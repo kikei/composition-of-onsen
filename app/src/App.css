@@ -1,0 +1,94 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+td input {
+    text-align: right;
+}
+
+.table-analysis fieldset {
+    border: none;
+}
+
+.table-analysis p {
+    text-align: left;
+}
+
+.form-header {
+    text-align: right;
+}
+
+.form-applicant p, .form-gensen p, .form-investigation p, .form-test p {
+    margin: 0.25em;
+}
+
+.form-applicant label > span {
+    display: inline-block;
+    width: 10em;
+}
+
+.form-gensen label > span {
+    display: inline-block;
+    width: 10em;
+}
+
+.form-investigation, .form-test {
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+}
+
+.form-investigation label > span {
+    display: inline-block;
+    width: 10em;
+}
+
+.form-test label > span {
+    display: inline-block;
+    width: 10em;
+}
+
+.form-positiveion, .form-negativeion {
+    background-color: #f8f8f8;
+    display: inline-block;
+    width: 45%;
+}
+
+.form-dissolved, .form-others {
+    background-color: #f8f8f8;
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+}
+
+td.column-name {
+    text-align: left;
+}
+
+td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
+    text-align: right;
+}
+
+.form-dissolved .column-name, .form-others .column-name {
+    width: 11em;
+}
+
