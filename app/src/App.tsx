@@ -67,8 +67,8 @@ function rowsPositiveIon(): Array<CompRepresentations> {
         row(Comp.MnII, 'マンガン (II) イオン'),
         row(Comp.FeII, '鉄 (II) イオン'),
         row(Comp.FeIII, '鉄 (III) イオン'),
-        row(Comp.Cu, '銅イオン'),
-        row(Comp.Zn, '亜鉛イオン')
+        row(Comp.CuII, '銅イオン'),
+        row(Comp.ZnII, '亜鉛イオン')
     ]
 }
 
