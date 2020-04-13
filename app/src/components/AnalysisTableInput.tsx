@@ -1,7 +1,7 @@
 import * as React from 'react';
 import update from 'react-addons-update';
 import { Comp } from '../constants/ChemicalConst';
-import Analysis, { IAnalysis } from '../models/Analysis';
+import Analysis, { IAnalysis, KeyMetadata } from '../models/Analysis';
 import CompRepresentations from '../models/CompRepresentations';
 import Components from '../models/Components';
 import TableComponentInput from './TableComponentInput';
@@ -14,7 +14,7 @@ export interface IProps extends React.Props<any> {
         negativeIon: Array<CompRepresentations>,
         undissociated: Array<CompRepresentations>,
         gas: Array<CompRepresentations>,
-        others: Array<CompRepresentations>
+        minor: Array<CompRepresentations>
     };
     visible?: boolean;
     onChangeAnalysis?: (analysis: IAnalysis) => void;
@@ -75,15 +75,39 @@ export default class AnalysisTableInput
 extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
-        console.log('AnalysisTableInput, props:', props);
         this.state = {
             analysis: props.analysis.toObject()
         };
+        this.updateName = this.updateName.bind(this);
         this.updatePositiveIon = this.updatePositiveIon.bind(this);
         this.updateNegativeIon = this.updateNegativeIon.bind(this);
         this.updateUndissociated = this.updateUndissociated.bind(this);
         this.updateGas = this.updateGas.bind(this);
-        this.updateOthers = this.updateOthers.bind(this);
+        this.updateMinor = this.updateMinor.bind(this);
+        this.updateMetadata = this.updateMetadata.bind(this);
+    }
+
+    /**
+     * Call event handler from a parent component
+     */
+    onChangeAnalysis() {
+        if (typeof this.props.onChangeAnalysis === 'function')
+            setTimeout(() => {
+                this.props.onChangeAnalysis!(this.state.analysis)
+            }, 0);
+    }
+
+    /**
+     * Process input
+     */
+    updateName(value: string) {
+        this.props.analysis.name = value;
+        this.setState(update(this.state, {
+            analysis: {
+                name: { $set: value }
+            }
+        }));
+        this.onChangeAnalysis();
     }
     updatePositiveIon(key: Comp, value: Components) {
         this.props.analysis.positiveIon = value;
@@ -94,8 +118,7 @@ extends React.Component<IProps, IState> {
                 }
             }
         }));
-        if (typeof this.props.onChangeAnalysis === 'function')
-            this.props.onChangeAnalysis(this.state.analysis);
+        this.onChangeAnalysis();
     }
     updateNegativeIon(key: Comp, value: Components) {
         this.props.analysis.negativeIon = value;
@@ -106,8 +129,7 @@ extends React.Component<IProps, IState> {
                 }
             }
         }));
-        if (typeof this.props.onChangeAnalysis === 'function')
-            this.props.onChangeAnalysis(this.state.analysis);
+        this.onChangeAnalysis();
     }
     updateUndissociated(key: Comp, value: Components) {
         this.props.analysis.undissociated = value;
@@ -118,8 +140,7 @@ extends React.Component<IProps, IState> {
                 }
             }
         }));
-        if (typeof this.props.onChangeAnalysis === 'function')
-            this.props.onChangeAnalysis(this.state.analysis);
+        this.onChangeAnalysis();
     }
     updateGas(key: Comp, value: Components) {
         this.props.analysis.gas = value;
@@ -130,240 +151,183 @@ extends React.Component<IProps, IState> {
                 }
             }
         }));
-        if (typeof this.props.onChangeAnalysis === 'function')
-            this.props.onChangeAnalysis(this.state.analysis);
+        this.onChangeAnalysis();
     }
-    updateOthers(key: Comp, value: Components) {
-        this.props.analysis.others = value;
+    updateMinor(key: Comp, value: Components) {
+        this.props.analysis.minor = value;
         this.setState(update(this.state, {
             analysis: {
-                others: {
+                minor: {
                     $set: value.toObject()
                 }
             }
         }));
-        if (typeof this.props.onChangeAnalysis === 'function')
-            this.props.onChangeAnalysis(this.state.analysis);
-    };
+        this.onChangeAnalysis();
+    }
+    updateMetadata(key: KeyMetadata, value: string) {
+        this.props.analysis.updateMetadata(key, value);
+        this.setState(update(this.state, {
+            analysis: {
+                metadata: {
+                    $set: this.props.analysis.copyMetadata()
+                }
+            }
+        }));
+        this.onChangeAnalysis();
+    }
     render() {
         const props = this.props;
-        const a = new Analysis(this.state.analysis);
-        console.log('render, a:', a);
         // const a = this.props.analysis;
         const rows = this.props.rows;
         const state = this.state;
+        const a = new Analysis(state.analysis);
+        console.log('render, a:', a, 'state.analysis:', state.analysis);
         const totalMelt = a.getTotalMelt();
         const totalComponent = a.getTotalComponent();
         const quality = qualityName(a);
+
+        // Helper component to input metadata
+        const InputMetadata = (key: KeyMetadata, size: number = 20) => (
+            <InputText
+                value={a.getMetadata(key) ?? ''}
+                onChange={e => this.updateMetadata(key, e.target.value)}
+                size={size}
+            />
+        );
+
         return (
             <div className={
               `table-analysis ${props.visible === false && "hidden"}`
             }>
                <h1>温泉分析書</h1>
                <fieldset className="form-header">
-                   <Row label="番号"><InputText value={a.no} /></Row>
+                   <Row label="番号">
+                       {InputMetadata('no')}
+                   </Row>
                </fieldset>
                <fieldset className="form-applicant">
                    <Row label="分析申請者 住所">
-                       <InputText value={a.applicantAddress}
-                                  onChange={e => {
-                                      this.setState({
-                                          analysis: {
-                                              ...state.analysis,
-                                              applicantAddress: e.target.value
-                                          }
-                                      })
-                                  }} />
+                       {InputMetadata('applicantAddress')}
                    </Row>
                    <Row label="分析申請者 氏名">
-                       <InputText value={a.applicantName}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          applicantName: e.target.value
-                                      }
-                                  })} />
+                       {InputMetadata('applicantName')}
                    </Row>
                </fieldset>
                <fieldset className="form-gensen">
                    <Row label="源泉名">
-                       <InputText value={a.gensenName}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          gensenName: e.target.value
-                                      }
-                                  })} />
+                       <InputText
+                           value={a.name}
+                           onChange={e => this.updateName(e.target.value)} />
                    </Row>
                    <Row label="源泉湧出地">
-                       <InputText value={a.gensenLocation}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          gensenLocation: e.target.value
-                                      }
-                                  })} />
+                       {InputMetadata('location')}
                    </Row>
                </fieldset>
                <fieldset className="form-investigation">
                    <h3>湧出地における調査及び試験成績</h3>
                    <Row label="調査及び試験者">
-                       <InputText value={a.investigater}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigater: e.target.value
-                                      }
-                                  })} />
+                       {InputMetadata('investigator')}
                    </Row>
                    <Row label="調査及び試験年月日">
-                       <InputText value={a.investigatedDate}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedDate: e.target.value
-                                      }
-                                  })} />
+                       {InputMetadata('investigatedDate')}
                    </Row>
                    <Row label="泉温">
                        <InputNumber value={a.temperature}
-                                  size={5}
-                                  onChange={n => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          temperature: n
-                                      }
-                                  })} />
-                       <InputText value={a.temperatureExtra}
-                                  size={20}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          temperatureExtra: e.target.number
-                                      }
-                                  })} />
+                                    size={5}
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                temperature: { $set: n }
+                                            }
+                                        }));
+                                        this.onChangeAnalysis();
+                                    }} />
+                       {InputMetadata('temperatureExtra', 20)}
                    </Row>
                    <Row label="湧出量/利用量">
-                       <InputText value={a.gensenAmount}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          gensenAmount: e.target.value
-                                      }
-                                  })} />
+                       <InputNumber value={a.yield}
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                yield: { $set: n }
+                                            }
+                                        }));
+                                        console.log('yield, n:', n, 'state:', this.state);
+                                        this.onChangeAnalysis();
+                                    }} />
                    </Row>
                    <Row label="知覚的試験">
-                       <InputText value={a.investigatedPerception}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedPerception: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('perception', 20)}
                    </Row>
                    <Row label="pH値">
-                       <InputNumber value={a.investigatedPh}
-                                    onChange={n => this.setState({
-                                        analysis: {
-                                            ...state.analysis,
-                                            investigatedPh: n
-                                        }
-                                    })} />
+                       <InputNumber value={a.pH}
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                pH: { $set: n }
+                                            }
+                                        }));
+                                        this.onChangeAnalysis();
+                                    }} />
                    </Row>
                    <Row label="電気伝導率">
-                       <InputText value={a.investigatedConductivity}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedConductivity: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('conductivity')}
                    </Row>
                    <Row label="ラドン">
-                       <InputNumber value={a.investigatedBq}
-                                  size={2}
-                                  onChange={n => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedBq: n
-                                      }
-                                  })}/>
+                       <InputNumber value={a.bq}
+                                    size={2}
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                bq: { $set: n }
+                                            }
+                                        }));
+                                        this.onChangeAnalysis();
+                                    }} />
                        {' '} Bq/kg,{' '}
-                       <InputNumber value={a.investigatedCi}
-                                  size={2}
-                                  onChange={n => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedCi: n
-                                      }
-                                  })}/>
+                       <InputNumber value={a.ci}
+                                    size={2}
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                ci: { $set: n }
+                                            }
+                                        }));
+                                        this.onChangeAnalysis();
+                                    }} />
                        {' '} Ci/kg, {' '}
-                       <InputNumber value={a.investigatedME}
+                       <InputNumber value={a.me}
                                   size={2}
-                                  onChange={n => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          investigatedME: n
-                                      }
-                                  })}/>
+                                    onChange={n => {
+                                        this.setState(update(this.state, {
+                                            analysis: {
+                                                me: { $set: n }
+                                            }
+                                        }));
+                                        this.onChangeAnalysis();
+                                    }} />
                        {' '} ME
                    </Row>
                </fieldset>
                <fieldset className="form-test">
                    <h3>試験室における試験成績</h3>
                    <Row label="試験者">
-                       <InputText value={a.tester}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          tester: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('tester', 20)}
                    </Row>
                    <Row label="分析終了年月日">
-                       <InputText value={a.testedDate}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          testedDate: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('testedDate', 20)}
                    </Row>
                    <Row label="知覚的試験">
-                       <InputText value={a.testedPerception}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          testedPerception: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('testedPerception', 20)}
                    </Row>
                    <Row label="密度">
-                       <InputText value={a.testedDencity}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          testedDencity: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('testedDencity', 20)}
                    </Row>
                    <Row label="pH値">
-                       <InputNumber value={a.testedPh}
-                                  onChange={n => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          testedPh: n
-                                      }
-                                  })}/>
+                       {InputMetadata('testedPH', 20)}
                    </Row>
                    <Row label="蒸発残留物">
-                       <InputText value={a.testedER}
-                                  onChange={e => this.setState({
-                                      analysis: {
-                                          ...state.analysis,
-                                          testedER: e.target.value
-                                      }
-                                  })}/>
+                       {InputMetadata('testedER', 20)}
                    </Row>
                </fieldset>
                <div>
@@ -406,13 +370,13 @@ extends React.Component<IProps, IState> {
                            onChangeComponent={this.updateGas}
                        />
                    </fieldset>
-                   <fieldset className="form-others">
+                   <fieldset className="form-minor">
                        <h4>その他微量成分</h4>
                        <TableComponentInput
                            labels={{title: '微量成分', total: '微量成分計'}}
                            columns={['name', 'mg']}
-                           rows={rows.others}
-                           components={a.others}
+                           rows={rows.minor}
+                           components={a.minor}
                        />
                    </fieldset>
                    <p>
@@ -430,14 +394,8 @@ extends React.Component<IProps, IState> {
                    <h3>判定</h3>
                    {quality}
                </div>
-               <div>
-                   <h4>禁忌症等</h4>
-                   {/*data.contraindication*/}
-               </div>
                <div className="footer">
-                   <ul>
-                       {a.footer.map((line, i) => <li key={i}>{line}</li>)}
-                   </ul>
+                   {a.getMetadata('footer')}
                </div>
             </div>
         )

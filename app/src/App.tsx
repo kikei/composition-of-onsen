@@ -129,13 +129,13 @@ function newAnalysis(): Analysis {
         no: '',
         applicantAddress: '',
         applicantName: '',
-        gensenName: '',
-        gensenLocation: '',
-        gensenAmount: 0,
-        gensenAmountExtra: ' m^3/day (掘削・動力揚湯)',
+        name: '',
+        location: '',
+        yield: 0,
+        yieldExtra: ' m^3/day (掘削・動力揚湯)',
         temperature: 25.0,
         temperatureExtra: '℃ (調査時における気温31℃)',
-        investigater: '',
+        investigator: '',
         investigatedDate: '',
         investigatedPerception: '',
         investigatedConductivity: 0,
@@ -152,7 +152,7 @@ function newAnalysis(): Analysis {
         testedPh: '--',
         testedER: '--',
         testedERUnit: ' g/kg (110℃)',
-        summary: '',
+        quality: '',
         contraindication: '',
         positiveIon: {
             'Na': {'mg': 87.8},
@@ -170,27 +170,21 @@ function newAnalysis(): Analysis {
             'HCO3': {mg: 186.1}
         },
         undissociated: {
-            /*
             'H2SiO3': {'mg': 63.8},
             'HBO2': {'mg': 0.8},
-            'humus': {'mg': 14.0}
-            */
+            // 'humus': {'mg': 14.0}
         },
         gas: {
-            /*
             'CO2': {'mg': 1.3},
             'H2S': {'mg': '<0.1'}
-            */
         },
-        others: {
-            /*
+        minor: {
             'Hg': {'mg': '0.0005 未満'},
             'Cu': {'mg': '0.05 未満'},
             'Pb': {'mg': '0.05 未満'},
             'As': {'mg': '0.005 未満'},
             'Zn': {'mg': '0.01 未満'},
             'Cd': {'mg': '0.01 未満'}
-            */
         },
         header: [],
         footer: []

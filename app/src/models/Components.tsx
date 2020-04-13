@@ -1,5 +1,5 @@
 import ChemicalConst, { Comp } from '../constants/ChemicalConst';
-import { OptionalNumber, mapNumberOr } from './OptionalNumber';
+import { OptionalNumber, mapNumber, mapNumberOr } from './OptionalNumber';
 import ComponentItem, { IComponentItem } from './ComponentItem';
 import ValuesObject from './ValuesObject';
 import ChemicalCalc from '../utils/ChemicalCalc';
@@ -9,6 +9,7 @@ export interface MgMvalMmol<T> {
     mg: T;
     mval: T;
     mmol: T;
+    mvalPercent: T;
 }
 
 // interface IComponents {
@@ -27,12 +28,14 @@ export default class Components { //implements IComponents {
             this.components[ChemicalConst.compOf(k)] =
                 obj[k as keyof typeof obj];
         }
+        this.recalculate();
     }
     getContent(key: Comp): MgMvalMmol<OptionalNumber> {
         return this.components[key] ?? {
             mg: '--',
             mval: '--',
-            mmol: '--'
+            mmol: '--',
+            mvalPercent: '--'
         };
     }
     getKeys(): Array<Comp> {
@@ -50,20 +53,19 @@ export default class Components { //implements IComponents {
             return {
                 mg: mg,
                 mval: ChemicalCalc.mgToMval(key, mg),
-                mmol: ChemicalCalc.mgToMmol(key, mg)
+                mmol: ChemicalCalc.mgToMmol(key, mg),
+                mvalPercent: 0
             }
         } else {
             return {
                 mg: 0,
                 mval: 0,
-                mmol: 0
+                mmol: 0,
+                mvalPercent: 0
             }
         }
     }
-    updateValue(key: Comp, values: ComponentItem) {
-        this.components[key] = values;
-        return this;
-    }
+
     getTotal(): MgMvalMmol<number> {
         let totalMg = 0.;
         let totalMval = 0.;
@@ -77,7 +79,8 @@ export default class Components { //implements IComponents {
         return {
             mg: totalMg,
             mval: totalMval,
-            mmol: totalMmol
+            mmol: totalMmol,
+            mvalPercent: 100.0
         };
     }
     toObject(): IComponents {
@@ -85,6 +88,29 @@ export default class Components { //implements IComponents {
             ...this.components
         };
     }
+
+    /**
+     * Update value
+     */
+    updateValue(key: Comp, values: ComponentItem) {
+        this.components[key] = values;
+        this.recalculate();
+        return this;
+    }
+    recalculate() {
+        const totalMval = this.getTotal().mval;
+        for (let key in this.components) {
+            const k = ChemicalConst.compOf(key);
+            if (this.components[k] &&
+                typeof this.components[k]!.mval === 'number') {
+                this.components[k]!.mvalPercent =
+                    mapNumber(this.components[k]!.mval,
+                              v => 100 * ChemicalCalc.mvalRate(v, totalMval))
+                    ?? 0;
+            }
+        }
+    }
+
 }
 
 export function jsonToComponents(obj: {[k in Comp]: ValuesObject}): Components {

@@ -5,158 +5,130 @@ import Components, {
     MgMvalMmol, IComponents, jsonToComponents
 } from './Components';
 
+export type KeyMetadata =
+    'no' | 'applicantAddress' | 'applicantName' |
+    'location' | 'yieldExtra' | 'temperatureExtra' | 'quality' |
+    'investigator' | 'investigatedDate' | 'perception' | 'conductivity' |
+    'tester' | 'testedDate' | 'testedPerception' | 'testedDencity' |
+    'testedPH' | 'testedER' | 'header' | 'footer';
+
+const keysMetadata = [
+    'no', 'applicantAddress', 'applicantName',
+    'location', 'yieldExtra', 'temperatureExtra', 'quality',
+    'investigator', 'investigatedDate', 'perception', 'conductivity',
+    'tester', 'testedDate', 'testedPerception', 'testedDencity',
+    'testedPH', 'testedER', 'header', 'footer'
+];
+
+export type Metadata = { [K in KeyMetadata]: string };
+
 export interface IAnalysis {
-    no: string;
-    applicantAddress: string;
-    applicantName: string;
-    gensenName: string;
-    gensenLocation: string;
-    gensenAmount: number;
-    gensenAmountExtra: string;
+    name: string;
+    yield: number;
     temperature: number;
-    temperatureExtra: string;
-    investigater: string;
-    investigatedDate: string;
-    investigatedPerception: string;
-    investigatedConductivity: number;
-    investigatedConductivityExtra: string;
-    investigatedPh: number;
-    investigatedBq: number;
-    investigatedCi: number;
-    investigatedME: number;
-    tester: string;
-    testedDate: string;
-    testedPerception: string;
-    testedDencity: number;
-    testedDencityExtra: string;
-    testedPh: number;
-    testedER: number;
-    testedERUnit: string;
-    quality: string;
-    contraindication: string;
+    pH: number;
+    bq: number;
+    ci: number;
+    me: number;
     positiveIon: IComponents;
     negativeIon: IComponents;
     undissociated: IComponents;
     gas: IComponents;
-    others: IComponents;
-    header: Array<string>;
-    footer: Array<string>;
+    minor: IComponents;
+    totalPositiveIon: MgMvalMmol<number>;
+    totalNegativeIon: MgMvalMmol<number>;
+    totalUndissociated: MgMvalMmol<number>;
+    totalGas: MgMvalMmol<number>;
+    totalMinor: MgMvalMmol<number>;
+    metadata: Metadata;
 }
 
 export default class Analysis {
-    no: string;
-    applicantAddress: string;
-    applicantName: string;
-    gensenName: string;
-    gensenLocation: string;
-    gensenAmount: number;
-    gensenAmountExtra: string;
+    name: string = '';
+    yield: number;
     temperature: number;
-    temperatureExtra: string;
-    investigater: string;
-    investigatedDate: string;
-    investigatedPerception: string;
-    investigatedConductivity: number;
-    investigatedConductivityExtra: string;
-    investigatedPh: number;
-    investigatedBq: number;
-    investigatedCi: number;
-    investigatedME: number;
-    tester: string;
-    testedDate: string;
-    testedPerception: string;
-    testedDencity: number;
-    testedDencityExtra: string;
-    testedPh: number;
-    testedER: number;
-    testedERUnit: string;
-    quality: string;
-    contraindication: string;
+    pH: number;
+    bq: number;
+    ci: number;
+    me: number;
     positiveIon: Components;
     negativeIon: Components;
     undissociated: Components;
     gas: Components;
-    others: Components;
-    header: Array<string>;
-    footer: Array<string>;
+    minor: Components;
+    metadata: Metadata = Analysis.newMetadata();
     constructor(obj: any) {
-        this.no = obj.no;
-        this.applicantAddress = obj.applicantAddress;
-        this.applicantName = obj.applicantName;
-        this.gensenName = obj.gensenName;
-        this.gensenLocation = obj.gensenLocation;
-        this.gensenAmount = obj.gensenAmount;
-        this.gensenAmountExtra = obj.gensenAmountExtra;
+        this.name = obj.name;
+        this.yield = obj.yield;
         this.temperature = obj.temperature;
-        this.temperatureExtra = obj.temperatureExtra;
-        this.investigater = obj.investigater;
-        this.investigatedDate = obj.investigatedDate;
-        this.investigatedPerception = obj.investigatedPerception;
-        this.investigatedConductivity = obj.investigatedConductivity;
-        this.investigatedConductivityExtra = obj.investigatedConductivityExtra;
-        this.investigatedPh = obj.investigatedPh;
-        this.investigatedBq = obj.investigatedBq;
-        this.investigatedCi = obj.investigatedCi;
-        this.investigatedME = obj.investigatedME;
-        this.tester = obj.tester;
-        this.testedDate = obj.testedDate;
-        this.testedPerception = obj.testedPerception;
-        this.testedDencity = obj.testedDencity;
-        this.testedDencityExtra = obj.testedDencityExtra;
-        this.testedPh = obj.testPh;
-        this.testedER = obj.testER;
-        this.testedERUnit = obj.testERUnit;
-        this.quality = obj.quality;
-        this.contraindication = obj.contraindication;
+        this.pH = obj.pH;
+        this.bq = obj.bq;
+        this.ci = obj.ci;
+        this.me = obj.me;
         this.positiveIon = jsonToComponents(obj.positiveIon);
         this.negativeIon = jsonToComponents(obj.negativeIon);
         this.undissociated = jsonToComponents(obj.undissociated);
         this.gas = jsonToComponents(obj.gas);
-        this.others = jsonToComponents(obj.others);
-        this.header = obj.header;
-        this.footer = obj.footer;
+        this.minor = jsonToComponents(obj.minor);
+        if (typeof obj.metadata === 'object') {
+            // TODO ugly...
+            // obj is IAnalysis when it was updated from UI,
+            // in otherhands it is just a object on initialization.
+            this.metadata = { ...this.metadata, ...obj.metadata };
+        } else {
+            for (let key in this.metadata)
+                this.metadata[key as KeyMetadata] = obj[key];
+        }
     }
     toObject(): IAnalysis {
-        const a = this;
         let obj = {} as IAnalysis;
-        console.log('positiveIon:', a.positiveIon);
-        console.log('negativeIon:', a.negativeIon);
+        const a = this;
+        // console.log('positiveIon:', a.positiveIon);
+        // console.log('negativeIon:', a.negativeIon);
         obj.positiveIon = a.positiveIon.toObject();
         obj.negativeIon = a.negativeIon.toObject();
         obj.undissociated = a.undissociated.toObject();
         obj.gas = a.gas.toObject();
-        obj.no = a.no;
-        obj.applicantAddress = a.applicantAddress;
-        obj.applicantName = a.applicantName;
-        obj.gensenName = a.gensenName;
-        obj.gensenLocation = a.gensenLocation;
-        obj.gensenAmount = a.gensenAmount;
-        obj.gensenAmountExtra = a.gensenAmountExtra;
+        obj.minor = a.minor.toObject();
+        obj.totalPositiveIon = this.positiveIon.getTotal();
+        obj.totalNegativeIon = this.negativeIon.getTotal();
+        obj.totalUndissociated = this.undissociated.getTotal();
+        obj.totalGas = this.gas.getTotal();
+        obj.totalMinor = this.minor.getTotal();
+        obj.name = a.name;
+        obj.yield = a.yield;
+        obj.pH = a.pH;
+        obj.bq = a.bq;
+        obj.ci = a.ci;
+        obj.me = a.me;
         obj.temperature = a.temperature;
-        obj.temperatureExtra = a.temperatureExtra;
-        obj.investigater = a.investigater;
-        obj.investigatedDate = a.investigatedDate;
-        obj.investigatedPerception = a.investigatedPerception;
-        obj.investigatedConductivity = a.investigatedConductivity;
-        obj.investigatedConductivityExtra = a.investigatedConductivityExtra;
-        obj.investigatedPh = a.investigatedPh;
-        obj.investigatedBq = a.investigatedBq;
-        obj.investigatedCi = a.investigatedCi;
-        obj.investigatedME = a.investigatedME;
-        obj.tester = a.tester;
-        obj.testedDate = a.testedDate;
-        obj.testedPerception = a.testedPerception;
-        obj.testedDencity = a.testedDencity;
-        obj.testedDencityExtra = a.testedDencityExtra;
-        obj.testedPh = a.testedPh;
-        obj.testedER = a.testedER;
-        obj.testedERUnit = a.testedERUnit;
-        obj.quality = a.quality;
-        obj.contraindication = a.contraindication;
-        obj.header = a.header;
-        obj.footer = a.footer;
+        obj.metadata = a.metadata;
         return obj;
     }
+
+    /**
+     * Metadata
+     */
+    static newMetadata(): Metadata {
+        const metadata: { [k: string]: string } = {};
+        for (let key of keysMetadata)
+            metadata[key as KeyMetadata] = '';
+        return { ...metadata } as Metadata;
+    }
+    getMetadata(key: KeyMetadata): string | undefined {
+        return this.metadata[key];
+    }
+    updateMetadata(key: KeyMetadata, value: string): Analysis {
+        this.metadata[key] = value;
+        return this;
+    }
+    copyMetadata(): Metadata {
+        return { ...this.metadata };
+    }
+
+    /**
+     * Returns components those values are converted to number
+    */
     positiveIonValue(key: Comp): MgMvalMmol<number> {
         return this.positiveIon.getValues(key);
     }
@@ -166,42 +138,82 @@ export default class Analysis {
     undissociatedValue(key: Comp): MgMvalMmol<number> {
         return this.undissociated.getValues(key);
     }
-    positiveIonList(f: (a: MgMvalMmol<number>, b: MgMvalMmol<number>) => number): Array<Comp> {
-        const ion = this.positiveIon;
-        const keys: Array<Comp> = ion.getKeys();
-        return keys.sort((a, b) => f(ion.getValues(b), ion.getValues(b)));
-    }
-    negativeIonList(f: (a: MgMvalMmol<number>, b: MgMvalMmol<number>) => number): Array<Comp> {
-        const ion = this.negativeIon;
-        const keys: Array<Comp> = ion.getKeys();
-        return keys.sort((a, b) => f(ion.getValues(b), ion.getValues(b)));
-    }
     gasValue(key: Comp): MgMvalMmol<number> {
         return this.gas.getValues(key);
     }
-    othersValue(key: Comp): MgMvalMmol<number> {
-        return this.others.getValues(key);
+    minorValue(key: Comp): MgMvalMmol<number> {
+        return this.minor.getValues(key);
     }
+
+    /**
+     * Returns components list sorted.
+     */
+    static componentList(f: (a: MgMvalMmol<number>,
+                             b: MgMvalMmol<number>) => number,
+                         components: Components): Array<Comp>
+    {
+        const keys: Array<Comp> = components.getKeys();
+        return keys.sort((a, b) => f(components.getValues(b),
+                                     components.getValues(b)));
+    }
+    positiveIonList(f: (a: MgMvalMmol<number>,
+                        b: MgMvalMmol<number>) => number): Array<Comp>
+    {
+        return Analysis.componentList(f, this.positiveIon);
+    }
+    negativeIonList(f: (a: MgMvalMmol<number>,
+                        b: MgMvalMmol<number>) => number): Array<Comp>
+    {
+        return Analysis.componentList(f, this.negativeIon);
+    }
+    undissociatedList(f: (a: MgMvalMmol<number>,
+                          b: MgMvalMmol<number>) => number): Array<Comp>
+    {
+        return Analysis.componentList(f, this.undissociated);
+    }
+    gasList(f: (a: MgMvalMmol<number>,
+                b: MgMvalMmol<number>) => number): Array<Comp>
+    {
+        return Analysis.componentList(f, this.gas);
+    }
+    minorList(f: (a: MgMvalMmol<number>,
+                  b: MgMvalMmol<number>) => number): Array<Comp>
+    {
+        return Analysis.componentList(f, this.minor);
+    }
+
+    /**
+     * Returns total values
+     */
     getTotalMelt(): MgMvalMmol<number> {
         const totalPositiveIon = this.positiveIon.getTotal();
         const totalNegativeIon = this.negativeIon.getTotal();
         const totalUndissociated = this.undissociated.getTotal();
+        const totalGas = this.gas.getTotal();
+        const totalMinor = this.minor.getTotal();
         return {
             mg: sum([
                 totalPositiveIon.mg,
                 totalNegativeIon.mg,
-                totalUndissociated.mg
+                totalUndissociated.mg,
+                totalGas.mg,
+                totalMinor.mg
             ]),
             mval: sum([
                 totalPositiveIon.mval,
                 totalNegativeIon.mval,
-                totalUndissociated.mval
+                totalUndissociated.mval,
+                totalGas.mg,
+                totalMinor.mg
             ]),
             mmol: sum([
                 totalPositiveIon.mmol,
                 totalNegativeIon.mmol,
-                totalUndissociated.mmol
-            ])
+                totalUndissociated.mmol,
+                totalGas.mmol,
+                totalMinor.mmol
+            ]),
+            mvalPercent: 100.0
         };
     }
     getTotalComponent(): MgMvalMmol<number> {
@@ -219,7 +231,8 @@ export default class Analysis {
             mmol: sum([
                 totalMelt.mmol,
                 totalGas.mmol,
-            ])
+            ]),
+            mvalPercent: 100.0
         };
     }
 }

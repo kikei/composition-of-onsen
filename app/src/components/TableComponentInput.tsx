@@ -1,12 +1,11 @@
 import React from 'react';
 import ChemicalConst, { Comp } from '../constants/ChemicalConst';
 import {
-    OptionalNumber, mapNumber, mapNumberToText
+    OptionalNumber, mapNumberToText
 } from '../models/OptionalNumber';
 import ComponentItem from '../models/ComponentItem';
 import Components, { IComponents } from '../models/Components';
 import CompRepresentations from '../models/CompRepresentations';
-import ChemicalCalc from '../utils/ChemicalCalc';
 
 type Column = 'name' | 'mg' | 'mval' | 'mmol' | 'mvalPercent'
 
@@ -53,7 +52,7 @@ function showMval(mval: OptionalNumber, def: string = ''): string {
 
 function showMvalPercent(per: OptionalNumber | undefined,
                          def: string = ''): string {
-    return mapNumberToText(per, v => (v * 100).toFixed(2)) ?? def;
+    return mapNumberToText(per, v => v.toFixed(2)) ?? def;
 }
 
 function showMmol(mmol: OptionalNumber, def: string = ''): string {
@@ -132,9 +131,8 @@ extends React.Component<IProps, IState> {
         };
         const BodyRow = (row: CompRepresentations) => {
             // const {mg, mval, mmol} = components.getValues(row.key);
-            const {mg, mval, mmol} = this.props.components.getContent(row.key);
-            const mvalRate =
-                mapNumber(mval, v => ChemicalCalc.mvalRate(v, total.mval));
+            const {mg, mval, mmol, mvalPercent} =
+                this.props.components.getContent(row.key);
             return (
                 <tr key={row.key}>
                 {columns.map(col => {
@@ -159,7 +157,7 @@ extends React.Component<IProps, IState> {
                             </td>;
                         case 'mvalPercent':
                             return <td key={col} className="column-mvalPercent">
-                                {showMvalPercent(mvalRate, '--')}
+                                {showMvalPercent(mvalPercent, '--')}
                             </td>;
                         case 'mmol':
                             return <td key={col} className="column-mmol">
@@ -203,7 +201,7 @@ extends React.Component<IProps, IState> {
                     <tr>{columns.map(HeaderCell)}</tr>
                 </thead>
                 <tbody>
-                    {rows.map(BodyRow)}
+                    {Array.isArray(rows) ? rows.map(BodyRow) : null}
                     {TotalRow}
                 </tbody>
             </table>

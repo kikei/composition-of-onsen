@@ -6,6 +6,7 @@ export interface IComponentItem {
     mg: number | string;
     mval: number | string;
     mmol: number | string;
+    mvalPercent: number | string;
 }
 
 export default class ComponentItem {
@@ -14,6 +15,7 @@ export default class ComponentItem {
     mg: OptionalNumber;
     mval!: OptionalNumber;
     mmol!: OptionalNumber;
+    mvalPercent!: OptionalNumber;
     // mvalPercent: OptionalNumber;
     constructor(weight: number, valence: number,
                 mg: OptionalNumber,
@@ -40,7 +42,7 @@ export default class ComponentItem {
                 this.mval = mval ?? '--';
                 this.mmol = mmol ?? '--';
         }
-        // this.mvalPercent == mvalPercent ?? {value: 0};
+        this.mvalPercent = mvalPercent ?? 100.0;
     }
     toObject(): IComponentItem {
         return {
@@ -48,7 +50,8 @@ export default class ComponentItem {
             valence: this.valence,
             mg: this.mg,
             mval: this.mval,
-            mmol: this.mmol
+            mmol: this.mmol,
+            mvalPercent: this.mvalPercent
         }
     }
 }

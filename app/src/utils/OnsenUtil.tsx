@@ -170,8 +170,8 @@ class OnsenQualityNameBuilder {
 
 export function qualityName(a: Analysis): string {
     const acidAlka =
-        typeof a.investigatedPh === 'string' ? 'Unknown' :
-        categorizePh(a.investigatedPh);
+        typeof a.pH === 'string' ? 'Unknown' :
+        categorizePh(a.pH);
     const temperature =
         typeof a.temperature === 'string' ? 'Unknown' :
         categorizeTemperature(a.temperature);

@@ -14,7 +14,7 @@ export interface IProps {
         negativeIon: Array<CompRepresentations>,
         undissociated: Array<CompRepresentations>,
         gas: Array<CompRepresentations>,
-        others: Array<CompRepresentations>
+        minor: Array<CompRepresentations>
     }
 }
 
