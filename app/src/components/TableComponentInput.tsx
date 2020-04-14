@@ -94,10 +94,11 @@ extends React.Component<IProps, IState> {
                 [key]: mv
             }
         });
-        this.props.components.updateValue(key, mv);
+        const components = this.props.components.copy();
+        components.updateValue(key, mv);
         // console.log('updateMgValue, key:', key, 'val:', val);
         if (typeof this.props.onChangeComponent === 'function')
-            this.props.onChangeComponent(key, this.props.components);
+            this.props.onChangeComponent(key, components);
     }
     render() {
         const labels = this.labels;
