@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Analysis, { IAnalysis } from '../models/Analysis';
 import CompRepresentations from '../models/CompRepresentations';
-import AnalysisTableInput from './AnalysisTableInput';
-import AnalysisTableExport from './AnalysisTableExport';
+import AnalysisTableEditor from './AnalysisTableEditor';
+import AnalysisTablePreview from './AnalysisTablePreview';
 import { enableMathJax } from '../utils/MathJax';
 
 type ViewMode = 'edit' | 'json';
@@ -23,7 +23,7 @@ interface IState {
     viewMode: ViewMode;
 }
 
-export default class AnalysisTable
+export default class AnalysisView
 extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -60,13 +60,13 @@ extends React.Component<IProps, IState> {
                    </button>
                 </nav>
                 <div className="container-analysis">
-                    <AnalysisTableInput
+                    <AnalysisTableEditor
                         analysis={a}
                         visible={viewMode === 'edit'}
                         onChangeAnalysis={this.updateAnalysis}
                         {...this.props}
                     />
-                    <AnalysisTableExport
+                    <AnalysisTablePreview
                         format='json'
                         analysis={a}
                         visible={viewMode === 'json'}

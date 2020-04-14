@@ -71,7 +71,7 @@ const InputNumber = (props: InputNumberProps) => (
            }} />
 );
 
-export default class AnalysisTableInput
+export default class AnalysisTableEditor
 extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);

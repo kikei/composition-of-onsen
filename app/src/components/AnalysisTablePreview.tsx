@@ -44,7 +44,7 @@ const SwitchExport = (format: ExportFormat, analysis: Analysis) => {
     }
 }
 
-const AnalysisTableExport: React.FC<IProps> = props => {
+const AnalysisTablePreview: React.FC<IProps> = props => {
     return (
         <div className={
           `container-export ${props.visible === false && "hidden"}`
@@ -55,5 +55,5 @@ const AnalysisTableExport: React.FC<IProps> = props => {
     );
 }
 
-export default AnalysisTableExport;
+export default AnalysisTablePreview;
 

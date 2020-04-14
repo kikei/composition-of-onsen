@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from 'react';
 import './App.css';
 
-import AnalysisTable from './components/AnalysisTable';
+import AnalysisView from './components/AnalysisView';
 import Analysis from './models/Analysis';
 import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
@@ -111,7 +111,7 @@ function rowsGas(): Array<CompRepresentations> {
     ];
 }
 
-function rowsOthers(): Array<CompRepresentations> {
+function rowsMinor(): Array<CompRepresentations> {
     return [
         row(Comp.As, '総砒素'),
         row(Comp.Hg, '総水銀'),
@@ -198,11 +198,10 @@ function fetchAnalysis(): Resource<Analysis> {
     return suspender<Analysis, string>(promise);
 }
 
-const AnalysisView = (props: any): any => {
-    console.log('props.analysis:', props);
-    const a = props.analysis.read();
-    return <AnalysisTable analysis={a} rows={props.rows} />
-}
+const AppContent = (props: any): any => {
+    const a = props.analysis;
+    return <AnalysisView analysis={a.read()} rows={props.rows} />
+};
 
 export default function App() {
     const [analysis] = useState(fetchAnalysis());
@@ -211,12 +210,12 @@ export default function App() {
         negativeIon: rowsNegativeIon(),
         undissociated: rowsUndissociated(),
         gas: rowsGas(),
-        others: rowsOthers()
+        minor: rowsMinor()
     };
     return (
         <Suspense fallback={<p>Loading...</p>}>
             <div className="App">
-                <AnalysisView analysis={analysis} rows={rows} />
+                <AppContent analysis={analysis} rows={rows} />
             </div>
         </Suspense>
     );
