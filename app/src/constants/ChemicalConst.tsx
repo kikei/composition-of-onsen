@@ -239,7 +239,7 @@ const Formula: Record<Comp, string> = {
     [Comp.HBO2]: '$\\ce{HBO2}$',
     [Comp.HCO3]: '$\\ce{HCO3^-}$',
     [Comp.HNO2]: '$\\ce{HNO2^-}$',
-    [Comp.HSiO3]: '$\\ce{HSiO3}$',
+    [Comp.HSiO3]: '$\\ce{HSiO3^-}$',
     [Comp.HPO4]: '$\\ce{HPO4^2-}$',
     [Comp.HS]: '$\\ce{HS^-}$',
     [Comp.HSO4]: '$\\ce{HSO4^-}$',

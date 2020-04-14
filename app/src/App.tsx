@@ -91,7 +91,7 @@ function rowsNegativeIon(): Array<CompRepresentations> {
         row(Comp.HCO3, '炭酸水素イオン'),
         row(Comp.CO3, '炭酸イオン'),
         row(Comp.AsO2, 'メタ亜砒酸イオン'),
-        row(Comp.HSiO3, 'メタケイ酸水素イオン'),
+        row(Comp.HSiO3, 'メタケイ酸イオン'),
         row(Comp.BO2, 'メタホウ酸イオン')
     ];
 }
