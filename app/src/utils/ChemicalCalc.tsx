@@ -1,7 +1,7 @@
 export function mgToMval(mg: number, weight: number, valence: number): number {
     if (weight === 0)
         return 0;
-    return mg / weight * valence;
+    return mg / weight * Math.abs(valence);
 }
 
 export function mgToMmol(mg: number, weight: number): number {
