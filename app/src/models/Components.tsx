@@ -88,6 +88,9 @@ export default class Components { //implements IComponents {
             ...this.components
         };
     }
+    copy(): Components {
+        return new Components({ ...this.components });
+    }
 
     /**
      * Update value

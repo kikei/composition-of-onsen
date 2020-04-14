@@ -37,12 +37,13 @@ export default class ComponentItem {
             case 'number':
                 this.mval = mval ?? mg / w * Math.abs(v);
                 this.mmol = mmol ?? mg / w;
+                this.mvalPercent = mvalPercent ?? 0;
                 break;
             default:
                 this.mval = mval ?? '--';
                 this.mmol = mmol ?? '--';
+                this.mvalPercent = mvalPercent ?? '--';
         }
-        this.mvalPercent = mvalPercent ?? 100.0;
     }
     toObject(): IComponentItem {
         return {
