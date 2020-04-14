@@ -48,22 +48,13 @@ export default class Components { //implements IComponents {
             */
     }
     getValues(key: Comp): MgMvalMmol<number> {
-        const mg = mapNumberOr(this.components[key]?.mg, x => x, null);
-        if (typeof mg === 'number') {
-            return {
-                mg: mg,
-                mval: ChemicalCalc.mgToMval(key, mg),
-                mmol: ChemicalCalc.mgToMmol(key, mg),
-                mvalPercent: 0
-            }
-        } else {
-            return {
-                mg: 0,
-                mval: 0,
-                mmol: 0,
-                mvalPercent: 0
-            }
-        }
+        const vs = this.components[key];
+        return {
+            mg: mapNumberOr(vs?.mg, x => x, 0),
+            mval: mapNumberOr(vs?.mval, x => x, 0),
+            mmol: mapNumberOr(vs?.mmol, x => x, 0),
+            mvalPercent: mapNumberOr(vs?.mvalPercent, x => x, 0)
+        };
     }
 
     getTotal(): MgMvalMmol<number> {

@@ -206,18 +206,13 @@ export function qualityName(a: Analysis): string {
     const simple: boolean = isSimple(a);
     if (!simple) {
         let totalPositiveIonMval: number = a.positiveIon.getTotal().mval;
-        a.positiveIonList((a, b) => b.mval - a.mval).forEach((comp: Comp) => {
-            console.log('Sort positive ion, comp:', comp,
-                        'mval:',
-                        a.positiveIonValue(comp).mval / totalPositiveIonMval);
+        a.positiveIonList((a, b) => b.mvalPercent - a.mvalPercent)
+         .forEach((comp: Comp) => {
             if (a.positiveIonValue(comp).mval / totalPositiveIonMval >= 0.2)
                 q.addPositiveIon(comp);
         });
         let totalNegativeIonMval: number = a.negativeIon.getTotal().mval;
         a.negativeIonList((a, b) => b.mval - a.mval).forEach((comp: Comp) => {
-            console.log('Sort negative ion, comp:', comp,
-                        'mval:',
-                        a.negativeIonValue(comp).mval / totalNegativeIonMval);
             if (a.negativeIonValue(comp).mval / totalNegativeIonMval >= 0.2)
                 q.addNegativeIon(comp);
         });

@@ -96,7 +96,6 @@ extends React.Component<IProps, IState> {
         });
         const components = this.props.components.copy();
         components.updateValue(key, mv);
-        // console.log('updateMgValue, key:', key, 'val:', val);
         if (typeof this.props.onChangeComponent === 'function')
             this.props.onChangeComponent(key, components);
     }

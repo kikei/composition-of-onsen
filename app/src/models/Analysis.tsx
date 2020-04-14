@@ -153,7 +153,7 @@ export default class Analysis {
                          components: Components): Array<Comp>
     {
         const keys: Array<Comp> = components.getKeys();
-        return keys.sort((a, b) => f(components.getValues(b),
+        return keys.sort((a, b) => f(components.getValues(a),
                                      components.getValues(b)));
     }
     positiveIonList(f: (a: MgMvalMmol<number>,

@@ -177,11 +177,9 @@ extends React.Component<IProps, IState> {
     }
     render() {
         const props = this.props;
-        // const a = this.props.analysis;
+        const a = this.props.analysis;
         const rows = this.props.rows;
-        const state = this.state;
-        const a = new Analysis(state.analysis);
-        console.log('render, a:', a, 'state.analysis:', state.analysis);
+        console.log('render, a:', a);
         const totalMelt = a.getTotalMelt();
         const totalComponent = a.getTotalComponent();
         const quality = qualityName(a);

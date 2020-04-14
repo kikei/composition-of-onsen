@@ -1,4 +1,5 @@
 import { OptionalNumber } from './OptionalNumber';
+import { mgToMval, mgToMmol } from '../utils/ChemicalCalc';
 
 export interface IComponentItem {
     weight: number;
@@ -35,8 +36,8 @@ export default class ComponentItem {
         const mg = this.mg;
         switch (typeof(mg)) {
             case 'number':
-                this.mval = mval ?? mg / w * Math.abs(v);
-                this.mmol = mmol ?? mg / w;
+                this.mval = mgToMval(mg, w, v);
+                this.mmol = mgToMmol(mg, w);
                 this.mvalPercent = mvalPercent ?? 0;
                 break;
             default:
