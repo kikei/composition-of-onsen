@@ -212,7 +212,8 @@ export function qualityName(a: Analysis): string {
                 q.addPositiveIon(comp);
         });
         let totalNegativeIonMval: number = a.negativeIon.getTotal().mval;
-        a.negativeIonList((a, b) => b.mval - a.mval).forEach((comp: Comp) => {
+        a.negativeIonList((a, b) => b.mvalPercent - a.mvalPercent)
+         .forEach((comp: Comp) => {
             if (a.negativeIonValue(comp).mval / totalNegativeIonMval >= 0.2)
                 q.addNegativeIon(comp);
         });
