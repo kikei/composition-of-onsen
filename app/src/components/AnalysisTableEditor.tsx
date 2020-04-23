@@ -101,7 +101,6 @@ extends React.Component<IProps, IState> {
      * Process input
      */
     updateName(value: string) {
-        this.props.analysis.name = value;
         this.setState(update(this.state, {
             analysis: {
                 name: { $set: value }
@@ -110,7 +109,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updatePositiveIon(key: Comp, value: Components) {
-        this.props.analysis.positiveIon = value;
         this.setState(update(this.state, {
             analysis: {
                 positiveIon: {
@@ -121,7 +119,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updateNegativeIon(key: Comp, value: Components) {
-        this.props.analysis.negativeIon = value;
         this.setState(update(this.state, {
             analysis: {
                 negativeIon: {
@@ -132,7 +129,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updateUndissociated(key: Comp, value: Components) {
-        this.props.analysis.undissociated = value;
         this.setState(update(this.state, {
             analysis: {
                 undissociated: {
@@ -143,7 +139,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updateGas(key: Comp, value: Components) {
-        this.props.analysis.gas = value;
         this.setState(update(this.state, {
             analysis: {
                 gas: {
@@ -154,7 +149,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updateMinor(key: Comp, value: Components) {
-        this.props.analysis.minor = value;
         this.setState(update(this.state, {
             analysis: {
                 minor: {
@@ -165,7 +159,6 @@ extends React.Component<IProps, IState> {
         this.onChangeAnalysis();
     }
     updateMetadata(key: KeyMetadata, value: string) {
-        this.props.analysis.updateMetadata(key, value);
         this.setState(update(this.state, {
             analysis: {
                 metadata: {
