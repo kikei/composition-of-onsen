@@ -177,12 +177,16 @@ extends React.Component<IProps, IState> {
     }
     render() {
         const props = this.props;
-        const a = this.props.analysis;
+        const a = new Analysis(this.state.analysis);
         const rows = this.props.rows;
-        console.log('render, a:', a);
         const totalMelt = a.getTotalMelt();
         const totalComponent = a.getTotalComponent();
         const quality = qualityName(a);
+        console.log('AnalysisTableEditor rendering, a:', a,
+                    'totalMelt:', totalMelt,
+                    'totalComponent:', totalComponent,
+                    'quality:', quality,
+                    'props:', props);
 
         // Helper component to input metadata
         const InputMetadata = (key: KeyMetadata, size: number = 20) => (
