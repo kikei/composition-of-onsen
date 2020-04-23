@@ -186,8 +186,8 @@ function newAnalysis(): Analysis {
             'Zn': {'mg': '0.01 未満'},
             'Cd': {'mg': '0.01 未満'}
         },
-        header: [],
-        footer: []
+        header: "",
+        footer: ""
     });
 }
 
