@@ -372,6 +372,7 @@ extends React.Component<IProps, IState> {
                            columns={['name', 'mg']}
                            rows={rows.minor}
                            components={a.minor}
+                           onChangeComponent={this.updateMinor}
                        />
                    </fieldset>
                    <p>
