@@ -1,6 +1,5 @@
 import { sum } from '../utils/MathUtil';
 import { Comp } from '../constants/ChemicalConst';
-import { OptionalNumber } from './OptionalNumber';
 import Components, {
     MgMvalMmol, IComponents, jsonToComponents
 } from './Components';

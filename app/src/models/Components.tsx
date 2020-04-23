@@ -108,7 +108,6 @@ export default class Components { //implements IComponents {
 }
 
 export function jsonToComponents(obj: {[k in Comp]: ValuesObject}): Components {
-    console.log('jsonToComponents, obj:', obj);
     const comps: {[key in Comp]?: ComponentItem} = {};
     for (let k in obj) {
         const v = obj[k as keyof typeof obj];

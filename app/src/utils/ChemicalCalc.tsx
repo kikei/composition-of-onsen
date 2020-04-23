@@ -12,7 +12,6 @@ export function mgToMmol(mg: number, weight: number): number {
 
 export default class ChemicalCalc {
     static mvalRate(mval: number, total: number): number {
-        console.log(mval, total, Number(mval.toFixed(2)) / total);
         if (isNaN(mval) || total === 0)
             return 0;
         return Number(mval.toFixed(2)) / total;

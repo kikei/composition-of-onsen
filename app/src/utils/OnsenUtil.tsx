@@ -48,7 +48,7 @@ function isMedicalFe(mg: number): boolean { return mg >= 20.0 }
 function isMedicalH(mg: number): boolean { return mg >= 1.0 }
 function isMedicalI(mg: number): boolean { return mg >= 10.0 }
 function isMedicalS(mg: number): boolean { return mg >= 2.0 }
-function isMedicalRn(mg: number): boolean { return mg >= 3e-9 }
+// function isMedicalRn(mg: number): boolean { return mg >= 3e-9 }
 
 // 硫化水素型
 function isTypeHS(mmolHS: number, mmolS2O3: number, mmolH2S: number): boolean {
