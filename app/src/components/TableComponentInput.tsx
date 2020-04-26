@@ -85,7 +85,7 @@ extends React.Component<IProps, IState> {
     updateMgValue(key: Comp, val: string) {
         const w = ChemicalConst.weight(key);
         const v = ChemicalConst.valence(key);
-        const r = parseFloat(val);
+        const r = Number(val);
         const mg = isNaN(r) ? val : r;
         const mv = new ComponentItem(w, v, mg);
         this.setState({
