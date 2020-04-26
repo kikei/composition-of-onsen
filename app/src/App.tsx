@@ -132,7 +132,7 @@ function newAnalysis(): Analysis {
         name: '',
         location: '',
         yield: 0,
-        yieldExtra: ' m^3/day (掘削・動力揚湯)',
+        yieldExtra: ' L/分 (掘削・自然湧出)',
         temperature: 25.0,
         temperatureExtra: '℃ (調査時における気温31℃)',
         investigator: '',
