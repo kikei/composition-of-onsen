@@ -119,10 +119,18 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
     margin-top: 3.5em; /* Offset for .select-view */
 }
 
+.container-export {
+    width: calc(100% - 2em);
+    height: 75vh;
+    padding: 0.5em 1em 1em 1em;
+}
+
 .container-export pre {
+    width: calc(100% - 1em);
+    height: 100%;
     border: 1px solid #000;
     background-color: #eee;
     text-align: left;
-    margin: 0.5em 1em 1em 1em;
     padding: 0.5em;
+    overflow: scroll;
 }

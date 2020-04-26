@@ -47,7 +47,7 @@ const SwitchExport = (format: ExportFormat, analysis: Analysis) => {
 const AnalysisTablePreview: React.FC<IProps> = props => {
     return (
         <div className={
-          `container-export ${props.visible === false && "hidden"}`
+          `container-export ${props.visible === false ? "hidden" : undefined}`
         }>
           <h1>温泉分析書</h1>
           {SwitchExport(props.format, props.analysis)}
