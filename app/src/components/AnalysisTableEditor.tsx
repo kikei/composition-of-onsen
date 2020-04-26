@@ -241,15 +241,16 @@ extends React.Component<IProps, IState> {
                    </Row>
                    <Row label="湧出量/利用量">
                        <InputNumber value={a.yield}
+                                    size={5}
                                     onChange={n => {
                                         this.setState(update(this.state, {
                                             analysis: {
                                                 yield: { $set: n }
                                             }
                                         }));
-                                        console.log('yield, n:', n, 'state:', this.state);
                                         this.onChangeAnalysis();
                                     }} />
+                       {InputMetadata('yieldExtra')}
                    </Row>
                    <Row label="知覚的試験">
                        {InputMetadata('perception', 20)}
