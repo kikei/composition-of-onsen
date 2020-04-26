@@ -39,6 +39,8 @@ export interface IAnalysis {
     totalUndissociated: MgMvalMmol<number>;
     totalGas: MgMvalMmol<number>;
     totalMinor: MgMvalMmol<number>;
+    totalMelt: MgMvalMmol<number>;
+    total: MgMvalMmol<number>;
     metadata: Metadata;
 }
 
@@ -94,6 +96,8 @@ export default class Analysis {
         obj.totalUndissociated = this.undissociated.getTotal();
         obj.totalGas = this.gas.getTotal();
         obj.totalMinor = this.minor.getTotal();
+        obj.totalMelt = this.getTotalMelt();
+        obj.total = this.getTotalComponent();
         obj.name = a.name;
         obj.yield = a.yield;
         obj.pH = a.pH;
