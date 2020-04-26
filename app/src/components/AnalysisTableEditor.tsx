@@ -162,7 +162,9 @@ extends React.Component<IProps, IState> {
         this.setState(update(this.state, {
             analysis: {
                 metadata: {
-                    $set: this.props.analysis.copyMetadata()
+                    [key]: {
+                        $set: value
+                    }
                 }
             }
         }));
