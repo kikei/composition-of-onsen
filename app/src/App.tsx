@@ -1,48 +1,18 @@
 import React, { Suspense, useState } from 'react';
+import { BrowserRouter, Switch, Route, Link, useParams } from 'react-router-dom';
 import './App.css';
 
+import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
+import SearchInput from './components/SearchInput';
 import Analysis from './models/Analysis';
 import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
+import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
+import WebAPI from './services/WebAPI';
 
 const Const = ChemicalConst;
-
-enum ResourceStatus {
-    Pending,
-    Fullfilled,
-    Rejected
-}
-
-interface Resource<T> {
-    read: () => T
-}
-
-function suspender<T, E>(promise: Promise<T>): Resource<T> {
-    let status = ResourceStatus.Pending;
-    let result: T;
-    let error: E;
-    const suspender = promise.then((r: T) => {
-        status = ResourceStatus.Fullfilled;
-        result = r;
-    }).catch((e: any) => {
-        status = ResourceStatus.Rejected;
-        error = e;
-    });
-    return {
-        read: () => {
-            switch (status) {
-                case ResourceStatus.Pending:
-                    throw suspender;
-                case ResourceStatus.Rejected:
-                    throw error;
-                default:
-                    return result;
-            }
-        }
-    };
-}
 
 function row(key: Comp, name: string): CompRepresentations {
     return {
@@ -100,7 +70,8 @@ function rowsUndissociated(): Array<CompRepresentations> {
     return [
         row(Comp.HAsO2, 'メタ亜砒酸'),
         row(Comp.H2SiO3, 'メタケイ酸'),
-        row(Comp.HBO2, 'メタホウ酸')
+        row(Comp.HBO2, 'メタホウ酸'),
+        row(Comp.H2SO4, '硫酸')
     ];
 }
 
@@ -191,20 +162,20 @@ function newAnalysis(): Analysis {
     });
 }
 
-function fetchAnalysis(): Resource<Analysis> {
-    const promise: Promise<Analysis> = new Promise((resolve, reject) =>
-        setTimeout(() => resolve(newAnalysis()), 1000)
-    );
-    return suspender<Analysis, string>(promise);
-}
-
 const AppContent = (props: any): any => {
     const a = props.analysis;
     return <AnalysisView analysis={a.read()} rows={props.rows} />
 };
 
-export default function App() {
-    const [analysis] = useState(fetchAnalysis());
+const ListApp = () => {
+    return <AnalysisList />
+};
+
+const AnalysisApp = () => {
+    const {id} = useParams();
+    console.log('Analysis id:', id);
+    const api = new WebAPI(configContext);
+    const [analysis] = useState(api.fetchAnalysis(id));
     const rows = {
         positiveIon: rowsPositiveIon(),
         negativeIon: rowsNegativeIon(),
@@ -212,12 +183,45 @@ export default function App() {
         gas: rowsGas(),
         minor: rowsMinor()
     };
+    return <Suspense fallback={<p>Loading...</p>}>
+        <div className="App">
+            <AppContent analysis={analysis} rows={rows} />
+        </div>
+    </Suspense>
+};
+
+const configContext: IConfigContext = {
+    urls: {
+        'analyses': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSES ?? '',
+        'analysis': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSIS ?? ''
+    },
+    paths: {
+        'top': process.env.REACT_APP_PATH_TOP ?? '',
+        'analysis': process.env.REACT_APP_PATH_ANALYSIS ?? ''
+    }
+};
+
+console.log('configContext:', configContext, 'env:', process.env);
+
+export default function App() {
     return (
-        <Suspense fallback={<p>Loading...</p>}>
-            <div className="App">
-                <AppContent analysis={analysis} rows={rows} />
-            </div>
-        </Suspense>
+        <ConfigContext.Provider value={configContext}>
+            <BrowserRouter>
+                <header className="app-header">
+                    <h1><Link to="/">Onsena (仮)</Link></h1>
+                    <nav className="app-nav" >
+                        <SearchInput />
+                    </nav>
+                </header>
+                <div className="app-body">
+                    <Switch>
+                        <Route path="/analysis/:id"
+                               component={AnalysisApp} />
+                        <Route path="/" component={ListApp} />
+                    </Switch>
+                </div>
+            </BrowserRouter>
+        </ConfigContext.Provider>
     );
 }
 

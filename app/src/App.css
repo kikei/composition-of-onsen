@@ -96,15 +96,36 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
     display: none;
 }
 
-.select-view {
+.app-header {
     background-color: #fffe;
     width: 100vw;
     height: 3.0em;
+    font-size: 1rem;
     text-align: left;
     position: fixed;
     top: 0px;
     left: 0px;
     border-bottom: solid 1px #ddd;
+    display: flex;
+}
+
+.app-header h1 {
+    margin: auto auto auto 2em;;
+    text-align: left;
+    font-size: 1.5em;
+}
+
+.app-header h1 a {
+    text-decoration: none;
+    color: #000;
+}
+
+.app-nav {
+    margin: auto 4em auto auto;
+}
+
+.select-view {
+    text-align: right;
 }
 
 .select-view button {
@@ -115,8 +136,18 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
     margin: 1% 0.25em 0em 0.25em;
 }
 
-.container-analysis {
-    margin-top: 3.5em; /* Offset for .select-view */
+.app-body {
+    margin: 3.0em 0em 0em 0em;
+    padding: 2em 2em 0em 2em;
+}
+
+.search-list .search-form {
+    margin-left: 2em;
+}
+
+.search-list ul {
+    list-style: circle;
+
 }
 
 .container-export {

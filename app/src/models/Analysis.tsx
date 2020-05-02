@@ -22,6 +22,7 @@ const keysMetadata = [
 export type Metadata = { [K in KeyMetadata]: string };
 
 export interface IAnalysis {
+    id: string | null;
     name: string;
     yield: number;
     temperature: number;
@@ -45,6 +46,7 @@ export interface IAnalysis {
 }
 
 export default class Analysis {
+    id: string | null;
     name: string = '';
     yield: number;
     temperature: number;
@@ -59,6 +61,7 @@ export default class Analysis {
     minor: Components;
     metadata: Metadata = Analysis.newMetadata();
     constructor(obj: any) {
+        this.id = obj.id;
         this.name = obj.name;
         this.yield = obj.yield;
         this.temperature = obj.temperature;
@@ -84,6 +87,7 @@ export default class Analysis {
     toObject(): IAnalysis {
         let obj = {} as IAnalysis;
         const a = this;
+        obj.id = a.id;
         // console.log('positiveIon:', a.positiveIon);
         // console.log('negativeIon:', a.negativeIon);
         obj.positiveIon = a.positiveIon.toObject();
