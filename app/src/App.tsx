@@ -11,6 +11,7 @@ import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
 import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
 import WebAPI from './services/WebAPI';
+import { enableMathJax } from './utils/MathJax';
 
 const Const = ChemicalConst;
 
@@ -203,25 +204,30 @@ const configContext: IConfigContext = {
 
 console.log('configContext:', configContext, 'env:', process.env);
 
-export default function App() {
-    return (
-        <ConfigContext.Provider value={configContext}>
-            <BrowserRouter>
-                <header className="app-header">
-                    <h1><Link to="/">Onsena (仮)</Link></h1>
-                    <nav className="app-nav" >
-                        <SearchInput />
-                    </nav>
-                </header>
-                <div className="app-body">
-                    <Switch>
-                        <Route path="/analysis/:id"
-                               component={AnalysisApp} />
-                        <Route path="/" component={ListApp} />
-                    </Switch>
-                </div>
-            </BrowserRouter>
-        </ConfigContext.Provider>
-    );
+export default class App extends React.Component {
+    componentDidMount() {
+        enableMathJax();
+    }
+    render() {
+        return (
+            <ConfigContext.Provider value={configContext}>
+                <BrowserRouter>
+                    <header className="app-header">
+                        <h1><Link to="/">Onsena (仮)</Link></h1>
+                        <nav className="app-nav" >
+                            <SearchInput />
+                        </nav>
+                    </header>
+                    <div className="app-body">
+                        <Switch>
+                            <Route path="/analysis/:id"
+                                   component={AnalysisApp} />
+                            <Route path="/" component={ListApp} />
+                        </Switch>
+                    </div>
+                </BrowserRouter>
+            </ConfigContext.Provider>
+        );
+    }
 }
 

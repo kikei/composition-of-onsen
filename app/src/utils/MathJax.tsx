@@ -29,3 +29,8 @@ export const enableMathJax = () => {
   addScript('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML', true);
   enableMhchem();
 }
+
+export const renderMathJax = () => {
+    const MathJax = (window as any).MathJax;
+    MathJax?.Hub.Queue(['Typeset', MathJax.Hub]);
+}

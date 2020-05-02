@@ -3,7 +3,7 @@ import Analysis, { IAnalysis } from '../models/Analysis';
 import CompRepresentations from '../models/CompRepresentations';
 import AnalysisTableEditor from './AnalysisTableEditor';
 import AnalysisTablePreview from './AnalysisTablePreview';
-import { enableMathJax } from '../utils/MathJax';
+import { renderMathJax } from '../utils/MathJax';
 
 type ViewMode = 'edit' | 'json';
 
@@ -35,7 +35,7 @@ extends React.Component<IProps, IState> {
         this.updateAnalysis = this.updateAnalysis.bind(this);
     }
     componentDidMount() {
-        enableMathJax();
+        renderMathJax();
     }
     selectView(viewMode: ViewMode) {
         this.setState({viewMode: viewMode});
