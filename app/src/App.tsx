@@ -1,17 +1,20 @@
 import React, { Suspense, useState } from 'react';
-import { BrowserRouter, Switch, Route, Link, useParams } from 'react-router-dom';
+import {
+    BrowserRouter, Switch, Route, Link, useParams,
+    RouteComponentProps
+} from 'react-router-dom';
 import './App.css';
 
 import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
 import SearchInput from './components/SearchInput';
-import Analysis from './models/Analysis';
 import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
 import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
 import WebAPI from './services/WebAPI';
 import { enableMathJax } from './utils/MathJax';
+import { getSampleAnalysisResource } from './utils/SampleAnalysis';
 
 const Const = ChemicalConst;
 
@@ -96,87 +99,34 @@ function rowsMinor(): Array<CompRepresentations> {
     ];
 }
 
-function newAnalysis(): Analysis {
-    return new Analysis({
-        no: '',
-        applicantAddress: '',
-        applicantName: '',
-        name: '',
-        location: '',
-        yield: 0,
-        yieldExtra: ' L/分 (掘削・自然湧出)',
-        temperature: 25.0,
-        temperatureExtra: '℃ (調査時における気温31℃)',
-        investigator: '',
-        investigatedDate: '',
-        investigatedPerception: '',
-        investigatedConductivity: 0,
-        investigatedConductivityExtra: ' mS/m (25℃)',
-        investigatedPh: 7.0,
-        investigatedBq: '--',
-        investigatedCi: '--',
-        investigatedME: '--',
-        tester: '',
-        testedDate: '',
-        testedPerception: '--',
-        testedDencity: '--',
-        testedDencityUnit: ' g/cm2 (20℃/4℃)',
-        testedPh: '--',
-        testedER: '--',
-        testedERUnit: ' g/kg (110℃)',
-        quality: '',
-        contraindication: '',
-        positiveIon: {
-            'Na': {'mg': 87.8},
-            'K': {'mg': 18.8},
-            'Mg': {'mg': 16.7},
-            'Ca': {'mg': 281.1},
-            'Sr': {'mg': 0.9},
-            'MnII': {'mg': 1.6}
-        },
-        negativeIon: {
-            'F': {'mg': 0.6},
-            'Cl': {'mg': 83.4},
-            'HS': {'mg': 17.1},
-            'SO4': {mg: 656.4},
-            'HCO3': {mg: 186.1}
-        },
-        undissociated: {
-            'H2SiO3': {'mg': 63.8},
-            'HBO2': {'mg': 0.8},
-            // 'humus': {'mg': 14.0}
-        },
-        gas: {
-            'CO2': {'mg': 1.3},
-            'H2S': {'mg': '<0.1'}
-        },
-        minor: {
-            'Hg': {'mg': '0.0005 未満'},
-            'Cu': {'mg': '0.05 未満'},
-            'Pb': {'mg': '0.05 未満'},
-            'As': {'mg': '0.005 未満'},
-            'Zn': {'mg': '0.01 未満'},
-            'Cd': {'mg': '0.01 未満'}
-        },
-        header: "",
-        footer: ""
-    });
-}
-
 const AppContent = (props: any): any => {
     const a = props.analysis;
-    return <AnalysisView analysis={a.read()} rows={props.rows} />
+    return <AnalysisView {...props}
+                         analysis={a.read()} rows={props.rows} />
 };
 
-const ListApp = () => {
-    return <AnalysisList />
+const ListApp = (props: RouteComponentProps) => {
+    return <AnalysisList {...props} />
 };
 
-const AnalysisApp = () => {
-    const {id} = useParams();
-    console.log('Analysis id:', id);
-    const api = new WebAPI(configContext);
-    const [analysis] = useState(api.fetchAnalysis(id));
+
+const AnalysisApp = (props: RouteComponentProps) => {
+    const { id } = useParams();
+    const getAnalysis = (id: string) => {
+        const api = new WebAPI(configContext);
+        return id === '_new' ?
+               getSampleAnalysisResource() :
+               api.fetchGetAnalysis(id);
+    }
+    const [analysis, setAnalysis] = useState(getAnalysis(id));
+    const [lastId, setLastId] = useState(id);
+    console.log('Analysis id:', id, 'lastId:', lastId);
+    // Fetch analysis data again after id in the url was changed.
+    if (lastId !== id) {
+        setLastId(id);
+        setAnalysis(getAnalysis(id));
+    }
+
     const rows = {
         positiveIon: rowsPositiveIon(),
         negativeIon: rowsNegativeIon(),
@@ -186,7 +136,8 @@ const AnalysisApp = () => {
     };
     return <Suspense fallback={<p>Loading...</p>}>
         <div className="App">
-            <AppContent analysis={analysis} rows={rows} />
+            <AppContent {...props}
+                        analysis={analysis} rows={rows} />
         </div>
     </Suspense>
 };
@@ -215,7 +166,16 @@ export default class App extends React.Component {
                     <header className="app-header">
                         <h1><Link to="/">Onsena (仮)</Link></h1>
                         <nav className="app-nav" >
-                            <SearchInput />
+                            <ul>
+                                <li>
+                                    <SearchInput />
+                                </li>
+                                <li>
+                                    <Link to={"/analysis/_new"}>
+                                        +
+                                    </Link>
+                                </li>
+                            </ul>
                         </nav>
                     </header>
                     <div className="app-body">

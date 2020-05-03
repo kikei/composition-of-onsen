@@ -49,7 +49,7 @@ interface InputTextProps {
 const InputText = (props: InputTextProps) => (
     <input type="text"
            size={props.size}
-           defaultValue={props.value}
+           value={props.value}
            onChange={props.onChange} />
 );
 
@@ -85,6 +85,18 @@ extends React.Component<IProps, IState> {
         this.updateGas = this.updateGas.bind(this);
         this.updateMinor = this.updateMinor.bind(this);
         this.updateMetadata = this.updateMetadata.bind(this);
+    }
+
+    shouldComponentUpdate(props: IProps,
+                          current_state: IState) {
+        console.log('AnalysisTableEditor.shouldComponentUpdate',
+                    'props:', props, 'current:', current_state);
+        if (props.analysis.id !== current_state.analysis.id) {
+            this.setState({
+                analysis: props.analysis.toObject()
+            });
+        }
+        return true;
     }
 
     /**

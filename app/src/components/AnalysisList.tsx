@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import SearchInput from './SearchInput';
 import ConfigContext, { IConfigContext } from '../contexts/ConfigContext';
 import WebAPI from '../services/WebAPI';
@@ -7,7 +7,7 @@ import AppPath from '../services/AppPath';
 import Analysis from '../models/Analysis';
 import Resource from '../utils/Resource';
 
-export interface IProps extends React.Props<any> {
+export interface IProps extends RouteComponentProps {
 }
 
 interface IState {
@@ -57,7 +57,7 @@ export default class AnalysisList extends React.Component<IProps, IState> {
     componentDidMount() {
         console.log('componentWllMount context:', this.context);
         const api = new WebAPI(this.context);
-        this.setState({ analyses: api.fetchAnalyses() });
+        this.setState({ analyses: api.fetchGetAnalyses() });
     }
 
     render() {

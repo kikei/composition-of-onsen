@@ -144,7 +144,7 @@ extends React.Component<IProps, IState> {
                         case 'mg':
                             return <td key={col} className="column-mg">
                                 <input type="text" size={6}
-                                       defaultValue={showMg(mg, '--')}
+                                       value={showMg(mg, '--')}
                                        onChange={e => {
                                            const v = e.target.value;
                                            this.updateMgValue(row.key, v);

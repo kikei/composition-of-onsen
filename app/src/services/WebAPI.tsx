@@ -11,36 +11,90 @@ export default class WebAPI {
         this.urls = options.urls;
     }
 
+    urlAnalyses() {
+        return this.urls['analyses'];
+    }
+
     urlAnalysis(id: string) {
         return this.urls['analysis'].replace('{id}', id);
     }
 
-    fetchAnalyses(): Resource<Analysis[]> {
-        const url = this.urls['analyses'];
-        console.log('WebAPI.fetchAnalyses, url:', url);
+    fetchGetAnalyses(): Resource<Analysis[]> {
+        const url = this.urlAnalyses();
+        console.log('WebAPI.fetchGetAnalyses, url:', url);
         const promise =
             fetch(url)
                 .then(r => r.json())
                 .then(obj => {
                     const a =
                         obj.analysis.map((a: IAnalysis) => new Analysis(a));
-                    console.log('WebAPI.fetchAnalysis done, a:', a);
+                    console.log('WebAPI.fetchGetAnalysis done,',
+                                'a:', a);
                     return a;
                 });
         return suspender<Analysis[], string>(promise);
     }
 
-    fetchAnalysis(id: string): Resource<Analysis> {
+    fetchGetAnalysis(id: string): Resource<Analysis> {
         const url = this.urlAnalysis(id);
-        console.log('WebAPI.fetchAnalysis, url:', url);
+        console.log('WebAPI.fetchGetAnalysis, url:', url);
         const promise =
             fetch(url)
                 .then(r => r.json())
                 .then(obj => {
                     const a = new Analysis(obj);
-                    console.log('WebAPI.fetchAnalysis done, a:', a);
+                    console.log('WebAPI.fetchGetAnalysis done,',
+                                'a:', a);
                     return a;
                 });
         return suspender<Analysis, string>(promise);
+    }
+
+    fetchPutAnalysis(a: Analysis): Promise<Analysis> {
+        if (!!a.id)
+            throw new TypeError('analysis id should be empty');
+        const url = this.urlAnalyses();
+        console.log('WebAPI.fetchPutAnalysis, url:', url);
+        const promise =
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors',
+                body: a.toJSONString()
+            })
+                .then(r => r.json())
+                .then(obj => {
+                    const a = new Analysis(obj);
+                    console.log('WebAPI.fetchPutAnalysis done,',
+                                'a:', a);
+                    return a;
+                });
+        return promise;
+    }
+
+    fetchPostAnalysis(a: Analysis): Promise<Analysis> {
+        if (a.id === null)
+            throw new TypeError('analysis id cannot be null');
+        const url = this.urlAnalysis(a.id);
+        console.log('WebAPI.fetchPostAnalysis, url:', url);
+        const promise =
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors',
+                body: a.toJSONString()
+            })
+                .then(r => r.json())
+                .then(obj => {
+                    const a = new Analysis(obj);
+                    console.log('WebAPI.fetchPostAnalysis done,',
+                                'a:', a);
+                    return a;
+                });
+        return promise;
     }
 }

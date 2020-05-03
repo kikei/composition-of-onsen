@@ -1,4 +1,5 @@
 import { sum } from '../utils/MathUtil';
+import { qualityName } from '../utils/OnsenUtil';
 import { Comp } from '../constants/ChemicalConst';
 import Components, {
     MgMvalMmol, IComponents, jsonToComponents
@@ -111,6 +112,28 @@ export default class Analysis {
         obj.temperature = a.temperature;
         obj.metadata = a.metadata;
         return obj;
+    }
+    toJSONString() {
+        const obj = this.toObject();
+        console.log('Analysis.toJSONString this:', this, 'obj:', obj);
+
+        // Move metadata to object's root
+        const data = { ...obj, ...obj.metadata };
+        delete data.metadata;
+
+        const quality = qualityName(this);
+        data.quality = quality;
+
+        const replacer = (key: string, value: any) => {
+            if (['mg', 'mval', 'mmol', 'mvalPercent'].includes(key)) {
+                return typeof value === 'number' ?
+                       Number(value.toFixed(4)) : value;
+            } else if (['weight', 'valence'].includes(key)) {
+                return undefined;
+            }
+            return value;
+        };
+        return JSON.stringify(data, replacer, 2);
     }
 
     /**

@@ -16,11 +16,15 @@ export function suspender<T, E>(promise: Promise<T>): Resource<T> {
         status = ResourceStatus.Fullfilled;
         result = r;
     }).catch((e: any) => {
+        console.info('suspender received error:', e);
         status = ResourceStatus.Rejected;
         error = e;
     });
     return {
         read: () => {
+            console.debug('suspender.read, status:', status,
+                          `(Pending: ${ResourceStatus.Pending})`,
+                          'result:', result);
             switch (status) {
                 case ResourceStatus.Pending:
                     throw suspender;
