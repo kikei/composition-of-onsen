@@ -21,7 +21,7 @@ interface ILocalizerOption {
     mineral?: boolean
 }
 
-type ToLocalQualityName = (comp: Comp, options: ILocalizerOption)
+type Localizer = (comp: Comp, options: ILocalizerOption)
 => string | undefined;
 
 function categorizePh(ph: number): AcidityAlkalinity {
@@ -130,7 +130,7 @@ class OnsenQualityNameBuilder {
     setMineral(isMineral: boolean): void {
         this.isMineral = isMineral;
     }
-    buildForMineral(dict: ToLocalQualityName): string {
+    buildForMineral(dict: Localizer): string {
         const p0 = applyDict(this.mineral, dict, { mineral: true });
         return '温泉法第二条の別表中に示された' +
                p0.join('及び') +
@@ -140,7 +140,7 @@ class OnsenQualityNameBuilder {
           osmoticPressure: OsmoticPressure,
           acidAlka: AcidityAlkalinity,
           temperature: Temperature,
-          dict: ToLocalQualityName)
+          dict: Localizer)
     : string {
         if (this.isMineral) {
             return this.buildForMineral(dict);
@@ -294,9 +294,7 @@ export function qualityName(a: Analysis): string {
 };
 
 
-const qualityJPName: ToLocalQualityName =
-    (comp: Comp, options: ILocalizerOption) =>
-{
+const qualityJPName: Localizer = (comp: Comp, options: ILocalizerOption) => {
     const { simple, mineral } = options;
     if (mineral) {
         switch (comp) {
@@ -357,8 +355,7 @@ const qualityJPName: ToLocalQualityName =
     }
 }
 
-
-function applyDict(comps: Array<Comp>, dict: ToLocalQualityName,
+function applyDict(comps: Array<Comp>, dict: Localizer,
                    options?: ILocalizerOption | undefined) {
     const opts = {
         simple: false,
