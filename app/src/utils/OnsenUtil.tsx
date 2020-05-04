@@ -16,6 +16,8 @@ type Temperature =
 type OsmoticPressure =
     'Hypotonic' | 'Isotonic' | 'Hypertonic' | 'Unknown';
 
+type ToLocalQualityName= (comp: Comp, simple: boolean) => string | undefined;
+
 function categorizePh(ph: number): AcidityAlkalinity {
     return ph < 3.0 ? 'Acid' :
            ph < 6.0 ? 'WeakAcid' :
@@ -89,19 +91,21 @@ class OnsenQualityNameBuilder {
     setTypeHS(typeHS: boolean): void {
         this.typeHS = typeHS;
     }
-    build(osmoticPressure: OsmoticPressure,
+    build(simple: boolean,
+          osmoticPressure: OsmoticPressure,
           acidAlka: AcidityAlkalinity,
           temperature: Temperature,
-          dict: (comp: Comp) => string | undefined)
+          dict: ToLocalQualityName)
     : string {
         let p0 = [] as Array<string>;
         let p1 = [] as Array<string>;
         let p2 = [] as Array<string>;
         const p3 = [] as Array<string>;
-        p0 = applyDict(this.special, dict);
-        if (this.positiveIon.length === 0 && this.negativeIon.length === 0) {
-            p2.push('単純温泉');
+        if (simple) {
+            p2 = applyDict(this.special, dict, simple) || ['温泉'];
+            p2 = ['単純' + p2.join('')];
         } else {
+            p0 = applyDict(this.special, dict);
             p1 = applyDict(this.positiveIon, dict);
             p2 = applyDict(this.negativeIon, dict);
         }
@@ -218,11 +222,22 @@ export function qualityName(a: Analysis): string {
                 q.addNegativeIon(comp);
         });
     }
-    return q.build(osmoticPressure, acidAlka, temperature, qualityJPName);
+    return q.build(simple, osmoticPressure, acidAlka, temperature,
+                   qualityJPName);
 };
 
 
-function qualityJPName(comp: Comp): string | undefined {
+const qualityJPName: ToLocalQualityName = (comp: Comp, simple: boolean) => {
+    if (simple) {
+        switch (comp) {
+            case Comp.CO2:
+                return '二酸化炭素';
+            case Comp.FeII:
+                return '鉄';
+            case Comp.S:
+                return '硫黄';
+        }
+    }
     switch (comp) {
         // Special
         case Comp.H:
@@ -260,9 +275,10 @@ function qualityJPName(comp: Comp): string | undefined {
     }
 }
 
-function applyDict(comps: Array<Comp>,
-                   dict: (comp: Comp) => string | undefined) {
-    return comps.map(dict)
+
+function applyDict(comps: Array<Comp>, dict: ToLocalQualityName,
+                   simple: boolean = false) {
+    return comps.map(c => dict(c, simple))
                 .filter(x => !!x)
                 .map((x: string | undefined) => !!x ? x : '');
 }
