@@ -43,7 +43,7 @@ function createLabels(given: Labels = {}): Labels {
 }
 
 function showMg(mg: OptionalNumber, def: string = ''): string {
-    return mapNumberToText(mg, v => v.toFixed(1)) ?? def;
+    return mapNumberToText(mg, v => String(v)) ?? def;
 }
 
 function showMval(mval: OptionalNumber, def: string = ''): string {
@@ -144,7 +144,7 @@ extends React.Component<IProps, IState> {
                         case 'mg':
                             return <td key={col} className="column-mg">
                                 <input type="text" size={6}
-                                       value={showMg(mg, '--')}
+                                       defaultValue={showMg(mg, '--')}
                                        onChange={e => {
                                            const v = e.target.value;
                                            this.updateMgValue(row.key, v);

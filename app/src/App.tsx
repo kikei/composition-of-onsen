@@ -137,6 +137,7 @@ const AnalysisApp = (props: RouteComponentProps) => {
     return <Suspense fallback={<p>Loading...</p>}>
         <div className="App">
             <AppContent {...props}
+                        key={id}
                         analysis={analysis} rows={rows} />
         </div>
     </Suspense>
