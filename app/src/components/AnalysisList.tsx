@@ -14,27 +14,60 @@ interface IState {
     analyses: Resource<Analysis[]> | null
 }
 
+const AnalysisItem = (context: IConfigContext, a: Analysis) => {
+    const path = new AppPath(context);
+    return (
+        <Link to={path.analysis(a)}>
+            <div className="search-item__title">
+                {a.name}
+            </div>
+            <div className="search-item__detail">{
+                a.getMetadata('facilityName') ?
+                <React.Fragment>
+                    {a.getMetadata('facilityName')}<br />
+                </React.Fragment>
+                : null
+            }{
+                a.getMetadata('location') ?
+                <React.Fragment>
+                    {a.getMetadata('location')}<br />
+                </React.Fragment>
+                : null
+            }{
+                [
+                    a.getMetadata('roomName'),
+                    a.yield ?
+                    `湧出量 ${a.yield}${a.getMetadata('yieldExtra')}`
+                    : null,
+                    a.pH ? `pH ${a.pH}` : null,
+                    a.temperature ?
+                    `泉温 ${a.temperature}${a.getMetadata('temperatureExtra')}`
+                    : null,
+                    a.getMetadata('quality') ?
+                    `泉質 ${a.getMetadata('quality')}` : null,
+                    `成分総計 ${a.getTotalComponent().mg.toFixed(1)} mg/kg`
+                ].filter(i => !!i).join(', ')
+            }
+            </div>
+        </Link>
+    );
+};
+
 const AnalysisListView: React.FC<{analyses: Analysis[]}> = props => {
     const analyses: Analysis[] = props.analyses;
     // const pathAnalysis = (url: string, id: string) => url.replace('{id}', id);
-    const AnalysisItem = (a: Analysis) => (
-        <ConfigContext.Consumer>
-            {
-                (context: IConfigContext) => a.id ? (
-                    <Link to={new AppPath(context).analysis(a)}>
-                        {a.name}
-                    </Link>
-                ) : (
-                    <span>{a.name}</span>
-                )
-            }
-        </ConfigContext.Consumer>
-    );
     return (
         <ul>
-            {
-                analyses.map((a, i) => <li key={i}>{AnalysisItem(a)}</li>)
-            }
+            <ConfigContext.Consumer>
+                {
+                    (context: IConfigContext) =>
+                        analyses.map((a, i) =>
+                            <li key={i} className="search-item">
+                                {AnalysisItem(context, a)}
+                            </li>
+                        )
+                }
+            </ConfigContext.Consumer>
         </ul>
     );
 }
