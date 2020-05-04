@@ -48,7 +48,8 @@ td input {
 .form-applicant,
 .form-facility,
 .form-investigation,
-.form-test {
+.form-test,
+.form-footer {
     width: 100%;
     margin: 0px;
     padding: 0px;
@@ -161,6 +162,10 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
 .form-usage span {
     display: inline-block;
     width: 6em;
+}
+
+.form-footer textarea {
+    width: 100%;
 }
 
 .hidden {

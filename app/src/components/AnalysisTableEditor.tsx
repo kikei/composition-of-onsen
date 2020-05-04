@@ -460,8 +460,17 @@ extends React.Component<IProps, IState> {
                        </Row>
                    </div>
                </fieldset>
-               <div className="footer">
-                   {a.getMetadata('footer')}
+               <div className="form-footer">
+                   <textarea
+                       value={a.getMetadata('footer')}
+                       onChange={e =>
+                           this.updateMetadata('footer', e.target.value)
+                       }
+                       rows={1 +
+                            (a.getMetadata('footer') ?? '').split('\n').length
+                       }
+                       placeholder='補足'>
+                   </textarea>
                </div>
             </div>
         )
