@@ -60,6 +60,7 @@ function rowsNegativeIon(): Array<CompRepresentations> {
         row(Comp.SO4, '硫酸イオン'),
         row(Comp.HNO2, '亜硝酸イオン'),
         row(Comp.NO3, '硝酸イオン'),
+        row(Comp.H2PO4, 'リン酸二水素イオン'),
         row(Comp.HPO4, 'リン酸水素イオン'),
         row(Comp.PO4, 'リン酸イオン'),
         row(Comp.HCO3, '炭酸水素イオン'),
