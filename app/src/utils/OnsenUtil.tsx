@@ -238,6 +238,8 @@ export function qualityName(a: Analysis): string {
         q.addSpecial(Comp.FeII);
     if (isMedicalI(a.negativeIonValue(Comp.I)?.mg))
         q.addSpecial(Comp.I);
+    if (isMedicalH(a.positiveIonValue(Comp.H)?.mg))
+        q.addSpecial(Comp.H);
     // S
     const hs = a.negativeIonValue(Comp.HS);
     const s2o3 = a.negativeIonValue(Comp.S2O3);
@@ -250,8 +252,6 @@ export function qualityName(a: Analysis): string {
     }
     // if (isMedicalRn(a))
     //     q.addSpecial(Comp.Rn);
-    if (isMedicalH(a.positiveIonValue(Comp.H)?.mg))
-        q.addSpecial(Comp.H);
     // if (isMedicalNaCl(a)){}
     // if (isMedicalHCO3(a)){}
     // if (isMedicalSO4(a)){}
