@@ -39,27 +39,24 @@ const Row = (props: RowProps) => (
     </p>
 );
 
-/* InputText */
-interface InputTextProps {
-    value: string | number;
+/* Input helpers */
+interface InputProps<T> {
+    value?: string | number;
     size?: number;
-    onChange?: (e: any) => void;
-};
+    onChange?: (e: T) => void;
+}
 
-const InputText = (props: InputTextProps) => (
+const InputText = (props: InputProps<string>) => (
     <input type="text"
            size={props.size}
-           value={props.value}
-           onChange={props.onChange} />
+           defaultValue={props.value}
+           onChange={e => {
+               if (typeof props.onChange === 'function')
+                   props.onChange(e.target.value)
+           }} />
 );
 
-interface InputNumberProps {
-    value: string | number;
-    size?: number;
-    onChange?: (e: number) => void;
-};
-
-const InputNumber = (props: InputNumberProps) => (
+const InputNumber = (props: InputProps<number>) => (
     <input type="text"
            size={props.size}
            defaultValue={props.value}
@@ -199,7 +196,7 @@ extends React.Component<IProps, IState> {
         const InputMetadata = (key: KeyMetadata, size: number = 20) => (
             <InputText
                 value={a.getMetadata(key) ?? ''}
-                onChange={e => this.updateMetadata(key, e.target.value)}
+                onChange={t => this.updateMetadata(key, t)}
                 size={size}
             />
         );
@@ -221,9 +218,7 @@ extends React.Component<IProps, IState> {
                        <Row label="源泉名">
                            <InputText
                                value={a.name}
-                               onChange={e =>
-                                   this.updateName(e.target.value)
-                               } />
+                               onChange={e => this.updateName(e)} />
                        </Row>
                        <Row label="源泉湧出地">
                            {InputMetadata('location')}
