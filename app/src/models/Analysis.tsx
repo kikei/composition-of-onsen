@@ -217,28 +217,24 @@ export default class Analysis {
         const totalPositiveIon = this.positiveIon.getTotal();
         const totalNegativeIon = this.negativeIon.getTotal();
         const totalUndissociated = this.undissociated.getTotal();
-        const totalGas = this.gas.getTotal();
         const totalMinor = this.minor.getTotal();
         return {
             mg: sum([
                 totalPositiveIon.mg,
                 totalNegativeIon.mg,
                 totalUndissociated.mg,
-                totalGas.mg,
                 totalMinor.mg
             ]),
             mval: sum([
                 totalPositiveIon.mval,
                 totalNegativeIon.mval,
                 totalUndissociated.mval,
-                totalGas.mg,
                 totalMinor.mg
             ]),
             mmol: sum([
                 totalPositiveIon.mmol,
                 totalNegativeIon.mmol,
                 totalUndissociated.mmol,
-                totalGas.mmol,
                 totalMinor.mmol
             ]),
             mvalPercent: 100.0
