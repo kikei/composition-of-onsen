@@ -91,11 +91,12 @@ function rowsMinor(): Array<CompRepresentations> {
     return [
         row(Comp.As, '総砒素'),
         row(Comp.Hg, '総水銀'),
-        row(Comp.Cu, '銅イオン'),
+        row(Comp.CuII, '銅イオン'),
         row(Comp.Cr, 'クロム'),
         row(Comp.Pb, '鉛イオン'),
         row(Comp.Cd, 'カドミウムイオン'),
-        row(Comp.Zn, '亜鉛イオン'),
+        row(Comp.MnII, 'マンガンイオン'),
+        row(Comp.ZnII, '亜鉛イオン'),
         row(Comp.NO3, '硝酸イオン')
     ];
 }
