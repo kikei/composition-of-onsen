@@ -333,6 +333,8 @@ const qualityJPName: Localizer = (comp: Comp, options: ILocalizerOption) => {
         // Positive ion
         case Comp.Na:
             return 'ナトリウム';
+        case Comp.Al:
+            return 'アルミニウム';
         case Comp.K:
             return 'カリウム';
         case Comp.NH4:
