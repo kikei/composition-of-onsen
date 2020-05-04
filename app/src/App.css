@@ -25,6 +25,16 @@ td input {
     text-align: right;
 }
 
+.table-analysis {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px 2.5% 0px 2.5%;
+}
+
+.table-analysis h1 {
+    width: 100%;
+}
+
 .table-analysis fieldset {
     border: none;
 }
@@ -33,53 +43,91 @@ td input {
     text-align: left;
 }
 
-.form-header {
+.form-header,
+.form-gensen,
+.form-applicant,
+.form-facility,
+.form-investigation,
+.form-test {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.form-component,
+.form-total,
+.form-quality,
+.form-usage {
+    width: 100%;
+}
+
+.form-total p:first-child {
+    margin: 1.25em 0px 0.25em 0px;
+}
+
+.form-total p {
+    margin: 0.25em 0px 0.25em 0px;
     text-align: right;
 }
 
-.form-header p, .form-applicant p, .form-gensen p, .form-facility p {
-    margin: 0.25em 2.5% 0.25em 2.5%;
+.form-total span:last-child {
+    display: inline-block;
+    width: 8em;
 }
 
-.form-investigation p, .form-test p {
-    margin: 0.25em;
+.form-investigation,
+.form-test {
+    width: 50%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.form-header .form-list,
+.form-gensen .form-list,
+.form-applicant .form-list,
+.form-facility .form-list {
+    display: flex;
+    margin: 0.25em 0px 0.25em 0px;
+    padding: 0px;
+}
+
+.form-component .form-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0px;
+}
+
+.form-header .form-list > *,
+.form-gensen .form-list > *,
+.form-applicant .form-list > *,
+.form-facility .form-list > * {
+    flex: 1 1 50%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.form-investigation .form-list > * ,
+.form-test .form-list > * {
+    margin: 0.25em 0px 0.25em 0px;
+    padding: 0px;
+}
+
+.form-component .form-list > * {
+    display: block;
+    flex: 1 1 50%;
+    background-color: #f8f8f8;
+    margin: 0px;
+    padding: 0px;
 }
 
 .form-header label > span,
 .form-gensen label > span,
 .form-applicant label > span,
-.form-facility label > span {
-    display: inline-block;
-    width: 10em;
-}
-
-.form-investigation, .form-test {
-    display: inline-block;
-    vertical-align: top;
-    width: 45%;
-}
-
-.form-investigation label > span {
-    display: inline-block;
-    width: 10em;
-}
-
+.form-facility label > span,
+.form-investigation label > span,
 .form-test label > span {
     display: inline-block;
     width: 10em;
-}
-
-.form-positiveion, .form-negativeion {
-    background-color: #f8f8f8;
-    display: inline-block;
-    width: 45%;
-}
-
-.form-dissolved, .form-minor {
-    background-color: #f8f8f8;
-    display: inline-block;
-    vertical-align: top;
-    width: 45%;
 }
 
 td.column-name {
@@ -90,22 +138,23 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
     text-align: right;
 }
 
-.form-dissolved .column-name, .form-others .column-name {
-    width: 11em;
+.form-dissolved .column-name,
+.form-others .column-name,
+.form-minor .column-name {
+    width: 12em;
 }
 
 .form-usage .form-list {
     display: flex;
     flex-wrap: wrap;
-    margin: 0px 1em 0px 1em;
 }
 
 .form-usage h3 {
     display: block;
 }
 
-.form-usage p {
-    flex: 1 1 45%;
+.form-usage .form-list > * {
+    flex: 1 1 35%;
     margin: 0.25em 0px 0.25em 0px;
 }
 
