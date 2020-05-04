@@ -166,7 +166,7 @@ const Valence: Record<Comp, number> = {
     [Comp.K]: +1,
     [Comp.Ca]: +2,
     [Comp.Cr]: 0,
-    [Comp.MnII]: +4,
+    [Comp.MnII]: +2,
     [Comp.FeII]: +2,
     [Comp.FeIII]: +3,
     [Comp.Cu]: 0,
