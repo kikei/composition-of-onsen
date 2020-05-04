@@ -5,20 +5,18 @@ import Components, {
     MgMvalMmol, IComponents, jsonToComponents
 } from './Components';
 
-export type KeyMetadata =
-    'no' | 'applicantAddress' | 'applicantName' |
-    'location' | 'yieldExtra' | 'temperatureExtra' | 'quality' |
-    'investigator' | 'investigatedDate' | 'perception' | 'conductivity' |
-    'tester' | 'testedDate' | 'testedPerception' | 'testedDencity' |
-    'testedPH' | 'testedER' | 'header' | 'footer';
-
 const keysMetadata = [
     'no', 'applicantAddress', 'applicantName',
+    'facilityName', 'roomName',
     'location', 'yieldExtra', 'temperatureExtra', 'quality',
     'investigator', 'investigatedDate', 'perception', 'conductivity',
     'tester', 'testedDate', 'testedPerception', 'testedDencity',
-    'testedPH', 'testedER', 'header', 'footer'
-];
+    'testedPH', 'testedER',
+    'water', 'heating', 'circulation', 'additive', 'chlorination',
+    'header', 'footer'
+] as const;
+
+export type KeyMetadata = typeof keysMetadata[number];
 
 export type Metadata = { [K in KeyMetadata]: string };
 

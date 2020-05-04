@@ -214,6 +214,18 @@ extends React.Component<IProps, IState> {
                        {InputMetadata('no')}
                    </Row>
                </fieldset>
+               <fieldset className="form-gensen">
+                   <Row label="源泉名">
+                       <InputText
+                           value={a.name}
+                           onChange={e =>
+                               this.updateName(e.target.value)
+                           } />
+                   </Row>
+                   <Row label="源泉湧出地">
+                       {InputMetadata('location')}
+                   </Row>
+               </fieldset>
                <fieldset className="form-applicant">
                    <Row label="分析申請者 住所">
                        {InputMetadata('applicantAddress')}
@@ -222,14 +234,12 @@ extends React.Component<IProps, IState> {
                        {InputMetadata('applicantName')}
                    </Row>
                </fieldset>
-               <fieldset className="form-gensen">
-                   <Row label="源泉名">
-                       <InputText
-                           value={a.name}
-                           onChange={e => this.updateName(e.target.value)} />
+               <fieldset className="form-facility">
+                   <Row label="施設名">
+                       {InputMetadata('facilityName')}
                    </Row>
-                   <Row label="源泉湧出地">
-                       {InputMetadata('location')}
+                   <Row label="浴室名/浴槽名">
+                       {InputMetadata('roomName')}
                    </Row>
                </fieldset>
                <fieldset className="form-investigation">
@@ -405,6 +415,26 @@ extends React.Component<IProps, IState> {
                    <h3>判定</h3>
                    {quality}
                </div>
+               <fieldset className="form-usage">
+                   <h3>浴槽の温泉利用に関する情報</h3>
+                   <div className="form-list">
+                       <Row label="加水">
+                           {InputMetadata('water')}
+                       </Row>
+                       <Row label="加温">
+                           {InputMetadata('heating')}
+                       </Row>
+                       <Row label="循環・ろ過">
+                           {InputMetadata('circulation')}
+                       </Row>
+                       <Row label="消毒">
+                           {InputMetadata('additive')}
+                       </Row>
+                       <Row label="入浴剤">
+                           {InputMetadata('chlorination')}
+                       </Row>
+                   </div>
+               </fieldset>
                <div className="footer">
                    {a.getMetadata('footer')}
                </div>
