@@ -56,6 +56,9 @@ function isMedicalFe(mg: number): boolean { return mg >= 20.0 }
 function isMedicalH(mg: number): boolean { return mg >= 1.0 }
 function isMedicalI(mg: number): boolean { return mg >= 10.0 }
 function isMedicalS(mg: number): boolean { return mg >= 2.0 }
+function isMedicalNaCl(na: number, cl: number): boolean {
+    return na > 5500 && cl > 8500
+}
 // function isMedicalRn(mg: number): boolean { return mg >= 3e-9 }
 
 function isMineralCO2(mg: number): boolean { return mg >= 250.0 }
@@ -94,15 +97,21 @@ class OnsenQualityNameBuilder {
     positiveIon: Array<Comp>;
     negativeIon: Array<Comp>;
     acidAlka: AcidityAlkalinity;
+    osmoticPressure: OsmoticPressure;
+    temperature: Temperature;
     typeHS: boolean;
     isMineral: boolean;
+    isStrongSalt: boolean;
     constructor() {
         this.special = [];
         this.mineral = [];
         this.positiveIon = [];
         this.negativeIon = [];
         this.acidAlka = 'Unknown';
+        this.osmoticPressure = 'Unknown';
+        this.temperature = 'Unknown';
         this.isMineral = false;
+        this.isStrongSalt = false;
         this.typeHS = false;
     }
     getSpecial(): Array<Comp> {
@@ -127,11 +136,17 @@ class OnsenQualityNameBuilder {
     setAcidAlka(acidAlka: AcidityAlkalinity): void {
         this.acidAlka = acidAlka;
     }
+    setOsmoticPressure(osmo: OsmoticPressure): void {
+        this.osmoticPressure = osmo;
+    }
+    setTemperature(temperature: Temperature): void {
+        this.temperature = temperature;
+    }
     setTypeHS(typeHS: boolean): void {
         this.typeHS = typeHS;
     }
-    setMineral(isMineral: boolean): void {
-        this.isMineral = isMineral;
+    setStrongSalt(isStrongSalt: boolean): void {
+        this.isStrongSalt = isStrongSalt;
     }
     buildForMineral(dict: Localizer): string {
         const p0 = applyDict(this.mineral, dict, { mineral: true });
@@ -199,7 +214,7 @@ class OnsenQualityNameBuilder {
                 break;
         }
         // 泉温
-        switch (temperature) {
+        switch (this.temperature) {
             case 'Cold':
                 p3.push('冷鉱泉');
                 break;
@@ -220,7 +235,10 @@ class OnsenQualityNameBuilder {
             [
                 p0.join('・'), p1.join('・'), p2.join('・')
             ].filter(t => t !== '').join('－'),
-            p2.length > 0 ? (temperature === 'Cold' ? '冷鉱泉' : '温泉') : '',
+            p2.length > 0 ?
+                (this.isStrongSalt ? '強塩' : '') +
+                (this.temperature === 'Cold' ? '冷鉱泉' : '温泉') :
+                '',
             this.typeHS ? ' (硫化水素型)' : '',
             ' (' + p3.join('・') + ')'
         ].join('');
@@ -228,15 +246,21 @@ class OnsenQualityNameBuilder {
 };
 
 export function qualityName(a: Analysis): string {
-    const temperature =
-        typeof a.temperature === 'string' ? 'Unknown' :
-        categorizeTemperature(a.temperature);
-    const osmoticPressure = categorizeOsmoticPressure(a.getTotalComponent().mg);
     const q = new OnsenQualityNameBuilder();
 
     // Acidiity Alkalinity
     const acidAlka = typeof a.pH === 'string' ? 'Unknown' : categorizePh(a.pH);
     q.setAcidAlka(acidAlka);
+
+    // Osmotic Pressure
+    const osmoticPressure = categorizeOsmoticPressure(a.getTotalComponent().mg);
+    q.setOsmoticPressure(osmoticPressure);
+
+    // Temperature
+    const temperature =
+        typeof a.temperature === 'string' ? 'Unknown' :
+        categorizeTemperature(a.temperature);
+    q.setTemperature(temperature);
 
     // Special
     if (isMedicalCO2(a.gasValue(Comp.CO2)?.mg))
@@ -260,7 +284,10 @@ export function qualityName(a: Analysis): string {
     }
     // if (isMedicalRn(a))
     //     q.addSpecial(Comp.Rn);
-    // if (isMedicalNaCl(a)){}
+    if (isMedicalNaCl(a.positiveIonValue(Comp.Na)?.mg,
+                      a.negativeIonValue(Comp.Cl)?.mg)) {
+        q.setStrongSalt(true);
+    }
     // if (isMedicalHCO3(a)){}
     // if (isMedicalSO4(a)){}
 
