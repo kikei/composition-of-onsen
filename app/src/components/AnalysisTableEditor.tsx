@@ -288,6 +288,7 @@ extends React.Component<IProps, IState> {
                        <Row label="pH値">
                            <InputNumber
                                value={a.pH}
+                               size={4}
                                onChange={n => {
                                    this.setState(update(this.state, {
                                        analysis: {
@@ -410,6 +411,7 @@ extends React.Component<IProps, IState> {
                                labels={{title: '微量成分', total: '微量成分計'}}
                                columns={['name', 'mg']}
                                rows={rows.minor}
+                               sizes={{mg: 18}}
                                components={a.minor}
                                onChangeComponent={this.updateMinor}
                            />

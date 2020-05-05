@@ -8,7 +8,7 @@ import Components, {
 const keysMetadata = [
     'no', 'applicantAddress', 'applicantName',
     'facilityName', 'roomName',
-    'location', 'yieldExtra', 'temperatureExtra', 'quality',
+    'location', 'yieldExtra', 'temperatureExtra', 'pHExtra', 'quality',
     'investigator', 'investigatedDate', 'perception', 'conductivity',
     'tester', 'testedDate', 'testedPerception', 'testedDencity',
     'testedPH', 'testedER',
