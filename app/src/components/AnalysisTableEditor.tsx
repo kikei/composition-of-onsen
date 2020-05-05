@@ -297,6 +297,7 @@ extends React.Component<IProps, IState> {
                                    }));
                                    this.onChangeAnalysis();
                                }} />
+                           {InputMetadata('pHExtra')}
                        </Row>
                        <Row label="電気伝導率">
                            {InputMetadata('conductivity')}
