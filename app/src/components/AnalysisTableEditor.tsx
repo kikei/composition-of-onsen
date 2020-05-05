@@ -257,7 +257,7 @@ extends React.Component<IProps, IState> {
                        <Row label="泉温">
                            <InputNumber
                                value={a.temperature}
-                               size={5}
+                               size={4}
                                onChange={n => {
                                    this.setState(update(this.state, {
                                        analysis: {
@@ -271,7 +271,7 @@ extends React.Component<IProps, IState> {
                        <Row label="湧出量/利用量">
                            <InputNumber
                                value={a.yield}
-                               size={5}
+                               size={4}
                                onChange={n => {
                                    this.setState(update(this.state, {
                                        analysis: {
