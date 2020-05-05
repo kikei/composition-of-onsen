@@ -6,6 +6,11 @@ import Analysis from '../models/Analysis';
  * Reference:
  * https://www.env.go.jp/nature/onsen/pdf/2-5_p_14.pdf
  */
+type Category = 'Medical'    // 療養泉
+              | 'Simple'     // 単純温泉
+              | 'SimpleCold' // 単純冷鉱泉
+              | 'Mineral'    // 温泉法上の温泉
+;
 
 type AcidityAlkalinity =
     'Acid' | 'WeakAcid' | 'Neutral' | 'WeakAlkaline' | 'Alkaline' | 'Unknown';
@@ -88,7 +93,13 @@ function isTypeHS(mmolHS: number, mmolS2O3: number, mmolH2S: number): boolean {
 // 単純温泉
 function isSimple(a: Analysis): boolean {
     return a.getTotalMelt().mg < 1000 &&
-           a.temperature > 25;
+           a.temperature >= 25;
+}
+
+// 単純冷鉱泉
+function isSimpleCold(a: Analysis): boolean {
+    return a.getTotalMelt().mg < 1000 &&
+           a.temperature < 25;
 }
 
 class OnsenQualityNameBuilder {
@@ -154,33 +165,57 @@ class OnsenQualityNameBuilder {
                p0.join('及び') +
                'の項で温泉法の温泉に適合する';
     }
-    build(simple: boolean,
-          osmoticPressure: OsmoticPressure,
-          temperature: Temperature,
-          dict: Localizer)
-    : string {
-        if (this.isMineral) {
-            return this.buildForMineral(dict);
-        }
+    build(category: Category, dict: Localizer) : string {
+        console.log('OnsenUtil.build, category:', category,
+                    'mineral:', this.isMineral,
+                    'special:', this.special,
+                    'acidAlka:', this.acidAlka);
         let p0 = [] as Array<string>;
         let p1 = [] as Array<string>;
         let p2 = [] as Array<string>;
         const p3 = [] as Array<string>;
-        console.log('this.acidAlka:', this.acidAlka);
-        if (simple && this.acidAlka === 'Alkaline') {
-            p0 = applyDict(this.special, dict);
-            p2 = ['アルカリ性単純温泉']
-        }
-        else if (simple) {
-            p2 = applyDict(this.special, dict, { simple: true }) || ['温泉'];
-            p2 = ['単純' + p2.join('')];
-        } else {
-            p0 = applyDict(this.special, dict);
-            p1 = applyDict(this.positiveIon, dict);
-            p2 = applyDict(this.negativeIon, dict);
+        switch (category) {
+            case 'Simple':
+                if (this.acidAlka === 'Alkaline') {
+                    p0 = applyDict(this.special, dict);
+                    p2 = ['アルカリ性単純']
+                } else {
+                    const ih = this.special.findIndex(a => a === Comp.H);
+                    if (ih > -1) {
+                        // examples:
+                        // - 大釜温泉: 含鉄－単純酸性温泉 
+                        this.special.splice(ih, 1);
+                        p0 = applyDict(this.special, dict);
+                        p2.push('単純酸性');
+                    } else {
+                        p2 = applyDict(this.special, dict);
+                    }
+                }
+                break;
+            case 'SimpleCold':
+                if (this.special.length === 1) {
+                    // examples:
+                    // - 三条の湯: 単純硫黄冷鉱泉 
+                    p2 = applyDict(this.special, dict, { simple: true });
+                    p2 = ['単純' + p2.join('')];
+                } else {
+                    p2 = ['単純']
+                }
+                break;
+            case 'Mineral':
+                // examples:
+                // - 麻葉の湯:
+                //   温泉法第二条の別表中に示されたふっ素イオン及び
+                //   メタほう酸の項で温泉法の温泉に適合する
+                return this.buildForMineral(dict);
+            default:
+                p0 = applyDict(this.special, dict);
+                p1 = applyDict(this.positiveIon, dict);
+                p2 = applyDict(this.negativeIon, dict);
+                break;
         }
         // 浸透圧
-        switch (osmoticPressure) {
+        switch (this.osmoticPressure) {
             case 'Hypotonic':
                 p3.push('低張性');
                 break;
@@ -305,12 +340,13 @@ export function qualityName(a: Analysis): string {
         isMineralH2SiO3(a.undissociatedValue(Comp.H2SiO3)?.mg))
         q.addMineral(Comp.H2SiO3);
 
-    const simple: boolean = isSimple(a);
-    if (q.special.length === 0 && simple && acidAlka !== 'Alkaline') {
-        q.setMineral(true);
-    }
+    const category =
+        isSimple(a) ? 'Simple' :
+        (isSimpleCold(a) && q.special.length >= 1) ? 'SimpleCold' :
+        isSimpleCold(a) ? 'Mineral' :
+        'Medical';
 
-    if (!simple) {
+    if (category === 'Medical') {
         let totalPositiveIonMval: number = a.positiveIon.getTotal().mval;
         a.positiveIonList((a, b) => b.mvalPercent - a.mvalPercent)
          .forEach((comp: Comp) => {
@@ -324,8 +360,7 @@ export function qualityName(a: Analysis): string {
                 q.addNegativeIon(comp);
         });
     }
-    return q.build(simple, osmoticPressure, temperature,
-                   qualityJPName);
+    return q.build(category, qualityJPName);
 };
 
 
