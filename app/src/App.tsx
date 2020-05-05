@@ -96,6 +96,9 @@ function rowsMinor(): Array<CompRepresentations> {
         row(Comp.Pb, '鉛イオン'),
         row(Comp.Cd, 'カドミウムイオン'),
         row(Comp.MnII, 'マンガンイオン'),
+        row(Comp.Li, 'リチウムイオン'),
+        row(Comp.Sr, 'ストロンチウムイオン'),
+        row(Comp.Al, 'アルミニウムイオン'),
         row(Comp.ZnII, '亜鉛イオン'),
         row(Comp.NO3, '硝酸イオン')
     ];
