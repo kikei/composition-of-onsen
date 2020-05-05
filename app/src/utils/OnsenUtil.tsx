@@ -188,7 +188,10 @@ class OnsenQualityNameBuilder {
                         p0 = applyDict(this.special, dict);
                         p2.push('単純酸性');
                     } else {
-                        p2 = applyDict(this.special, dict);
+                        // examples:
+                        // - 霧島温泉 湯之谷山荘: 単純硫黄温泉 (硫化水素型)
+                        p2 = applyDict(this.special, dict, { simple: true });
+                        p2 = ['単純' + p2.join('')];
                     }
                 }
                 break;
