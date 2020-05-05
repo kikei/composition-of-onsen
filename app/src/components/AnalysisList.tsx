@@ -22,9 +22,10 @@ const AnalysisItem = (context: IConfigContext, a: Analysis) => {
                 {a.name}
             </div>
             <div className="search-item__detail">{
-                a.getMetadata('facilityName') ?
+                a.getMetadata('facilityName') || a.getMetadata('roomName') ?
                 <React.Fragment>
-                    {a.getMetadata('facilityName')}<br />
+                    {a.getMetadata('facilityName')}
+                    {' '}{a.getMetadata('roomName')}<br />
                 </React.Fragment>
                 : null
             }{
@@ -35,7 +36,6 @@ const AnalysisItem = (context: IConfigContext, a: Analysis) => {
                 : null
             }{
                 [
-                    a.getMetadata('roomName'),
                     a.yield ?
                     `湧出量 ${a.yield}${a.getMetadata('yieldExtra')}`
                     : null,
