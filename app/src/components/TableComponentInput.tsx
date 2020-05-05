@@ -8,6 +8,7 @@ import Components, { IComponents } from '../models/Components';
 import CompRepresentations from '../models/CompRepresentations';
 
 type Column = 'name' | 'mg' | 'mval' | 'mmol' | 'mvalPercent'
+type Sizes = {[T in Column]?: number};
 
 interface Labels {
     title?: string,
@@ -22,6 +23,7 @@ interface IProps {
     labels?: Labels;
     rows: Array<CompRepresentations>;
     columns?: Array<Column>;
+    sizes?: Sizes;
     components: Components;
     onChangeComponent?: (key: Comp, value: Components) => void;
     onChangeTotal?: () => void;
@@ -102,6 +104,7 @@ extends React.Component<IProps, IState> {
     render() {
         const labels = this.labels;
         const columns = this.props.columns ?? ['name', 'mg'];
+        const sizes = this.props.sizes ?? {};
         const rows = this.props.rows;
         // const components = this.state.components;
         const total = this.props.components.getTotal();
@@ -143,7 +146,7 @@ extends React.Component<IProps, IState> {
                             </td>;
                         case 'mg':
                             return <td key={col} className="column-mg">
-                                <input type="text" size={6}
+                                <input type="text" size={sizes['mg'] || 6}
                                        defaultValue={showMg(mg, '--')}
                                        onChange={e => {
                                            const v = e.target.value;
