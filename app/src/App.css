@@ -141,6 +141,13 @@ td input {
     width: 10em;
 }
 
+.form-header input,
+.form-gensen input,
+.form-applicant input,
+.form-facility input {
+    width: calc(100% - 14em);
+}
+
 td.column-name {
     text-align: left;
 }
@@ -152,7 +159,7 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
 .form-dissolved .column-name,
 .form-others .column-name,
 .form-minor .column-name {
-    width: 12em;
+    width: 14em;
 }
 
 .form-usage .form-list {
@@ -172,6 +179,10 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
 .form-usage span {
     display: inline-block;
     width: 6em;
+}
+
+.form-usage input {
+    width: calc(100% - 9em);
 }
 
 .form-footer textarea {
