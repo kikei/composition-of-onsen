@@ -76,6 +76,7 @@ function rowsUndissociated(): Array<CompRepresentations> {
         row(Comp.HAsO2, 'メタ亜砒酸'),
         row(Comp.H2SiO3, 'メタケイ酸'),
         row(Comp.HBO2, 'メタホウ酸'),
+        row(Comp.H3PO4, 'リン酸'),
         row(Comp.H2SO4, '硫酸')
     ];
 }
