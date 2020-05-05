@@ -31,8 +31,18 @@ td input {
     margin: 0px 2.5% 0px 2.5%;
 }
 
-.table-analysis h1 {
+.table-analysis header {
     width: 100%;
+    text-align: center;
+}
+
+.table-analysis header h1 {
+    margin-bottom: 0px;
+}
+
+.table-analysis header p {
+    margin: 0.5em 0px 1.5em 0px;
+    text-align: center;
 }
 
 .table-analysis fieldset {

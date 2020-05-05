@@ -205,7 +205,10 @@ extends React.Component<IProps, IState> {
             <div className={
               `table-analysis ${props.visible === false && "hidden"}`
             }>
-               <h1>温泉分析書</h1>
+               <header>
+                   <h1>温泉分析書</h1>
+                   <p>(鉱泉分析試験法による分析)</p>
+               </header>
                <fieldset className="form-header">
                    <div className="form-list">
                        <Row label="番号">
