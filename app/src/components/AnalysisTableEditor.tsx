@@ -305,6 +305,7 @@ extends React.Component<IProps, IState> {
                        <Row label="電気伝導率">
                            {InputMetadata('conductivity')}
                        </Row>
+                       {/*
                        <Row label="ラドン">
                            <InputNumber
                                value={a.bq}
@@ -329,7 +330,7 @@ extends React.Component<IProps, IState> {
                                    }));
                                    this.onChangeAnalysis();
                                }} />
-                           {' '} Ci/kg, {' '}
+                           {' '} ×10<sup>-10</sup> Ci/kg, {' '}
                            <InputNumber
                                value={a.me}
                                size={2}
@@ -341,8 +342,9 @@ extends React.Component<IProps, IState> {
                                    }));
                                    this.onChangeAnalysis();
                                }} />
-                           {' '} ME
+                           {' '} M.E.
                        </Row>
+                       */}
                    </div>
                </fieldset>
                <fieldset className="form-test">
