@@ -275,6 +275,37 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
     color: #888;
 }
 
+.pages {
+    text-align: center;
+}
+
+.pages ul {
+    display: inline-block;
+    padding: 0px;
+}
+
+.pages li {
+    display: inline-block;
+    margin: 0px 0.25em 0px 0.25em;
+    min-width: 2em;
+    text-align: center;
+    list-style: none;
+    border: solid #ccc 1px;
+}
+
+.pages li:hover {
+    background-color: #f88;
+}
+
+.pages li.current {
+    background-color: #fee;
+}
+
+.pages li a {
+    text-decoration: none;
+    color: #000;
+}
+
 .container-export {
     width: calc(100% - 2em);
     height: 75vh;

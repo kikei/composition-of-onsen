@@ -12,7 +12,7 @@ import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
 import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
-import WebAPI from './services/WebAPI';
+import WebAPI, { isValidOrderBy, isValidDirection } from './services/WebAPI';
 import { enableMathJax } from './utils/MathJax';
 import { getSampleAnalysisResource } from './utils/SampleAnalysis';
 
@@ -112,7 +112,33 @@ const AppContent = (props: any): any => {
 };
 
 const ListApp = (props: RouteComponentProps) => {
-    return <AnalysisList {...props} />
+    let { orderBy, direction, page } = useParams();
+    console.log('ListApp params:', orderBy, direction, page);
+
+    // Default values
+    orderBy = orderBy ?? 'timeline';
+    direction = direction ?? 'desc';
+    page = page ?? '1';
+
+    let pageNumber = Number(page);
+    if (isNaN(pageNumber)) {
+        console.info('Invalid page:', page);
+        return <div>error (APP_LISTAPP_PAGE_IS_NAN)</div>
+    }
+    if (!isValidOrderBy(orderBy)) {
+        console.info('Invalid orderBy:', orderBy);
+        return <div>error (APP_LISTAPP_INVALID_ORDER_BY)</div>
+    }
+    if (!isValidDirection(direction)) {
+        console.info('Invalid direction:', direction);
+        return <div>error (APP_LISTAPP_INVALID_DIRECTION)</div>
+    }
+    return <AnalysisList key={window.location.pathname}
+                         {...props}
+                         orderBy={orderBy}
+                         direction={direction}
+                         page={pageNumber}
+    />
 };
 
 
@@ -156,7 +182,8 @@ const configContext: IConfigContext = {
     },
     paths: {
         'top': process.env.REACT_APP_PATH_TOP ?? '',
-        'analysis': process.env.REACT_APP_PATH_ANALYSIS ?? ''
+        'analysis': process.env.REACT_APP_PATH_ANALYSIS ?? '',
+        'analysesPage': process.env.REACT_APP_PATH_ANALYSES_PAGE ?? ''
     }
 };
 
@@ -187,6 +214,8 @@ export default class App extends React.Component {
                     </header>
                     <div className="app-body">
                         <Switch>
+                            <Route path="/analyses/:orderBy/:direction/:page"
+                                   component={ListApp} />
                             <Route path="/analysis/:id"
                                    component={AnalysisApp} />
                             <Route path="/" component={ListApp} />

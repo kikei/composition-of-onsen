@@ -4,6 +4,35 @@ import Analysis, { IAnalysis } from '../models/Analysis';
 type WebAPIResource = 'analyses' | 'analysis';
 export type WebAPIUrls = {[R in WebAPIResource]: string};
 
+const AnalysesOrderBys = ['timeline', 'identifier'] as const;
+export type AnalysesOrderBy = typeof AnalysesOrderBys[number];
+
+const AnalysesDirections = ['desc', 'asc'] as const;
+export type AnalysesDirection = typeof AnalysesDirections[number];
+
+/* Validators */
+export function isValidOrderBy(x: any): x is AnalysesOrderBy {
+    return AnalysesOrderBys.includes(x);
+}
+
+export function isValidDirection(x: any): x is AnalysesDirection {
+    return AnalysesDirections.includes(x);
+}
+
+export interface IAnalysesOptions {
+    page?: number;
+    limit?: number;
+    orderBy?: AnalysesOrderBy;
+    direction?: AnalysesDirection;
+}
+
+export interface IAnalysesResponse {
+    analyses: Array<Analysis>;
+    page: number;
+    limit: number;
+    total: number;
+}
+
 export default class WebAPI {
     urls: WebAPIUrls;
 
@@ -11,16 +40,27 @@ export default class WebAPI {
         this.urls = options.urls;
     }
 
-    urlAnalyses() {
-        return this.urls['analyses'];
+    urlAnalyses(options: IAnalysesOptions = {} as any) {
+        const query = [
+            options.page ? `p=${options.page - 1}` : null,
+            options.limit ? `l=${options.limit}` : null,
+            options.orderBy ? 'o=' + (
+                options.orderBy === 'timeline' ? 'l' : 'i'
+            ) : null,
+            options.direction ? 'd=' + (
+                options.direction === 'desc' ? '-1' : '1'
+            ) : null
+        ].filter(x => !!x).join('&');
+        return this.urls['analyses'] + (query ? `?${query}` : '');
     }
 
     urlAnalysis(id: string) {
         return this.urls['analysis'].replace('{id}', id);
     }
 
-    fetchGetAnalyses(): Resource<Analysis[]> {
-        const url = this.urlAnalyses();
+    fetchGetAnalyses(options: IAnalysesOptions = {} as any)
+        : Resource<IAnalysesResponse> {
+        const url = this.urlAnalyses(options);
         console.log('WebAPI.fetchGetAnalyses, url:', url);
         const promise =
             fetch(url)
@@ -28,11 +68,16 @@ export default class WebAPI {
                 .then(obj => {
                     const a =
                         obj.analysis.map((a: IAnalysis) => new Analysis(a));
-                    console.log('WebAPI.fetchGetAnalysis done,',
+                    console.log('WebAPI.fetchGetAnalysis done, obj:', obj,
                                 'a:', a);
-                    return a;
+                    return {
+                        analyses: a,
+                        page: obj.page,
+                        limit: obj.limit,
+                        total: obj.total
+                    };
                 });
-        return suspender<Analysis[], string>(promise);
+        return suspender<IAnalysesResponse, string>(promise);
     }
 
     fetchGetAnalysis(id: string): Resource<Analysis> {
