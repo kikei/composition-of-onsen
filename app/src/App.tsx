@@ -41,8 +41,10 @@ function rowsPositiveIon(): Array<CompRepresentations> {
         row(Comp.MnII, 'マンガン (II) イオン'),
         row(Comp.FeII, '鉄 (II) イオン'),
         row(Comp.FeIII, '鉄 (III) イオン'),
+        row(Comp.Cr, 'クロムイオン'),
         row(Comp.CuII, '銅イオン'),
-        row(Comp.ZnII, '亜鉛イオン')
+        row(Comp.ZnII, '亜鉛イオン'),
+        row(Comp.Pb, '鉛イオン'),
     ]
 }
 
@@ -56,8 +58,9 @@ function rowsNegativeIon(): Array<CompRepresentations> {
         row(Comp.HS, '硫化水素イオン'),
         row(Comp.S, '硫化物イオン'),
         row(Comp.S2O3, 'チオ硫酸イオン'),
-        row(Comp.HSO4, '硫酸水素イオン'),
         row(Comp.SO4, '硫酸イオン'),
+        row(Comp.HS2O3, 'チオ硫酸水素イオン'),
+        row(Comp.HSO4, '硫酸水素イオン'),
         row(Comp.HNO2, '亜硝酸イオン'),
         row(Comp.NO3, '硝酸イオン'),
         row(Comp.H2PO4, 'リン酸二水素イオン'),
@@ -66,7 +69,8 @@ function rowsNegativeIon(): Array<CompRepresentations> {
         row(Comp.HCO3, '炭酸水素イオン'),
         row(Comp.CO3, '炭酸イオン'),
         row(Comp.AsO2, 'メタ亜砒酸イオン'),
-        row(Comp.HSiO3, 'メタケイ酸イオン'),
+        row(Comp.HSiO3, 'メタケイ酸水素イオン'),
+        row(Comp.SiO3, 'メタケイ酸イオン'),
         row(Comp.BO2, 'メタホウ酸イオン')
     ];
 }
