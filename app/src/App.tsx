@@ -81,7 +81,8 @@ function rowsUndissociated(): Array<CompRepresentations> {
         row('H2SiO3', 'メタケイ酸'),
         row('HBO2', 'メタホウ酸'),
         row('H3PO4', 'リン酸'),
-        row('H2SO4', '硫酸')
+        row('H2SO4', '硫酸'),
+        row('humus', '有機質')
     ];
 }
 

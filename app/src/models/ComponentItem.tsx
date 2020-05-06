@@ -36,9 +36,16 @@ export default class ComponentItem {
         const mg = this.mg;
         switch (typeof(mg)) {
             case 'number':
-                this.mval = mgToMval(mg, w, v);
-                this.mmol = mgToMmol(mg, w);
-                this.mvalPercent = mvalPercent ?? 0;
+                if (w !== 0) {
+                    // Support Humus
+                    this.mval = mgToMval(mg, w, v);
+                    this.mmol = mgToMmol(mg, w);
+                    this.mvalPercent = mvalPercent ?? 0;
+                } else {
+                    this.mval = mval ?? '--';
+                    this.mmol = mmol ?? '--';
+                    this.mvalPercent = mvalPercent ?? '--';
+                }
                 break;
             default:
                 this.mval = mval ?? '--';

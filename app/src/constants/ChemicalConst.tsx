@@ -45,7 +45,8 @@ export type Comp =
     /* Si */'SiO3' |
     /* P */'PO4' |
     /* S */'SO4' | 'S2O3' |
-    /* As */'AsO2'
+    /* As */'AsO2' |
+    'humus'
 ;
 
 const compounds: Record<Comp, Array<Atom>> = {
@@ -105,7 +106,8 @@ const compounds: Record<Comp, Array<Atom>> = {
     PO4: ['P', 'O', 'O', 'O', 'O'],
     SO4: ['S', 'O', 'O', 'O', 'O'],
     S2O3: ['S', 'S', 'O', 'O', 'O'],
-    AsO2: ['As', 'O', 'O']
+    AsO2: ['As', 'O', 'O'],
+    humus: []
 };
 
 function weightAtomOf(a: Atom): number {
@@ -210,7 +212,8 @@ const Valence: Record<Comp, number> = {
     PO4: -2,
     SO4: -2,
     S2O3: -2,
-    AsO2: -1
+    AsO2: -1,
+    humus: 0
 };
 
 const Formula: Record<Comp, string> = {
@@ -270,5 +273,6 @@ const Formula: Record<Comp, string> = {
     PO4: '$\\ce{PO4^2-}$',
     SO4: '$\\ce{SO4^2-}$',
     S2O3: '$\\ce{S2O3^2-}$',
-    AsO2: '$\\ce{AsO2-}$'
+    AsO2: '$\\ce{AsO2-}$',
+    humus: ''
 };

@@ -142,7 +142,8 @@ extends React.Component<IProps, IState> {
                     switch (col) {
                         case 'name':
                             return <td key={col} className="column-name">
-                                {row.name} ({row.formula})
+                                {row.name}
+                                {row.formula ? ` (${row.formula})` : null}
                             </td>;
                         case 'mg':
                             return <td key={col} className="column-mg">
