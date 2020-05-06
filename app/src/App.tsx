@@ -28,84 +28,84 @@ function row(key: Comp, name: string): CompRepresentations {
 
 function rowsPositiveIon(): Array<CompRepresentations> {
     return [
-        row(Comp.H, '水素イオン'),
-        row(Comp.Li, 'リチウムイオン'),
-        row(Comp.Na, 'ナトリウムイオン'),
-        row(Comp.K, 'カリウムイオン'),
-        row(Comp.NH4, 'アンモニウムイオン'),
-        row(Comp.Mg, 'マグネシウムイオン'),
-        row(Comp.Ca, 'カルシウムイオン'),
-        row(Comp.Sr, 'ストロンチウムイオン'),
-        row(Comp.Br, 'バリウムイオン'),
-        row(Comp.Al, 'アルミニウムイオン'),
-        row(Comp.MnII, 'マンガン (II) イオン'),
-        row(Comp.FeII, '鉄 (II) イオン'),
-        row(Comp.FeIII, '鉄 (III) イオン'),
-        row(Comp.Cr, 'クロムイオン'),
-        row(Comp.CuII, '銅イオン'),
-        row(Comp.ZnII, '亜鉛イオン'),
-        row(Comp.Pb, '鉛イオン'),
+        row('H', '水素イオン'),
+        row('Li', 'リチウムイオン'),
+        row('Na', 'ナトリウムイオン'),
+        row('K', 'カリウムイオン'),
+        row('NH4', 'アンモニウムイオン'),
+        row('Mg', 'マグネシウムイオン'),
+        row('Ca', 'カルシウムイオン'),
+        row('Sr', 'ストロンチウムイオン'),
+        row('Br', 'バリウムイオン'),
+        row('Al', 'アルミニウムイオン'),
+        row('MnII', 'マンガン (II) イオン'),
+        row('FeII', '鉄 (II) イオン'),
+        row('FeIII', '鉄 (III) イオン'),
+        row('Cr', 'クロムイオン'),
+        row('CuII', '銅イオン'),
+        row('ZnII', '亜鉛イオン'),
+        row('Pb', '鉛イオン'),
     ]
 }
 
 function rowsNegativeIon(): Array<CompRepresentations> {
     return [
-        row(Comp.F, 'フッ素イオン'),
-        row(Comp.Cl, '塩素イオン'),
-        row(Comp.Br, '臭化物イオン'),
-        row(Comp.I, 'ヨウ化物イオン'),
-        row(Comp.OH, '水酸イオン'),
-        row(Comp.HS, '硫化水素イオン'),
-        row(Comp.S, '硫化物イオン'),
-        row(Comp.S2O3, 'チオ硫酸イオン'),
-        row(Comp.SO4, '硫酸イオン'),
-        row(Comp.HS2O3, 'チオ硫酸水素イオン'),
-        row(Comp.HSO4, '硫酸水素イオン'),
-        row(Comp.HNO2, '亜硝酸イオン'),
-        row(Comp.NO3, '硝酸イオン'),
-        row(Comp.H2PO4, 'リン酸二水素イオン'),
-        row(Comp.HPO4, 'リン酸水素イオン'),
-        row(Comp.PO4, 'リン酸イオン'),
-        row(Comp.HCO3, '炭酸水素イオン'),
-        row(Comp.CO3, '炭酸イオン'),
-        row(Comp.AsO2, 'メタ亜砒酸イオン'),
-        row(Comp.HSiO3, 'メタケイ酸水素イオン'),
-        row(Comp.SiO3, 'メタケイ酸イオン'),
-        row(Comp.BO2, 'メタホウ酸イオン')
+        row('F', 'フッ素イオン'),
+        row('Cl', '塩素イオン'),
+        row('Br', '臭化物イオン'),
+        row('I', 'ヨウ化物イオン'),
+        row('OH', '水酸イオン'),
+        row('HS', '硫化水素イオン'),
+        row('S', '硫化物イオン'),
+        row('S2O3', 'チオ硫酸イオン'),
+        row('SO4', '硫酸イオン'),
+        row('HS2O3', 'チオ硫酸水素イオン'),
+        row('HSO4', '硫酸水素イオン'),
+        row('HNO2', '亜硝酸イオン'),
+        row('NO3', '硝酸イオン'),
+        row('H2PO4', 'リン酸二水素イオン'),
+        row('HPO4', 'リン酸水素イオン'),
+        row('PO4', 'リン酸イオン'),
+        row('HCO3', '炭酸水素イオン'),
+        row('CO3', '炭酸イオン'),
+        row('AsO2', 'メタ亜砒酸イオン'),
+        row('HSiO3', 'メタケイ酸水素イオン'),
+        row('SiO3', 'メタケイ酸イオン'),
+        row('BO2', 'メタホウ酸イオン')
     ];
 }
 
 function rowsUndissociated(): Array<CompRepresentations> {
     return [
-        row(Comp.HAsO2, 'メタ亜砒酸'),
-        row(Comp.H2SiO3, 'メタケイ酸'),
-        row(Comp.HBO2, 'メタホウ酸'),
-        row(Comp.H3PO4, 'リン酸'),
-        row(Comp.H2SO4, '硫酸')
+        row('HAsO2', 'メタ亜砒酸'),
+        row('H2SiO3', 'メタケイ酸'),
+        row('HBO2', 'メタホウ酸'),
+        row('H3PO4', 'リン酸'),
+        row('H2SO4', '硫酸')
     ];
 }
 
 function rowsGas(): Array<CompRepresentations> {
     return [
-        row(Comp.CO2, '遊離二酸化炭素'),
-        row(Comp.H2S, '遊離硫化水素')
+        row('CO2', '遊離二酸化炭素'),
+        row('H2S', '遊離硫化水素')
     ];
 }
 
 function rowsMinor(): Array<CompRepresentations> {
     return [
-        row(Comp.As, '総砒素'),
-        row(Comp.Hg, '総水銀'),
-        row(Comp.CuII, '銅イオン'),
-        row(Comp.Cr, '総クロム'),
-        row(Comp.Pb, '鉛イオン'),
-        row(Comp.Cd, 'カドミウムイオン'),
-        row(Comp.MnII, 'マンガンイオン'),
-        row(Comp.Li, 'リチウムイオン'),
-        row(Comp.Sr, 'ストロンチウムイオン'),
-        row(Comp.Al, 'アルミニウムイオン'),
-        row(Comp.ZnII, '亜鉛イオン'),
-        row(Comp.NO3, '硝酸イオン')
+        row('As', '総砒素'),
+        row('Hg', '総水銀'),
+        row('CuII', '銅イオン'),
+        row('Cr', '総クロム'),
+        row('Pb', '鉛イオン'),
+        row('Cd', 'カドミウムイオン'),
+        row('MnII', 'マンガンイオン'),
+        row('Li', 'リチウムイオン'),
+        row('Sr', 'ストロンチウムイオン'),
+        row('Al', 'アルミニウムイオン'),
+        row('ZnII', '亜鉛イオン'),
+        row('NO3', '硝酸イオン')
     ];
 }
 

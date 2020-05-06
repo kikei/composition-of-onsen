@@ -180,7 +180,7 @@ class OnsenQualityNameBuilder {
                     p0 = applyDict(this.special, dict);
                     p2 = ['アルカリ性単純']
                 } else {
-                    const ih = this.special.findIndex(a => a === Comp.H);
+                    const ih = this.special.findIndex(a => a === 'H');
                     if (ih > -1) {
                         // examples:
                         // - 大釜温泉: 含鉄－単純酸性温泉 
@@ -301,47 +301,47 @@ export function qualityName(a: Analysis): string {
     q.setTemperature(temperature);
 
     // Special
-    if (isMedicalCO2(a.gasValue(Comp.CO2)?.mg))
-        q.addSpecial(Comp.CO2);
-    if (isMedicalFe((a.positiveIonValue(Comp.FeII)?.mg ?? 0) +
-                    a.positiveIonValue(Comp.FeIII)?.mg ?? 0))
-        q.addSpecial(Comp.FeII);
-    if (isMedicalI(a.negativeIonValue(Comp.I)?.mg))
-        q.addSpecial(Comp.I);
-    if (isMedicalH(a.positiveIonValue(Comp.H)?.mg))
-        q.addSpecial(Comp.H);
+    if (isMedicalCO2(a.gasValue('CO2')?.mg))
+        q.addSpecial('CO2');
+    if (isMedicalFe((a.positiveIonValue('FeII')?.mg ?? 0) +
+                    a.positiveIonValue('FeIII')?.mg ?? 0))
+        q.addSpecial('FeII');
+    if (isMedicalI(a.negativeIonValue('I')?.mg))
+        q.addSpecial('I');
+    if (isMedicalH(a.positiveIonValue('H')?.mg))
+        q.addSpecial('H');
     // S
-    const hs = a.negativeIonValue(Comp.HS);
-    const s2o3 = a.negativeIonValue(Comp.S2O3);
-    const h2s = a.gasValue(Comp.H2S);
+    const hs = a.negativeIonValue('HS');
+    const s2o3 = a.negativeIonValue('S2O3');
+    const h2s = a.gasValue('H2S');
     if (isMedicalS(mgOfS(hs?.mg ?? 0,
                          s2o3?.mg ?? 0,
                          h2s?.mg ?? 0))) {
-        q.addSpecial(Comp.S);
+        q.addSpecial('S');
         q.setTypeHS(isTypeHS(hs?.mmol ?? 0, s2o3?.mmol ?? 0, h2s?.mmol ?? 0));
     }
     // if (isMedicalRn(a))
-    //     q.addSpecial(Comp.Rn);
-    if (isMedicalNaCl(a.positiveIonValue(Comp.Na)?.mg,
-                      a.negativeIonValue(Comp.Cl)?.mg)) {
+    //     q.addSpecial('Rn');
+    if (isMedicalNaCl(a.positiveIonValue('Na')?.mg,
+                      a.negativeIonValue('Cl')?.mg)) {
         q.setStrongSalt(true);
     }
     // if (isMedicalHCO3(a)){}
     // if (isMedicalSO4(a)){}
 
     // Mineral
-    if (isMineralCO2(a.gasValue(Comp.CO2)?.mg))
-        q.addMineral(Comp.CO2);
-    if (isMineralI(a.negativeIonValue(Comp.I)?.mg))
-        q.addMineral(Comp.I);
-    if (isMineralF(a.negativeIonValue(Comp.F)?.mg))
-        q.addMineral(Comp.F);
-    if (isMineralBO2(a.negativeIonValue(Comp.BO2)?.mg) ||
-        isMineralHBO2(a.undissociatedValue(Comp.HBO2)?.mg))
-        q.addMineral(Comp.HBO2);
-    if (isMineralHSiO3(a.negativeIonValue(Comp.HSiO3)?.mg) ||
-        isMineralH2SiO3(a.undissociatedValue(Comp.H2SiO3)?.mg))
-        q.addMineral(Comp.H2SiO3);
+    if (isMineralCO2(a.gasValue('CO2')?.mg))
+        q.addMineral('CO2');
+    if (isMineralI(a.negativeIonValue('I')?.mg))
+        q.addMineral('I');
+    if (isMineralF(a.negativeIonValue('F')?.mg))
+        q.addMineral('F');
+    if (isMineralBO2(a.negativeIonValue('BO2')?.mg) ||
+        isMineralHBO2(a.undissociatedValue('HBO2')?.mg))
+        q.addMineral('HBO2');
+    if (isMineralHSiO3(a.negativeIonValue('HSiO3')?.mg) ||
+        isMineralH2SiO3(a.undissociatedValue('H2SiO3')?.mg))
+        q.addMineral('H2SiO3');
 
     const category =
         isSimple(a) ? 'Simple' :
@@ -371,61 +371,61 @@ const qualityJPName: Localizer = (comp: Comp, options: ILocalizerOption) => {
     const { simple, mineral } = options;
     if (mineral) {
         switch (comp) {
-            case Comp.I:
+            case 'I':
                 return 'ヨウ素イオン';
-            case Comp.F:
+            case 'F':
                 return 'ふっ素イオン';
-            case Comp.H2SiO3:
+            case 'H2SiO3':
                 return 'メタケイ酸';
-            case Comp.HBO2:
+            case 'HBO2':
                 return 'メタほう酸';
         }
     }
     if (simple) {
         switch (comp) {
-            case Comp.CO2:
+            case 'CO2':
                 return '二酸化炭素';
-            case Comp.FeII:
+            case 'FeII':
                 return '鉄';
-            case Comp.S:
+            case 'S':
                 return '硫黄';
         }
     }
     switch (comp) {
         // Special
-        case Comp.H:
+        case 'H':
             return '酸性';
-        case Comp.CO2:
+        case 'CO2':
             return '含二酸化炭素';
-        case Comp.FeII:
+        case 'FeII':
             return '含鉄';
-        case Comp.S:
+        case 'S':
             return '含硫黄';
-        case Comp.I:
+        case 'I':
             return '含ヨウ素';
         // Positive ion
-        case Comp.Na:
+        case 'Na':
             return 'ナトリウム';
-        case Comp.Al:
+        case 'Al':
             return 'アルミニウム';
-        case Comp.K:
+        case 'K':
             return 'カリウム';
-        case Comp.NH4:
+        case 'NH4':
             return 'アンモニウム';
-        case Comp.Mg:
+        case 'Mg':
             return 'マグネシウム';
-        case Comp.Ca:
+        case 'Ca':
             return 'カルシウム';
-        case Comp.Sr:
+        case 'Sr':
             return 'ストロンチウム';
         // Negative ion
-        case Comp.Cl:
+        case 'Cl':
             return '塩化物';
-        case Comp.HCO3:
+        case 'HCO3':
             return '炭酸水素塩';
-        case Comp.CO3:
+        case 'CO3':
             return '炭酸水素塩';
-        case Comp.SO4:
+        case 'SO4':
             return '硫酸塩';
     }
 }
