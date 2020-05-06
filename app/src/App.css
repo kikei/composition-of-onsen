@@ -302,8 +302,11 @@ td.column-mg, td.column-mval, td.column-mvalPercent, td.column-mmol {
 }
 
 .pages li a {
+    display: block;
     text-decoration: none;
     color: #000;
+    width: 100%;
+    height: 100%;
 }
 
 .container-export {
