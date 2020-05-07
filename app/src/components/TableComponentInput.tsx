@@ -123,11 +123,11 @@ extends React.Component<IProps, IState> {
                         {labels.mval}
                     </th>;
                 case 'mmol':
-                    return <th key={col} className="mmol">
+                    return <th key={col} className="column-mmol">
                         {labels.mmol}
                     </th>;
                 case 'mvalPercent':
-                    return <th key={col} className="mvalPercent">
+                    return <th key={col} className="column-mvalPercent">
                         {labels.mvalPercent}
                     </th>;
             }
@@ -153,6 +153,7 @@ extends React.Component<IProps, IState> {
                                            const v = e.target.value;
                                            this.updateMgValue(row.key, v);
                                        }}
+                                       className="input"
                                 />
                             </td>;
                         case 'mval':
@@ -200,7 +201,7 @@ extends React.Component<IProps, IState> {
         };
         const TotalRow = <tr>{columns.map(TotalCell)}</tr>;
         return (
-            <table>
+            <table className="table is-bordered is-hoverable">
                 <thead>
                     <tr>{columns.map(HeaderCell)}</tr>
                 </thead>

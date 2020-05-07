@@ -23,40 +23,68 @@ interface IState {
 export type IAnalysesPage =
     {[T in keyof IAnalysesOptions]-?: IAnalysesOptions[T]};
 
+const showDate = (date: string) => {
+    return date.replace('１', '1')
+               .replace('１', '1')
+               .replace('２', '2')
+               .replace('３', '3').replace('３', '3')
+               .replace('４', '4')
+               .replace('５', '5')
+               .replace('６', '6')
+               .replace('７', '7')
+               .replace('８', '8')
+               .replace('９', '9')
+               .replace('０', '0').replace('０', '0').replace('０', '0');
+}
+
 const AnalysisItem = (context: IConfigContext, a: Analysis) => {
     const path = new AppPath(context);
+    const Title = (
+        a.getMetadata('facilityName') || a.getMetadata('roomName') ?
+        <React.Fragment>
+            {a.getMetadata('facilityName')}
+            {' '}{a.getMetadata('roomName')}
+        </React.Fragment>
+        : null
+    );
+    const Subtitle = (
+        <React.Fragment>
+        {a.name}
+        {a.getMetadata('investigatedDate') ?
+         ' ' + showDate(a.getMetadata('investigatedDate')!) :
+         a.getMetadata('testedDate') ?
+         ' ' + showDate(a.getMetadata('testedDate')!) : null}
+        </React.Fragment>
+    );
+    const Location = (
+        a.getMetadata('location') ?
+        <React.Fragment>
+            {a.getMetadata('location')}
+        </React.Fragment>
+        : null
+    );
+    const Detail = (
+        [
+            a.pH ? `pH ${a.pH}` : null,
+            a.temperature ?
+            `泉温 ${a.temperature}${a.getMetadata('temperatureExtra')}`
+            : null,
+            a.getMetadata('quality') ?
+            `泉質 ${a.getMetadata('quality')}` : null,
+            `成分総計 ${a.getTotalComponent().mg.toFixed(1)} mg/kg`
+        ].filter(i => !!i).join(', ')
+    );
     return (
         <Link to={path.analysis(a)}>
-            <div className="search-item__title">
-                {a.name}
+            <h3 className="title is-5 search-title">
+                {Title}
+            </h3>
+            <div className="subtitle is-6 search-subtitle">
+                {Subtitle}
             </div>
-            <div className="search-item__detail">{
-                a.getMetadata('facilityName') || a.getMetadata('roomName') ?
-                <React.Fragment>
-                    {a.getMetadata('facilityName')}
-                    {' '}{a.getMetadata('roomName')}<br />
-                </React.Fragment>
-                : null
-            }{
-                a.getMetadata('location') ?
-                <React.Fragment>
-                    {a.getMetadata('location')}<br />
-                </React.Fragment>
-                : null
-            }{
-                [
-                    a.yield ?
-                    `湧出量 ${a.yield}${a.getMetadata('yieldExtra')}`
-                    : null,
-                    a.pH ? `pH ${a.pH}` : null,
-                    a.temperature ?
-                    `泉温 ${a.temperature}${a.getMetadata('temperatureExtra')}`
-                    : null,
-                    a.getMetadata('quality') ?
-                    `泉質 ${a.getMetadata('quality')}` : null,
-                    `成分総計 ${a.getTotalComponent().mg.toFixed(1)} mg/kg`
-                ].filter(i => !!i).join(', ')
-            }
+            <div className="search-content">
+                <div className="search-location is-size-6">{Location}</div>
+                <div className="search-detail is-size-6">{Detail}</div>
             </div>
         </Link>
     );
@@ -65,16 +93,20 @@ const AnalysisItem = (context: IConfigContext, a: Analysis) => {
 const AnalysisPage: React.FC<{
     context: IConfigContext,
     options: IAnalysesPage,
-    current?: boolean
+    current?: boolean,
+    className?: string
 }> = props => {
     const path = new AppPath(props.context);
     const { page, orderBy, direction } = props.options;
     return (
-        <li key={page} className={props.current ? 'current' : 'nocurrent'}>
-            <Link to={path.analysesPage(`${orderBy}`, `${direction}`, page)}>
-                {props.children}
-            </Link>
-        </li>
+        <Link to={path.analysesPage(`${orderBy}`, `${direction}`, page)}
+              className={[
+                  props.className,
+                  'pagination-link',
+                  props.current ? 'is-current' : ''
+              ].join(' ')}>
+            {props.children}
+        </Link>
     )
 };
 
@@ -95,7 +127,7 @@ const AnalysisListView: React.FC<{
                             {' '}{limit * page + 1} 件目 〜
                             {' '}{limit * page + analyses.length} 件目を表示
                         </p>
-                        <ul>
+                        <ul className="search-list">
                             {
                                 analyses.map((a, i) =>
                                     <li key={i} className="search-item">
@@ -104,33 +136,52 @@ const AnalysisListView: React.FC<{
                                 )
                             }
                         </ul>
-                        <div className="pages">
-                            <ul className="pages-list">
+                        <div className="pagination is-centered pages">
+                            <ul className="pagination-list pages-list">
                             {
-                                Array.from(Array(finalPage).keys()).map(i =>
+                                page !== 1 ?
+                                <li>
                                     <AnalysisPage
-                                        key={i}
                                         context={context}
                                         options={{
-                                            ...props.options, page: i + 1
+                                            ...props.options,
+                                            page: props.options.page - 1
                                         }}
-                                        current={page === i + 1}>
-                                        {i + 1}
+                                        className="pagination-prev">
+                                        &laquo;
                                     </AnalysisPage>
+                                </li>
+                                : null
+                            }
+                            {
+                                Array.from(Array(finalPage).keys()).map(i =>
+                                    <li key={i}>
+                                        <AnalysisPage
+                                            key={i}
+                                            context={context}
+                                            options={{
+                                                ...props.options, page: i + 1
+                                            }}
+                                            current={page === i + 1}>
+                                            {i + 1}
+                                        </AnalysisPage>
+                                    </li>
                                 )
                             }
-                            </ul>
-                            <ul className="pages-next">
                             {
                                 finalPage !== page ?
-                                    <AnalysisPage context={context}
-                                                  options={{
-                                                      ...props.options,
-                                                      page: props.options.page + 1
-                                                  }}>
-                                       »
-                                    </AnalysisPage>
-                                    : null
+                                    <li>
+                                        <AnalysisPage
+                                            context={context}
+                                            options={{
+                                                ...props.options,
+                                                page: props.options.page + 1
+                                            }}
+                                            className="pagination-next">
+                                            &raquo;
+                                        </AnalysisPage>
+                                    </li>
+                                : null
                             }
                             </ul>
                         </div>
@@ -188,18 +239,26 @@ export default class AnalysisList extends React.Component<IProps, IState> {
         console.log('AnalysisList render, state:', state,
                     'options:', this.options);
         return (
-            <div>
-                <div className="search-list">
-                    <SearchInput />
-                    {
-                        state.analyses ? (
-                            <Suspense fallback={<p>Loading...</p>}>
-                                <SuspensedAnalysisList
-                                    options={this.options}
-                                    analyses={state.analyses} />
-                            </Suspense>
-                        ) : null
-                    }
+            <div className="container">
+                <div className="columns">
+                    <div className="column is-1">
+                    </div>
+                    <div className="column">
+                        <div className="content search-container">
+                            <SearchInput />
+                            {
+                                state.analyses ? (
+                                    <Suspense fallback={<p>Loading...</p>}>
+                                        <SuspensedAnalysisList
+                                            options={this.options}
+                                            analyses={state.analyses} />
+                                    </Suspense>
+                                ) : null
+                            }
+                        </div>
+                    </div>
+                    <div className="column is-1">
+                    </div>
                 </div>
             </div>
         );

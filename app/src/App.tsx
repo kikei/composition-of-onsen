@@ -3,7 +3,7 @@ import {
     BrowserRouter, Switch, Route, Link, useParams,
     RouteComponentProps
 } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 
 import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
@@ -172,11 +172,9 @@ const AnalysisApp = (props: RouteComponentProps) => {
         minor: rowsMinor()
     };
     return <Suspense fallback={<p>Loading...</p>}>
-        <div className="App">
-            <AppContent {...props}
-                        key={id}
-                        analysis={analysis} rows={rows} />
-        </div>
+        <AppContent {...props}
+                    key={id}
+                    analysis={analysis} rows={rows} />
     </Suspense>
 };
 
@@ -202,22 +200,27 @@ export default class App extends React.Component {
         return (
             <ConfigContext.Provider value={configContext}>
                 <BrowserRouter>
-                    <header className="app-header">
-                        <h1><Link to="/">Onsena (仮)</Link></h1>
-                        <nav className="app-nav" >
-                            <ul>
-                                <li>
+                    <header className="navbar is-fixed-top app-header">
+                        <h1 className="navbar-brand">
+                            <Link to="/" className="navbar-item">
+                                温泉分析書庫 (仮)
+                            </Link>
+                        </h1>
+                        <nav className="navbar-menu">
+                            <div className="navbar-end app-nav" >
+                                <div className="navbar-item">
                                     <SearchInput />
-                                </li>
-                                <li>
-                                    <Link to={"/analysis/_new"}>
+                                </div>
+                                <div className="navbar-item">
+                                    <Link to={"/analysis/_new"}
+                                        className="button">
                                         +
                                     </Link>
-                                </li>
-                            </ul>
+                                </div>
+                            </div>
                         </nav>
                     </header>
-                    <div className="app-body">
+                    <div className="section app-body">
                         <Switch>
                             <Route path="/analyses/:orderBy/:direction/:page"
                                    component={ListApp} />

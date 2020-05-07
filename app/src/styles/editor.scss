@@ -1,0 +1,137 @@
+.editor-container {
+    header {
+        text-align: center;
+        margin: 0.5em 0px 1.0em 0px;
+    }
+    /*
+    input {
+        line-height: 1.5em;
+        height: 1.8em;
+    }
+    */
+}
+
+.editor-group {
+    margin: 0.25em 0px 0.25em 0px !important;
+    width: 100%;
+    h3 {
+        text-align: center;
+        margin: 0.5em 0px 0.5em 0px;
+    }
+    h4 {
+        margin: 0.5em 0px 0.5em 1em;
+    }
+}
+
+.editor-row {
+    .field:not(.has-extra) {
+        min-width: 20em;
+    }
+    .field.has-extra {
+        min-width: 4em;
+    }
+}
+
+.editor-total {
+    margin: 1em 0px 0px 0px;
+    padding: 0px;
+    text-align: right;
+    .column {
+        padding-top: 0em;
+        padding-bottom: 0em;
+    }
+}
+
+.editor-quality {
+    margin: 0px;
+    padding: 0px;
+    h3 {
+        margin: 0px 0px 0.25em 0px;
+        padding: 0px;
+    }
+    .editor-row {
+        text-align: center;
+    }
+}
+
+.editor-header, .editor-gensen,
+.editor-investigation, .editor-test,
+.editor-applicant, .editor-facility {
+    label {
+        width: 10em;
+    }
+}
+
+.editor-usage {
+    label {
+        width: 5em;
+    }
+}
+
+.editor-components {
+    th, td {
+        padding: 3px 4px 3px 4px !important;
+    }
+}
+
+.column-name {
+    min-width: 16em;
+    line-height: 2.0em;
+}
+
+.column-mg {
+    min-width: 5em;
+    line-height: 2.0em;
+    text-align: right !important;
+    input {
+        line-height: 1.5;
+        height: 2.0em;;
+        text-align: right !important;
+    }
+}
+
+.column-mval, .column-mvalPercent, .column-mmol {
+    min-width: 4em;
+    line-height: 2.0em;
+    text-align: right !important;
+}
+
+/*
+.column-name {
+    text-align: left;
+}
+
+
+.form-dissolved .column-name,
+.form-others .column-name,
+.form-minor .column-name {
+    width: 14em;
+}
+
+.form-usage .form-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-usage h3 {
+    display: block;
+}
+
+.form-usage .form-list > * {
+    flex: 1 1 35%;
+    margin: 0.25em 0px 0.25em 0px;
+}
+
+.form-usage span {
+    display: inline-block;
+    width: 6em;
+}
+
+.form-usage input {
+    width: calc(100% - 9em);
+}
+
+.form-footer textarea {
+    width: 100%;
+}
+*/

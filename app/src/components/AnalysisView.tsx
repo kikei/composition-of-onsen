@@ -91,19 +91,22 @@ extends React.Component<IProps, IState> {
         const a = new Analysis(state.analysis);
         const viewMode = state.viewMode;
         return (
-            <div>
+            <div className="container is-fluid">
                 <nav className="select_view-nav">
-                  <button onClick={e => this.selectView('edit')}>
-                     Editor
-                  </button>
-                   <button onClick={e => this.selectView('json')}>
-                     JSON
-                   </button>
-                   <button onClick={e => this.saveAnalysis()}>
-                     Save
-                   </button>
+                    <button onClick={e => this.selectView('edit')}
+                            className="button is-rounded">
+                        Editor
+                    </button>
+                    <button onClick={e => this.selectView('json')}
+                            className="button is-rounded">
+                        JSON
+                    </button>
+                    <button onClick={e => this.saveAnalysis()}
+                            className="button is-primary is-rounded">
+                        Save
+                    </button>
                 </nav>
-                <div className="container-analysis">
+                <div className="content analysis-container">
                     <AnalysisTableEditor
                         analysis={a}
                         visible={viewMode === 'edit'}

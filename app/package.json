@@ -9,6 +9,8 @@
     "@types/react-addons-update": "^0.14.20",
     "@types/react-dom": "^16.9.5",
     "@types/react-router-dom": "^5.1.5",
+    "bulma": "^0.8.2",
+    "node-sass": "^4.14.1",
     "react": "^16.9.0",
     "react-addons-update": "^15.6.2",
     "react-dom": "^16.9.0",

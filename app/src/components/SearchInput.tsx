@@ -14,15 +14,21 @@ const SearchInput: React.FC<IProps> = props => {
     };
 
     return (
-        <form action="/" className="search-form">
-            <input type="text"
-                   value={searchInput}
-                   onChange={e => setSearchInput(e.target.value) }
-            />
-            <button onClick={e => onSubmit(searchInput)}>
-                Search
-            </button>
-        </form>
+        <div className="field has-addons search-form">
+            <div className="control">
+                <input className="input"
+                       type="text"
+                       value={searchInput}
+                       onChange={e => setSearchInput(e.target.value) }
+                />
+            </div>
+            <div className="control">
+                <button className="button is-primary"
+                        onClick={e => onSubmit(searchInput)}>
+                    Search
+                </button>
+            </div>
+        </div>
     )
 }
 

@@ -28,15 +28,22 @@ interface IState {
 interface RowProps {
     label: string;
     children: React.ReactNode;
+    labelFor?: string;
 };
 
 const Row = (props: RowProps) => (
-    <p>
-        <label>
-            <span>{props.label}</span>
+    <div className="field is-horizontal editor-row">
+        <div className="field-label is-normal">
+            <label
+                className="label"
+                htmlFor={props.labelFor}>
+                {props.label}
+            </label>
+        </div>
+        <div className="field-body">
             {props.children}
-        </label>
-    </p>
+        </div>
+    </div>
 );
 
 /* Input helpers */
@@ -44,28 +51,44 @@ interface InputProps<T> {
     value?: string | number;
     size?: number;
     onChange?: (e: T) => void;
+    className?: string;
+    id?: string;
 }
 
 const InputText = (props: InputProps<string>) => (
-    <input type="text"
-           size={props.size}
-           defaultValue={props.value}
-           onChange={e => {
-               if (typeof props.onChange === 'function')
-                   props.onChange(e.target.value)
-           }} />
+    <div className="field">
+        <div className="control is-expanded">
+            <input
+                id={props.id}
+                type="text"
+                size={props.size}
+                defaultValue={props.value}
+                onChange={e => {
+                    if (typeof props.onChange === 'function')
+                        props.onChange(e.target.value)
+                }}
+                className="input" />
+        </div>
+    </div>
 );
 
 const InputNumber = (props: InputProps<number>) => (
-    <input type="text"
-           size={props.size}
-           defaultValue={props.value}
-           onChange={e => {
-               const value = Number(e.target.value);
-               if (!isNaN(value) && typeof props.onChange === 'function') {
-                   props.onChange(value)
-               }
-           }} />
+    <div className={`field ${props.className}`}>
+        <div className="control">
+            <input type="text"
+                size={props.size}
+                defaultValue={props.value}
+                onChange={e => {
+                    const value = Number(e.target.value);
+                    if (!isNaN(value) &&
+                        typeof props.onChange === 'function') {
+                        props.onChange(value)
+                    }
+                }}
+                className="input"
+                id={props.id} />
+        </div>
+    </div>
 );
 
 export default class AnalysisTableEditor
@@ -193,292 +216,405 @@ extends React.Component<IProps, IState> {
                     'props:', props);
 
         // Helper component to input metadata
-        const InputMetadata = (key: KeyMetadata, size: number = 20) => (
+        const InputMetadata = (key: KeyMetadata) => (
             <InputText
+                id={`${key}`}
                 value={a.getMetadata(key) ?? ''}
                 onChange={t => this.updateMetadata(key, t)}
-                size={size}
             />
         );
 
+        const Header = (
+            <div className="editor-rows">
+                <Row label="番号" labelFor="no">
+                    {InputMetadata('no')}
+                </Row>
+            </div>
+        );
+
+        const Gensen = (
+            <div className="editor-rows">
+                <Row label="源泉名" labelFor="gensenName">
+                    <InputText
+                        id="gensenName"
+                        value={a.name}
+                        onChange={e => this.updateName(e)} />
+                </Row>
+                <Row label="源泉湧出地" labelFor="location">
+                    {InputMetadata('location')}
+                </Row>
+            </div>
+        );
+
+        const Applicant = (
+            <div className="editor-rows">
+                <Row label="分析申請者 住所" labelFor="applicantAddress">
+                    {InputMetadata('applicantAddress')}
+                </Row>
+                <Row label="分析申請者 氏名" labelFor="applicantName">
+                    {InputMetadata('applicantName')}
+                </Row>
+            </div>
+        );
+
+        const Facility = (
+            <div className="editor-rows">
+                <Row label="施設名" labelFor="facilityName">
+                    {InputMetadata('facilityName')}
+                </Row>
+                <Row label="浴室名/浴槽名" labelFor="roomName">
+                    {InputMetadata('roomName')}
+                </Row>
+            </div>
+        );
+
+        const Investigation = (
+            <React.Fragment>
+                <h3 className="is-size-5">
+                    湧出地における調査及び試験成績
+                </h3>
+                <div className="editor-rows">
+                    <Row label="調査及び試験者" labelFor="investigator">
+                        {InputMetadata('investigator')}
+                    </Row>
+                    <Row label="調査及び試験年月日" labelFor="investigatedDate">
+                        {InputMetadata('investigatedDate')}
+                    </Row>
+                    <Row label="泉温" labelFor="temperature">
+                        <InputNumber
+                            value={a.temperature}
+                            onChange={n => {
+                                this.setState(update(this.state, {
+                                    analysis: {
+                                        temperature: { $set: n }
+                                    }
+                                }));
+                                this.onChangeAnalysis();
+                            }}
+                            className="has-extra"
+                            id="temperature" />
+                        {InputMetadata('temperatureExtra')}
+                    </Row>
+                    <Row label="湧出量/利用量" labelFor="yield">
+                        <InputNumber
+                            value={a.yield}
+                            onChange={n => {
+                                this.setState(update(this.state, {
+                                    analysis: {
+                                        yield: { $set: n }
+                                    }
+                                }));
+                                this.onChangeAnalysis();
+                            }}
+                            className="has-extra"
+                            id="yield" />
+                        {InputMetadata('yieldExtra')}
+                    </Row>
+                    <Row label="知覚的試験" labelFor="perception">
+                        {InputMetadata('perception')}
+                    </Row>
+                    <Row label="pH値" labelFor="pH">
+                        <InputNumber
+                            value={a.pH}
+                            size={4}
+                            onChange={n => {
+                                this.setState(update(this.state, {
+                                    analysis: {
+                                        pH: { $set: n }
+                                    }
+                                }));
+                                this.onChangeAnalysis();
+                            }}
+                            className="has-extra"
+                            id="pH" />
+                        {InputMetadata('pHExtra')}
+                    </Row>
+                    <Row label="電気伝導率" labelFor="conductivity">
+                        {InputMetadata('conductivity')}
+                    </Row>
+                    {/*
+                        <Row label="ラドン">
+                        <InputNumber
+                        value={a.bq}
+                        size={2}
+                        onChange={n => {
+                        this.setState(update(this.state, {
+                        analysis: {
+                        bq: { $set: n }
+                        }
+                        }));
+                        this.onChangeAnalysis();
+                        }} />
+                        {' '} Bq/kg,{' '}
+                        <InputNumber
+                        value={a.ci}
+                        size={2}
+                        onChange={n => {
+                        this.setState(update(this.state, {
+                        analysis: {
+                        ci: { $set: n }
+                        }
+                        }));
+                        this.onChangeAnalysis();
+                        }} />
+                        {' '} ×10<sup>-10</sup> Ci/kg, {' '}
+                        <InputNumber
+                        value={a.me}
+                        size={2}
+                        onChange={n => {
+                        this.setState(update(this.state, {
+                        analysis: {
+                        me: { $set: n }
+                        }
+                        }));
+                        this.onChangeAnalysis();
+                        }} />
+                        {' '} M.E.
+                        </Row>
+                      */}
+                </div>
+            </React.Fragment>
+        );
+
+        const Test = (
+            <React.Fragment>
+                <h3 className="is-size-5">
+                    試験室における試験成績
+                </h3>
+                <div className="editor-rows">
+                    <Row label="試験者" labelFor="tester">
+                        {InputMetadata('tester')}
+                    </Row>
+                    <Row label="分析終了年月日" labelFor="testedDate">
+                        {InputMetadata('testedDate')}
+                    </Row>
+                    <Row label="知覚的試験" labelFor="testedPerception">
+                        {InputMetadata('testedPerception')}
+                    </Row>
+                    <Row label="密度" labelFor="testedDencity">
+                        {InputMetadata('testedDencity')}
+                    </Row>
+                    <Row label="pH値" labelFor="testedPH">
+                        {InputMetadata('testedPH')}
+                    </Row>
+                    <Row label="蒸発残留物" labelFor="testedER">
+                        {InputMetadata('testedER')}
+                    </Row>
+                </div>
+            </React.Fragment>
+        );
+
+        const PositiveIon = (
+            <React.Fragment>
+                <h4 className="is-size-6">陽イオン</h4>
+                <TableComponentInput
+                    labels={{title: '成分', total: '陽イオン計'}}
+                    columns={['name', 'mg', 'mval', 'mvalPercent']}
+                    rows={rows.positiveIon}
+                    components={a.positiveIon}
+                    onChangeComponent={this.updatePositiveIon}
+                />
+            </React.Fragment>
+        );
+
+        const NegativeIon = (
+            <React.Fragment>
+                <h4 className="is-size-6">陰イオン</h4>
+                <TableComponentInput
+                    labels={{title: '成分', total: '陰イオン計'}}
+                    columns={['name', 'mg', 'mval', 'mvalPercent']}
+                    rows={rows.negativeIon}
+                    components={a.negativeIon}
+                    onChangeComponent={this.updateNegativeIon}
+                />
+            </React.Fragment>
+        );
+
+        const Undissociated = (
+            <div className="editor-table-container editor-undissociated">
+                <h4 className="is-size-6">遊離成分</h4>
+                <TableComponentInput
+                    labels={{title: '非解離成分', total: '非解離成分計'}}
+                    columns={['name', 'mg', 'mmol']}
+                    rows={rows.undissociated}
+                    components={a.undissociated}
+                    onChangeComponent={this.updateUndissociated}
+                />
+            </div>
+        );
+
+        const Gas = (
+            <div className="editor-table-container editor-gas">
+                <TableComponentInput
+                    labels={{title: '溶存ガス成分',
+                             total: '溶存ガス成分計'}}
+                    columns={['name', 'mg', 'mmol']}
+                    rows={rows.gas}
+                    components={a.gas}
+                    onChangeComponent={this.updateGas}
+                />
+            </div>
+        );
+
+        const Minor = (
+            <React.Fragment>
+                <h4 className="is-size-6">その他微量成分</h4>
+                <TableComponentInput
+                    labels={{title: '微量成分', total: '微量成分計'}}
+                    columns={['name', 'mg']}
+                    rows={rows.minor}
+                    sizes={{mg: 18}}
+                    components={a.minor}
+                    onChangeComponent={this.updateMinor}
+                />
+            </React.Fragment>
+        );
+
         return (
-            <div className={
-              `table-analysis ${props.visible === false && "hidden"}`
-            }>
+            <div className={[
+                'editor-container',
+                props.visible === false && 'hidden'
+            ].join(' ')}>
                <header>
-                   <h1>温泉分析書</h1>
-                   <p>(鉱泉分析試験法による分析)</p>
+                   <h1 className="title is-size-3">温泉分析書</h1>
+                   <p className="subtitle is-size-6">
+                       (鉱泉分析試験法による分析)
+                   </p>
                </header>
-               <fieldset className="form-header">
-                   <div className="form-list">
-                       <Row label="番号">
-                           {InputMetadata('no')}
-                       </Row>
+               <div className="columns is-multiline">
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-header">
+                       {Header}
+                   </fieldset>
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-gensen">
+                       {Gensen}
+                   </fieldset>
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-facility">
+                       {Facility}
+                   </fieldset>
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-applicant">
+                       {Applicant}
+                   </fieldset>
+               </div>
+               <div className="columns is-multiline">
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-investigation">
+                       {Investigation}
+                   </fieldset>
+                   <fieldset className="column is-half-widescreen
+                       editor-group editor-test">
+                       {Test}
+                   </fieldset>
+               </div>
+               <div className="editor-group editor-components">
+                   <h3 className="is-size-5">
+                       試料1kg中の成分・分量及び組成
+                   </h3>
+                   <div className="columns is-multiline
+                       editor-tables">
+                       <fieldset className="column is-half
+                           editor-table-container editor-positiveion">
+                           {PositiveIon}
+                        </fieldset>
+                        <fieldset className="column is-half
+                            editor-table-container editor-netagitveion">
+                            {NegativeIon}
+                        </fieldset>
                    </div>
-               </fieldset>
-               <fieldset className="form-gensen">
-                   <div className="form-list">
-                       <Row label="源泉名">
-                           <InputText
-                               value={a.name}
-                               onChange={e => this.updateName(e)} />
-                       </Row>
-                       <Row label="源泉湧出地">
-                           {InputMetadata('location')}
-                       </Row>
+                   <div className="columns is-widescreen is-multiline">
+                        <div className="column is-half-widescreen">
+                            {Undissociated}
+                            {Gas}
+                        </div>
+                        <div className="column
+                            editor-table-container editor-minor">
+                            {Minor}
+                        </div>
                    </div>
-               </fieldset>
-               <fieldset className="form-applicant">
-                   <div className="form-list">
-                       <Row label="分析申請者 住所">
-                           {InputMetadata('applicantAddress')}
-                       </Row>
-                       <Row label="分析申請者 氏名">
-                           {InputMetadata('applicantName')}
-                       </Row>
+                   <div className="columns is-multiline">
+                        <div className="column columns">
+                           <div className="column is-full
+                               editor-rows editor-total">
+                               <div className="editor-row">
+                                   <div className="columns is-size-5">
+                                       <span className="column is-9
+                                           has-text-weight-medium">
+                                           溶存物質計(ガス性のものを除く)
+                                       </span>
+                                       <span className="column">
+                                           {(totalMelt.mg / 1000).toFixed(3)}
+                                           {' '}g/kg
+                                       </span>
+                                   </div>
+                                    <div className="columns is-size-5">
+                                        <span className="column is-9
+                                            has-text-weight-medium">
+                                            成分総計
+                                        </span>
+                                        <span className="column">
+                                            {(totalComponent.mg / 1000).toFixed(3)}
+                                            {' '}g/kg
+                                        </span>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                        <div className="column is-full is-size-5
+                            editor-group editor-quality">
+                            <h3 className="is-size-5">泉質</h3>
+                            <div className="editor-row">{quality}</div>
+                        </div>
                    </div>
-               </fieldset>
-               <fieldset className="form-facility">
-                   <div className="form-list">
-                       <Row label="施設名">
-                           {InputMetadata('facilityName')}
-                       </Row>
-                       <Row label="浴室名/浴槽名">
-                           {InputMetadata('roomName')}
-                       </Row>
-                   </div>
-               </fieldset>
-               <fieldset className="form-investigation">
-                   <h3>湧出地における調査及び試験成績</h3>
-                   <div className="form-list">
-                       <Row label="調査及び試験者">
-                           {InputMetadata('investigator')}
-                       </Row>
-                       <Row label="調査及び試験年月日">
-                           {InputMetadata('investigatedDate')}
-                       </Row>
-                       <Row label="泉温">
-                           <InputNumber
-                               value={a.temperature}
-                               size={4}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           temperature: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {InputMetadata('temperatureExtra', 20)}
-                       </Row>
-                       <Row label="湧出量/利用量">
-                           <InputNumber
-                               value={a.yield}
-                               size={4}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           yield: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {InputMetadata('yieldExtra')}
-                       </Row>
-                       <Row label="知覚的試験">
-                           {InputMetadata('perception', 20)}
-                       </Row>
-                       <Row label="pH値">
-                           <InputNumber
-                               value={a.pH}
-                               size={4}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           pH: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {InputMetadata('pHExtra')}
-                       </Row>
-                       <Row label="電気伝導率">
-                           {InputMetadata('conductivity')}
-                       </Row>
-                       {/*
-                       <Row label="ラドン">
-                           <InputNumber
-                               value={a.bq}
-                               size={2}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           bq: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {' '} Bq/kg,{' '}
-                           <InputNumber
-                               value={a.ci}
-                               size={2}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           ci: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {' '} ×10<sup>-10</sup> Ci/kg, {' '}
-                           <InputNumber
-                               value={a.me}
-                               size={2}
-                               onChange={n => {
-                                   this.setState(update(this.state, {
-                                       analysis: {
-                                           me: { $set: n }
-                                       }
-                                   }));
-                                   this.onChangeAnalysis();
-                               }} />
-                           {' '} M.E.
-                       </Row>
-                       */}
-                   </div>
-               </fieldset>
-               <fieldset className="form-test">
-                   <h3>試験室における試験成績</h3>
-                   <div className="form-list">
-                       <Row label="試験者">
-                           {InputMetadata('tester', 20)}
-                       </Row>
-                       <Row label="分析終了年月日">
-                           {InputMetadata('testedDate', 20)}
-                       </Row>
-                       <Row label="知覚的試験">
-                           {InputMetadata('testedPerception', 20)}
-                       </Row>
-                       <Row label="密度">
-                           {InputMetadata('testedDencity', 20)}
-                       </Row>
-                       <Row label="pH値">
-                           {InputMetadata('testedPH', 20)}
-                       </Row>
-                       <Row label="蒸発残留物">
-                           {InputMetadata('testedER', 20)}
-                       </Row>
-                   </div>
-               </fieldset>
-               <div className="form-component">
-                   <h3>試料1kg中の成分・分量及び組成</h3>
-                   <div className="form-list">
-                       <fieldset className="form-positiveion">
-                           <h4>陽イオン</h4>
-                           <TableComponentInput
-                               labels={{title: '成分', total: '陽イオン計'}}
-                               columns={['name', 'mg', 'mval', 'mvalPercent']}
-                               rows={rows.positiveIon}
-                               components={a.positiveIon}
-                               onChangeComponent={this.updatePositiveIon}
-                           />
-                       </fieldset>
-                       <fieldset className="form-negativeion">
-                           <h4>陰イオン</h4>
-                           <TableComponentInput
-                               labels={{title: '成分', total: '陰イオン計'}}
-                               columns={['name', 'mg', 'mval', 'mvalPercent']}
-                               rows={rows.negativeIon}
-                               components={a.negativeIon}
-                               onChangeComponent={this.updateNegativeIon}
-                           />
-                       </fieldset>
-                       <fieldset className="form-dissolved">
-                           <h4>遊離成分</h4>
-                           <TableComponentInput
-                               labels={{title: '非解離成分', total: '非解離成分計'}}
-                               columns={['name', 'mg', 'mmol']}
-                               rows={rows.undissociated}
-                               components={a.undissociated}
-                               onChangeComponent={this.updateUndissociated}
-                           />
-                           <TableComponentInput
-                               labels={{title: '溶存ガス成分',
-                                        total: '溶存ガス成分計'}}
-                               columns={['name', 'mg', 'mmol']}
-                               rows={rows.gas}
-                               components={a.gas}
-                               onChangeComponent={this.updateGas}
-                           />
-                       </fieldset>
-                       <fieldset className="form-minor">
-                           <h4>その他微量成分</h4>
-                           <TableComponentInput
-                               labels={{title: '微量成分', total: '微量成分計'}}
-                               columns={['name', 'mg']}
-                               rows={rows.minor}
-                               sizes={{mg: 18}}
-                               components={a.minor}
-                               onChangeComponent={this.updateMinor}
-                           />
-                       </fieldset>
-                       <div className="form-total">
-                           <p>
-                               <span>
-                                   溶存物質計(ガス性のものを除く)
-                               </span>
-                               <span>
-                                   {(totalMelt.mg / 1000).toFixed(3)}
-                                   g/kg
-                               </span>
-                           </p>
-                           <p>
-                               <span>
-                                   成分総計
-                               </span>
-                               <span>
-                                   {(totalComponent.mg / 1000).toFixed(3)}
-                                   g/kg
-                               </span>
-                           </p>
+                   <fieldset className="editor-group editor-usage">
+                       <h3 className="is-size-5">浴槽の温泉利用に関する情報</h3>
+                       <div className="columns is-widescreen is-multiline
+                           editor-rows">
+                           <div className="column is-half-widescreen">
+                               <Row label="加水" labelFor="water">
+                                   {InputMetadata('water')}
+                               </Row>
+                           </div>
+                           <div className="column is-half-widescreen">
+                               <Row label="加温" labelFor="heating">
+                                   {InputMetadata('heating')}
+                               </Row>
+                           </div>
+                           <div className="column is-half-widescreen">
+                               <Row label="循環・ろ過" labelFor="circulation">
+                                   {InputMetadata('circulation')}
+                               </Row>
+                           </div>
+                           <div className="column is-half-widescreen">
+                               <Row label="消毒" labelFor="chlorination">
+                                   {InputMetadata('chlorination')}
+                               </Row>
+                           </div>
+                           <div className="column is-half-widescreen">
+                               <Row label="入浴剤" labelFor="additive">
+                                   {InputMetadata('additive')}
+                               </Row>
+                           </div>
                        </div>
-                   </div>
-               </div>
-               <div className="form-quality">
-                   <h3>泉質</h3>
-                   <span>{quality}</span>
-               </div>
-               <fieldset className="form-usage">
-                   <h3>浴槽の温泉利用に関する情報</h3>
-                   <div className="form-list">
-                       <Row label="加水">
-                           {InputMetadata('water')}
-                       </Row>
-                       <Row label="加温">
-                           {InputMetadata('heating')}
-                       </Row>
-                       <Row label="循環・ろ過">
-                           {InputMetadata('circulation')}
-                       </Row>
-                       <Row label="消毒">
-                           {InputMetadata('additive')}
-                       </Row>
-                       <Row label="入浴剤">
-                           {InputMetadata('chlorination')}
-                       </Row>
-                   </div>
-               </fieldset>
-               <div className="form-footer">
-                   <textarea
-                       value={a.getMetadata('footer')}
-                       onChange={e =>
-                           this.updateMetadata('footer', e.target.value)
-                       }
-                       rows={1 +
-                            (a.getMetadata('footer') ?? '').split('\n').length
-                       }
-                       placeholder='補足'>
-                   </textarea>
+                   </fieldset>
+                   <fieldset className="editor-group editor-footer">
+                       <h3 className="is-size-5">
+                           補足 ※特記やメモなどご自由に
+                       </h3>
+                       <textarea
+                           value={a.getMetadata('footer')}
+                           onChange={e =>
+                               this.updateMetadata('footer', e.target.value)
+                           }
+                           rows={1 +
+                             (a.getMetadata('footer') ?? '').split('\n').length
+                           }
+                           placeholder='補足'
+                           className="textarea">
+                       </textarea>
+                   </fieldset>
                </div>
             </div>
         )

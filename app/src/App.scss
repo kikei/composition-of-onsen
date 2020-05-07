@@ -1,0 +1,142 @@
+@charset "utf-8";
+
+$sugar-cane-700: #2c3b0c; // 700
+$sugar-cane-500: #506138; // 500
+$sugar-cane-400: #748361; // 400
+$sugar-cane-200: #9ca98e; // 200
+$sugar-cane-80: #c4cebb; // 80
+$sugar-cane-20: #f9fff4; // 20
+
+$snow-flurry-700: #2e360a; // 700
+$snow-flurry-600: #3f592b; // 600
+$snow-flurry-500: #567242; // 500
+$snow-flurry-300: #749160; // 300
+$snow-flurry-100: #98b482; // 100
+$snow-flurry-80: #bdd7a4; // 80
+$snow-flurry-20: #e8ffcb; // 20
+
+$color-7: $snow-flurry-700;
+$color-6: $snow-flurry-600;
+$color-5: $snow-flurry-500;
+$color-4: $snow-flurry-300;
+$color-3: $snow-flurry-100;
+$color-2: $snow-flurry-80;
+$color-1: $snow-flurry-20;
+$color-0: $sugar-cane-20;
+
+$scheme-main: $color-1;
+$background: $color-1;
+$primary: $color-4;
+
+$text-strong: $color-6;
+$text: $color-5;
+$link: $color-4;
+$subtitle-color: $color-6;
+$border: $color-3;
+$button-border-color: $color-4;
+
+$navbar-background-color: $color-7;
+
+$pagination-current-background-color: $color-4;
+
+$table-background-color: transparent;
+$table-head-background-color: $color-3;
+$table-head-cell-color: $color-4;
+$table-cell-border: $color-1;
+$table-cell-border-width: 0 0 1px;
+$table-row-hover-background-color: $color-2;
+
+@import "~bulma/bulma.sass";
+
+body {
+  font-family: "Helvetica Neue",
+               Arial,
+               "Hiragino Kaku Gothic ProN",
+               "Hiragino Sans",
+               Meiryo,
+               sans-serif;
+  background-color: $color-2;
+}
+
+.hidden {
+    display: none;
+}
+
+.app-header h1 a {
+    color: $color-1;
+}
+
+.select_view-nav {
+    text-align: right;
+
+    button {
+        margin: 1% 0.25em 0em 0.25em;
+        padding: 0.5em;
+        border: #000 solid 1px;
+        border-radius: 2px;
+        min-width: 4em;
+        background: #fff;
+    }
+}
+
+.app-body {
+    margin: 3.0em 0em 0em 0em;
+    > .container {
+        background-color: $color-0;
+    }
+}
+
+.search-list {
+    list-style: circle;
+}
+
+.search-item:hover {
+    background-color: $sugar-cane-80;
+}
+
+.search-title {
+    margin: 1.0em 0px 0.25em 0px !important;
+}
+
+.search-subtitle {
+    margin: 0px 0px 0px 0em !important;
+}
+
+.search-location, .search-detail {
+    color: $text;
+}
+
+.pages ul {
+    list-style: none;
+}
+
+.pages li {
+    /* mysterious margin inserted into .content li + li */
+    margin: 0px !important;
+}
+
+.pages a:hover {
+    background-color: $color-2;
+}
+
+.container-export {
+    width: calc(100% - 2em);
+    height: 75vh;
+    padding: 0.5em 1em 1em 1em;
+}
+
+.container-export pre {
+    width: calc(100% - 1em);
+    height: 100%;
+    border: 1px solid #000;
+    background-color: #eee;
+    text-align: left;
+    padding: 0.5em;
+    overflow: scroll;
+}
+
+@import "styles/editor.scss";
+
+.analysis-container {
+    padding-bottom: 1em;
+}
