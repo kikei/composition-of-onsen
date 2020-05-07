@@ -8,6 +8,7 @@ import './App.scss';
 import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
 import SearchInput from './components/SearchInput';
+import ScrollButton from './components/ScrollButton';
 import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
@@ -230,6 +231,11 @@ export default class App extends React.Component {
                         </Switch>
                     </div>
                 </BrowserRouter>
+                <footer>
+                </footer>
+                <div className="id-overlay scrollup-button">
+                    <ScrollButton />
+                </div>
             </ConfigContext.Provider>
         );
     }

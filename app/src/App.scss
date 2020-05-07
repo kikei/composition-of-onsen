@@ -140,3 +140,40 @@ body {
 .analysis-container {
     padding-bottom: 1em;
 }
+
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} { @content; }
+    @-moz-keyframes    #{$name} { @content; }
+    @-ms-keyframes     #{$name} { @content; }
+    @keyframes         #{$name} { @content; }
+}
+
+@include keyframes(fadein-1) {
+    0%   { opacity: 0.2; }
+    100% { opacity: 0.9; }
+}
+
+@include keyframes(fadeout-1) {
+    0%   { opacity: 0.9; }
+    100% { opacity: 0.0; }
+}
+
+.scrollup-button {
+    position: fixed;
+    bottom: 1%;
+    right: 1%;
+    width: 64px;
+    height: 64px;
+    .top {
+        display: none;
+    }
+    .notop {
+        opacity: 0.2;
+    }
+    .notop:hover {
+        opacity: 0.9;
+        animation: fadein-1 0.5s ease 1;
+    }
+}
+
+
