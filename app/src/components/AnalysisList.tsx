@@ -124,8 +124,9 @@ const AnalysisListView: React.FC<{
                     <div>
                         <p>
                             全 {total} 件中
-                            {' '}{limit * page + 1} 件目 〜
-                            {' '}{limit * page + analyses.length} 件目を表示
+                            {' '}{limit * (page - 1) + 1} 件目 〜
+                            {' '}{limit * (page - 1) + analyses.length}
+                            件目を表示
                         </p>
                         <ul className="search-list">
                             {
