@@ -125,12 +125,16 @@ const AnalysisListView: React.FC<{
             context => {
                 return (
                     <div>
-                        <p>
-                            全 {total} 件中
-                            {' '}{limit * (page - 1) + 1} 件目 〜
-                            {' '}{limit * (page - 1) + analyses.length}
-                            件目を表示
-                        </p>
+                        {
+                            total > 0 ? (
+                                <p>
+                                    全 {total} 件中
+                                    {' '}{limit * (page - 1) + 1} 件目 〜
+                                    {' '}{limit * (page - 1) + analyses.length}
+                                    件目を表示中
+                                </p>
+                            ) : <p>見つかりませんでした</p>
+                        }
                         <ul className="search-list">
                             {
                                 analyses.map((a, i) =>

@@ -70,7 +70,7 @@ export default class WebAPI {
                 .then(obj => {
                     const a =
                         obj.analysis.map((a: IAnalysis) => new Analysis(a));
-                    console.log('WebAPI.fetchGetAnalysis done, obj:', obj,
+                    console.log('WebAPI.fetchGetAnalyses done, obj:', obj,
                                 'a:', a);
                     return {
                         analyses: a,
@@ -78,6 +78,15 @@ export default class WebAPI {
                         limit: obj.limit,
                         total: obj.total
                     };
+                })
+                .catch(e => {
+                    console.warn('WebAPI.fetchGetAnalyses done, error:', e);
+                    return {
+                        analyses: [],
+                        page: 0,
+                        limit: 1,
+                        total: 0
+                    }
                 });
         return suspender<IAnalysesResponse, string>(promise);
     }
@@ -87,13 +96,22 @@ export default class WebAPI {
         console.log('WebAPI.fetchGetAnalysis, url:', url);
         const promise =
             fetch(url)
-                .then(r => r.json())
+                .then(r => {
+                    if (r.ok)
+                        return r.json();
+                    else
+                        throw new Error(`${r.statusText} ${r.status}`);
+                })
                 .then(obj => {
                     const a = new Analysis(obj);
                     console.log('WebAPI.fetchGetAnalysis done,',
                                 'a:', a);
                     return a;
-                });
+                })
+                .catch(e => {
+                    console.warn('WebAPI.fetchGetAnalysis done, error:', e);
+                    throw e;
+                })
         return suspender<Analysis, string>(promise);
     }
 
