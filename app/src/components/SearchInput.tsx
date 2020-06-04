@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 interface IProps {
+    value?: string;
     onSearch?: (query: string) => void;
 }
 
 const SearchInput: React.FC<IProps> = props => {
-    const [searchInput, setSearchInput] = useState('');
+    const [searchInput, setSearchInput] = useState(props.value ?? '');
 
     const onSubmit = (query: string) => {
         if (typeof props.onSearch === 'function') {

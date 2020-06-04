@@ -250,7 +250,7 @@ export default class AnalysisList extends React.Component<IProps, IState> {
 
     render() {
         const state = this.state;
-        console.log('AnalysisList render, state:', state,
+        console.log('AnalysisList render, state:', state, 'props:', this.props,
                     'options:', this.options);
         return (
             <div className="container">
@@ -259,7 +259,8 @@ export default class AnalysisList extends React.Component<IProps, IState> {
                     </div>
                     <div className="column">
                         <div className="content search-container">
-                            <SearchInput onSearch={this.onSearch} />
+                            <SearchInput value={this.props.query ?? ''}
+                                         onSearch={this.onSearch} />
                             {
                                 state.analyses ? (
                                     <Suspense fallback={<p>Loading...</p>}>
