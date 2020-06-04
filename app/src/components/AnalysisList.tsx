@@ -119,7 +119,7 @@ const AnalysisListView: React.FC<{
 }> = props => {
     const { analyses, limit, total } = props.analyses;
     const { page } = props.options;
-    const finalPage = Math.floor(total / limit) + 1;
+    const finalPage = Math.floor((total - 1) / limit) + 1;
     return (
         <ConfigContext.Consumer>{
             context => {
