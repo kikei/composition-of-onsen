@@ -13,6 +13,7 @@ export interface IProps extends RouteComponentProps {
     orderBy: AnalysesOrderBy;
     direction: AnalysesDirection;
     page: number;
+    query?: string | null;
     limit?: number;
 }
 
@@ -97,9 +98,11 @@ const AnalysisPage: React.FC<{
     className?: string
 }> = props => {
     const path = new AppPath(props.context);
-    const { page, orderBy, direction } = props.options;
+    const { page, orderBy, direction, query } = props.options;
     return (
-        <Link to={path.analysesPage(`${orderBy}`, `${direction}`, page)}
+        <Link to={path.analysesPage(`${orderBy}`, `${direction}`, page, {
+            query: query
+        })}
               className={[
                   props.className,
                   'pagination-link',
@@ -224,15 +227,25 @@ export default class AnalysisList extends React.Component<IProps, IState> {
         console.log('componentWllMount context:', this.context);
         const api = new WebAPI(this.context);
         this.setState({ analyses: api.fetchGetAnalyses(this.options) });
+        this.onSearch = this.onSearch.bind(this);
     }
 
     getAnalysesOptions(): IAnalysesPage {
-        return {
+        const options = {
             page: this.props.page,
             limit: this.limit,
             orderBy: this.props.orderBy,
-            direction: this.props.direction
-        }
+            direction: this.props.direction,
+            query: this.props.query
+        } as any;
+        return options;
+    }
+
+    onSearch(query: string) {
+        this.props.history.push({
+            pathname: '/',
+            search: '?query=' + encodeURIComponent(query)
+        })
     }
 
     render() {
@@ -246,7 +259,7 @@ export default class AnalysisList extends React.Component<IProps, IState> {
                     </div>
                     <div className="column">
                         <div className="content search-container">
-                            <SearchInput />
+                            <SearchInput onSearch={this.onSearch} />
                             {
                                 state.analyses ? (
                                     <Suspense fallback={<p>Loading...</p>}>

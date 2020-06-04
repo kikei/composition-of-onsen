@@ -119,7 +119,9 @@ const AppContent = (props: any): any => {
 
 const ListApp = (props: RouteComponentProps) => {
     let { orderBy, direction, page } = useParams();
-    console.log('ListApp params:', orderBy, direction, page);
+    const params = new URLSearchParams(props.location.search);
+    const query = params.get('query');
+    console.log('ListApp params:', orderBy, direction, page, query);
 
     // Default values
     orderBy = orderBy ?? 'timeline';
@@ -139,11 +141,12 @@ const ListApp = (props: RouteComponentProps) => {
         console.info('Invalid direction:', direction);
         return <div>error (APP_LISTAPP_INVALID_DIRECTION)</div>
     }
-    return <AnalysisList key={window.location.pathname}
+    return <AnalysisList key={window.location.pathname + window.location.search}
                          {...props}
                          orderBy={orderBy}
                          direction={direction}
                          page={pageNumber}
+                         query={query}
     />
 };
 

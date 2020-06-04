@@ -16,10 +16,13 @@ export default class AppPath {
             this.paths['top'];
     }
 
-    analysesPage(orderBy: string, direction: string, page: number): string {
+    analysesPage(orderBy: string, direction: string, page: number, params: {
+        query: string
+    }): string {
         return this.paths['analysesPage']
             .replace('{orderBy}', orderBy)
             .replace('{direction}', direction)
-            .replace('{page}', `${page}`);
+            .replace('{page}', `${page}`) +
+            `?query=${encodeURIComponent(params.query)}`;
     }
 }

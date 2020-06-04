@@ -20,6 +20,7 @@ export function isValidDirection(x: any): x is AnalysesDirection {
 }
 
 export interface IAnalysesOptions {
+    query?: string;
     page?: number;
     limit?: number;
     orderBy?: AnalysesOrderBy;
@@ -42,6 +43,7 @@ export default class WebAPI {
 
     urlAnalyses(options: IAnalysesOptions = {} as any) {
         const query = [
+            options.query ? `q=${encodeURIComponent(options.query)}` : null,
             options.page ? `p=${options.page - 1}` : null,
             options.limit ? `l=${options.limit}` : null,
             options.orderBy ? 'o=' + (
