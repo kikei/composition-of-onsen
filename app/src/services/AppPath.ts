@@ -23,6 +23,6 @@ export default class AppPath {
             .replace('{orderBy}', orderBy)
             .replace('{direction}', direction)
             .replace('{page}', `${page}`) +
-            `?query=${encodeURIComponent(params.query)}`;
+            (!!params.query ? `?query=${encodeURIComponent(params.query)}` : '');
     }
 }
