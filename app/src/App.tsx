@@ -226,7 +226,7 @@ export default class App extends React.Component {
                     <header className="navbar is-fixed-top app-header">
                         <h1 className="navbar-brand">
                             <Link to="/" className="navbar-item">
-                                温泉分析書庫 (仮)
+                                温泉草子
                             </Link>
                         </h1>
                         <nav className="navbar-menu">
