@@ -17,7 +17,7 @@ import { Comp } from './constants/ChemicalConst';
 import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
 import WebAPI, { isValidOrderBy, isValidDirection } from './services/WebAPI';
 import { enableMathJax } from './utils/MathJax';
-import { getSampleAnalysisResource } from './utils/SampleAnalysis';
+import * as SampleAnalysis from './utils/SampleAnalysis';
 import { resource } from './utils/Resource';
 
 const Const = ChemicalConst;
@@ -160,7 +160,8 @@ const AnalysisApp = (props: RouteComponentProps) => {
         const api = new WebAPI(configContext);
         const saved = Storage.getInputAnalysis();
         return id === '_new' ? (
-            saved === null ? getSampleAnalysisResource() : resource(saved)
+            saved === null ?
+            resource(SampleAnalysis.newAnalysis()) : resource(saved)
         ) : api.fetchGetAnalysis(id);
     }
     const [analysis, setAnalysis] = useState(getAnalysis(id));

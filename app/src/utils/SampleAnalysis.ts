@@ -1,13 +1,6 @@
-import Resource, { suspender } from './Resource';
 import Analysis from '../models/Analysis';
 
-export function getSampleAnalysisResource(): Resource<Analysis> {
-    const promise = new Promise<Analysis>((resolve, reject) =>
-        setTimeout(() => resolve(newAnalysis()), 100));
-    return suspender<Analysis, string>(promise);
-};
-
-function newAnalysis(): Analysis {
+export function newAnalysis(): Analysis {
     return new Analysis({
         no: '',
         applicantAddress: '',
