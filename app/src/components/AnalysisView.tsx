@@ -60,6 +60,8 @@ extends React.Component<IProps, IState> {
         this.setState({viewMode: viewMode});
     }
     saveAnalysis() {
+        console.log('AnalysisView.saveAnalysis,', 'props:', this.props);
+        renderMathJax();
         const context = this.context;
         const a = new Analysis(this.state.analysis);
         const api = new WebAPI(context);
