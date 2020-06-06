@@ -11,6 +11,7 @@ import WebAPI from '../services/WebAPI';
 import AppPath from '../services/AppPath';
 
 type ViewMode = 'edit' | 'json';
+type SaveResult = 'none' | 'success' | 'failed';
 
 export interface IProps extends RouteComponentProps<any> {
     analysis: Analysis;
@@ -26,6 +27,7 @@ export interface IProps extends RouteComponentProps<any> {
 interface IState {
     analysis: IAnalysis;
     viewMode: ViewMode;
+    saveResult: SaveResult;
 }
 
 export default class AnalysisView
@@ -36,7 +38,8 @@ extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             analysis: props.analysis.toObject(),
-            viewMode: 'edit'
+            viewMode: 'edit',
+            saveResult: 'none'
         };
         this.selectView = this.selectView.bind(this);
         this.saveAnalysis = this.saveAnalysis.bind(this);
@@ -59,33 +62,42 @@ extends React.Component<IProps, IState> {
     selectView(viewMode: ViewMode) {
         this.setState({viewMode: viewMode});
     }
-    saveAnalysis() {
+    async saveAnalysis() {
         console.log('AnalysisView.saveAnalysis,', 'props:', this.props);
         renderMathJax();
         const context = this.context;
-        const a = new Analysis(this.state.analysis);
+        let a = new Analysis(this.state.analysis);
         const api = new WebAPI(context);
         console.log('saveAnalysis, a:', a);
-        if (!a.id) {
-            // Create new analysis
-            api.fetchPutAnalysis(a).then(a => {
+        try {
+            if (!a.id) {
+                // Create new analysis
+                a = await api.fetchPutAnalysis(a);
                 const path = new AppPath(context);
                 console.log('saveAnalysis pushes history:',
                             path.analysis(a));
                 this.props.history.push(path.analysis(a));
-            });
-        } else {
-            // Update existing analysis
-            api.fetchPostAnalysis(a).then(a => {
+            } else {
+                // Update existing analysis
+                a = await api.fetchPostAnalysis(a);
                 this.setState({
                     analysis: a.toObject()
                 });
+            }
+            this.setState({
+                saveResult: 'success'
+            });
+        } catch (e) {
+            console.warn('Failed to save Analysis, e:', e);
+            this.setState({
+                saveResult: 'failed'
             });
         }
     }
     updateAnalysis(value: IAnalysis) {
         this.setState({
-            analysis: JSON.parse(JSON.stringify(value)) // deep copy
+            analysis: JSON.parse(JSON.stringify(value)), // deep copy
+            saveResult: 'none'
         });
     }
     render() {
@@ -103,10 +115,22 @@ extends React.Component<IProps, IState> {
                             className="button is-rounded">
                         JSON
                     </button>
-                    <button onClick={e => this.saveAnalysis()}
-                            className="button is-primary is-rounded">
-                        Save
-                    </button>
+                    {
+                        state.saveResult === 'none' ? (
+                            <button onClick={e => this.saveAnalysis()}
+                                    className="button is-primary is-rounded">
+                                Save
+                            </button>
+                        ) : state.saveResult === 'success' ? (
+                            <button className="button is-success is-rounded">
+                                Success!
+                            </button>
+                        ) : (
+                            <button className="button is-danger is-rounded">
+                                Error!
+                            </button>
+                        )
+                    }
                 </nav>
                 <div className="content analysis-container">
                     <AnalysisTableEditor

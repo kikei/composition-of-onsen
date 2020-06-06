@@ -129,7 +129,12 @@ export default class WebAPI {
                 mode: 'cors',
                 body: a.toJSONString()
             })
-                .then(r => r.json())
+                .then(r => {
+                    if (r.ok)
+                        return r.json();
+                    else
+                        throw new Error(`${r.statusText} ${r.status}`);
+                })
                 .then(obj => {
                     const a = new Analysis(obj);
                     console.log('WebAPI.fetchPutAnalysis done,',
@@ -153,7 +158,12 @@ export default class WebAPI {
                 mode: 'cors',
                 body: a.toJSONString()
             })
-                .then(r => r.json())
+                .then(r => {
+                    if (r.ok)
+                        return r.json();
+                    else
+                        throw new Error(`${r.statusText} ${r.status}`);
+                })
                 .then(obj => {
                     const a = new Analysis(obj);
                     console.log('WebAPI.fetchPostAnalysis done,',
