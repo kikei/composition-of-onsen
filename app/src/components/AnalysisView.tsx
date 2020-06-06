@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
+import * as Storage from '../Storage';
+
 import Analysis, { IAnalysis } from '../models/Analysis';
 import CompRepresentations from '../models/CompRepresentations';
 import AnalysisTableEditor from './AnalysisTableEditor';
@@ -95,6 +97,7 @@ extends React.Component<IProps, IState> {
             this.setState({
                 saveResult: 'success'
             });
+            Storage.setInputAnalysis(null);
         } catch (e) {
             console.warn('Failed to save Analysis, e:', e);
             this.setState({
@@ -107,6 +110,7 @@ extends React.Component<IProps, IState> {
             analysis: JSON.parse(JSON.stringify(value)), // deep copy
             saveResult: 'none'
         });
+        Storage.setInputAnalysis(new Analysis(value));
     }
     render() {
         const state = this.state;

@@ -8,6 +8,12 @@ export default interface Resource<T> {
     read: () => T
 }
 
+export function resource<T>(item: T, delay?: number): Resource<T> {
+    const promise = new Promise<T>((resolve, _) =>
+        setTimeout(() => resolve(item), delay ?? 0));
+    return suspender<T, string>(promise);
+};
+
 export function suspender<T, E>(promise: Promise<T>): Resource<T> {
     let status = ResourceStatus.Pending;
     let result: T;

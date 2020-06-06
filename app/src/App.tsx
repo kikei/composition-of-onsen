@@ -5,6 +5,8 @@ import {
 } from 'react-router-dom';
 import './App.scss';
 
+import * as Storage from './Storage';
+
 import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
 import SearchInput from './components/SearchInput';
@@ -16,6 +18,7 @@ import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
 import WebAPI, { isValidOrderBy, isValidDirection } from './services/WebAPI';
 import { enableMathJax } from './utils/MathJax';
 import { getSampleAnalysisResource } from './utils/SampleAnalysis';
+import { resource } from './utils/Resource';
 
 const Const = ChemicalConst;
 
@@ -155,9 +158,10 @@ const AnalysisApp = (props: RouteComponentProps) => {
     const { id } = useParams();
     const getAnalysis = (id: string) => {
         const api = new WebAPI(configContext);
-        return id === '_new' ?
-               getSampleAnalysisResource() :
-               api.fetchGetAnalysis(id);
+        const saved = Storage.getInputAnalysis();
+        return id === '_new' ? (
+            saved === null ? getSampleAnalysisResource() : resource(saved)
+        ) : api.fetchGetAnalysis(id);
     }
     const [analysis, setAnalysis] = useState(getAnalysis(id));
     const [lastId, setLastId] = useState(id);
