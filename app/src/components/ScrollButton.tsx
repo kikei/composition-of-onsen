@@ -43,8 +43,11 @@ const ScrollButton: React.FC<IProps> = props => {
             setTimerId(_timerId = setInterval(scrollStep, interval));
     };
     return (
-        <a title="Back to top"
-           onClick={e => scrollTo()}
+        <a href="?" title="Back to top"
+           onClick={e => {
+            e.preventDefault();
+            scrollTo()
+           }}
            className={ visible ? 'notop' : 'top' }>
             <Arrow />
         </a>
