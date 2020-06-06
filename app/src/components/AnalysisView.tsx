@@ -11,7 +11,7 @@ import WebAPI from '../services/WebAPI';
 import AppPath from '../services/AppPath';
 
 type ViewMode = 'edit' | 'json';
-type SaveResult = 'none' | 'success' | 'failed';
+type SaveResult = 'none' | 'progress' | 'success' | 'failed';
 
 export interface IProps extends RouteComponentProps<any> {
     analysis: Analysis;
@@ -68,6 +68,14 @@ extends React.Component<IProps, IState> {
         const context = this.context;
         let a = new Analysis(this.state.analysis);
         const api = new WebAPI(context);
+
+        // Ignore operation when the last request is on progress.
+        if (this.state.saveResult !== 'none')
+            return;
+        this.setState({
+            saveResult: 'progress'
+        });
+
         console.log('saveAnalysis, a:', a);
         try {
             if (!a.id) {
@@ -120,6 +128,10 @@ extends React.Component<IProps, IState> {
                             <button onClick={e => this.saveAnalysis()}
                                     className="button is-primary is-rounded">
                                 Save
+                            </button>
+                        ) : state.saveResult === 'progress' ? (
+                            <button className="button is-primary is-loading is-rounded">
+                                Saving...
                             </button>
                         ) : state.saveResult === 'success' ? (
                             <button className="button is-success is-rounded">
