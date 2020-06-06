@@ -67,6 +67,7 @@ function isMedicalNaCl(na: number, cl: number): boolean {
 // function isMedicalRn(mg: number): boolean { return mg >= 3e-9 }
 
 function isMineralCO2(mg: number): boolean { return mg >= 250.0 }
+function isMineralHCO3(mg: number): boolean { return mg >= 340 }
 function isMineralHSiO3(mg: number): boolean { return mg >= 50.0 }
 function isMineralH2SiO3(mg: number): boolean { return mg >= 50.0 }
 function isMineralBO2(mg: number): boolean { return mg >= 5.0 }
@@ -342,6 +343,8 @@ export function qualityName(a: Analysis): string {
     if (isMineralHSiO3(a.negativeIonValue('HSiO3')?.mg) ||
         isMineralH2SiO3(a.undissociatedValue('H2SiO3')?.mg))
         q.addMineral('H2SiO3');
+    if (isMineralHCO3(a.negativeIonValue('HCO3')?.mg))
+        q.addMineral('HCO3');
 
     const category =
         isSimple(a) ? 'Simple' :
@@ -375,6 +378,8 @@ const qualityJPName: Localizer = (comp: Comp, options: ILocalizerOption) => {
                 return 'ヨウ素イオン';
             case 'F':
                 return 'ふっ素イオン';
+            case 'HCO3':
+                return '重炭酸そうだ';
             case 'H2SiO3':
                 return 'メタケイ酸';
             case 'HBO2':
