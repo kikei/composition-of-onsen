@@ -12,6 +12,7 @@ const SearchInput: React.FC<IProps> = props => {
         if (typeof props.onSearch === 'function') {
             props.onSearch(searchInput);
         }
+        setSearchInput('');
     };
 
     return (

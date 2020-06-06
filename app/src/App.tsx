@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from 'react';
 import {
     BrowserRouter, Switch, Route, Link, useParams,
-    RouteComponentProps
+    RouteComponentProps, withRouter
 } from 'react-router-dom';
 import './App.scss';
 
@@ -196,6 +196,20 @@ const configContext: IConfigContext = {
 
 console.log('configContext:', configContext, 'env:', process.env);
 
+const TopSearchInput = withRouter(props => {
+
+    const onSearch = (query: string) => {
+        props.history.push({
+           pathname: '/',
+           search: '?query=' + encodeURIComponent(query)
+        })
+    }
+
+    return (
+        <SearchInput onSearch={onSearch} />
+    );
+});
+
 export default class App extends React.Component {
     componentDidMount() {
         enableMathJax();
@@ -213,7 +227,7 @@ export default class App extends React.Component {
                         <nav className="navbar-menu">
                             <div className="navbar-end app-nav" >
                                 <div className="navbar-item">
-                                    <SearchInput />
+                                    <TopSearchInput />
                                 </div>
                                 <div className="navbar-item">
                                     <Link to={"/analysis/_new"}
