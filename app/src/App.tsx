@@ -15,6 +15,7 @@ import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
 import { Comp } from './constants/ChemicalConst';
 import ConfigContext, { IConfigContext } from './contexts/ConfigContext';
+import StorageContext, { DefaultStorageContext } from './contexts/StorageContext';
 import WebAPI, { isValidOrderBy, isValidDirection } from './services/WebAPI';
 import { enableMathJax } from './utils/MathJax';
 import * as SampleAnalysis from './utils/SampleAnalysis';
@@ -190,7 +191,9 @@ const AnalysisApp = (props: RouteComponentProps) => {
 const configContext: IConfigContext = {
     urls: {
         'analyses': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSES ?? '',
-        'analysis': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSIS ?? ''
+        'analysis': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSIS ?? '',
+        'comments': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENTS ?? '',
+        'comment_image': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENT_IMAGE ?? ''
     },
     paths: {
         'top': process.env.REACT_APP_PATH_TOP ?? '',
@@ -222,42 +225,44 @@ export default class App extends React.Component {
     render() {
         return (
             <ConfigContext.Provider value={configContext}>
-                <BrowserRouter>
-                    <header className="navbar is-fixed-top app-header">
-                        <h1 className="navbar-brand">
-                            <Link to="/" className="navbar-item">
-                                温泉草子
-                            </Link>
-                        </h1>
-                        <nav className="navbar-menu">
-                            <div className="navbar-end app-nav" >
-                                <div className="navbar-item">
-                                    <TopSearchInput />
+                <StorageContext.Provider value={new DefaultStorageContext()}>
+                    <BrowserRouter>
+                        <header className="navbar is-fixed-top app-header">
+                            <h1 className="navbar-brand">
+                                <Link to="/" className="navbar-item">
+                                    温泉草子
+                                </Link>
+                            </h1>
+                            <nav className="navbar-menu">
+                                <div className="navbar-end app-nav" >
+                                    <div className="navbar-item">
+                                        <TopSearchInput />
+                                    </div>
+                                    <div className="navbar-item">
+                                        <Link to={"/analysis/_new"}
+                                              className="button">
+                                            +
+                                        </Link>
+                                    </div>
                                 </div>
-                                <div className="navbar-item">
-                                    <Link to={"/analysis/_new"}
-                                        className="button">
-                                        +
-                                    </Link>
-                                </div>
-                            </div>
-                        </nav>
-                    </header>
-                    <div className="section app-body">
-                        <Switch>
-                            <Route path="/analyses/:orderBy/:direction/:page"
-                                   component={ListApp} />
-                            <Route path="/analysis/:id"
-                                   component={AnalysisApp} />
-                            <Route path="/" component={ListApp} />
-                        </Switch>
+                            </nav>
+                        </header>
+                        <div className="section app-body">
+                            <Switch>
+                                <Route path="/analyses/:orderBy/:direction/:page"
+                                       component={ListApp} />
+                                <Route path="/analysis/:id"
+                                       component={AnalysisApp} />
+                                <Route path="/" component={ListApp} />
+                            </Switch>
+                        </div>
+                    </BrowserRouter>
+                    <footer>
+                    </footer>
+                    <div className="id-overlay scrollup-button">
+                        <ScrollButton />
                     </div>
-                </BrowserRouter>
-                <footer>
-                </footer>
-                <div className="id-overlay scrollup-button">
-                    <ScrollButton />
-                </div>
+                </StorageContext.Provider>
             </ConfigContext.Provider>
         );
     }

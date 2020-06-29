@@ -11,6 +11,7 @@ import { renderMathJax } from '../utils/MathJax';
 import ConfigContext from '../contexts/ConfigContext';
 import WebAPI from '../services/WebAPI';
 import AppPath from '../services/AppPath';
+import CommentList from './CommentList';
 
 type ViewMode = 'edit' | 'json';
 type SaveResult = 'none' | 'progress' | 'success' | 'failed';
@@ -161,6 +162,13 @@ extends React.Component<IProps, IState> {
                         visible={viewMode === 'json'}
                     />
                 </div>
+                {
+                    !!a.id ? (
+                        <div className="content analysis-comment-container">
+                            <CommentList analysisId={a.id} />
+                        </div>
+                    ) : null
+                }
             </div>
         )
     }

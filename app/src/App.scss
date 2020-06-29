@@ -176,4 +176,53 @@ body {
     }
 }
 
+ul.comments-list {
+    list-style: none outside;
+    margin-left: 0px;
+}
+
+.comment-body {
+    div {
+        margin-left: 1em;
+        padding: 0.2em 1em 0.2em 1em;
+        border-left: solid 6px $color-2;
+    }
+}
+
+.comment-images {
+    list-style: none !important;
+    margin: 0px !important;
+    text-align: right;
+    a {
+        display: inline-block;
+    }
+}
+
+.comment-item {
+    margin: 0.5em 0em 1.0em 0em;
+    padding: 0.5em 0.5em 1.5em 0.5em;
+    border-bottom: solid 1px $color-2;
+    .level {
+        margin-bottom: 1.0em;
+    }
+}
+
+.comment-toolbox {
+    display: flex;
+    justify-content: flex-end;
+
+    > * {
+        align-self: flex-end;
+    }
+
+    a {
+        display: inline-block;
+        line-height: 1.1em;
+        margin-right: 0.5rem;
+        > * {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+    }
+}
 
