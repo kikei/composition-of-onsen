@@ -71,7 +71,6 @@ const CommentListView: React.FC<{
     const context = useContext(ConfigContext);
     const storageContext = useContext(StorageContext);
     const [comments, setComments] = useState(props.comments.comments);
-    const [editorKey, setEditorKey] = useState(0);
 
     const api = new WebAPI(context);
 
@@ -82,8 +81,6 @@ const CommentListView: React.FC<{
         } else {
             setComments(update(comments, { $splice: [[index, 1, comment]] }));
         }
-        // Refresh comment editor form
-        setEditorKey(editorKey + 1);
     };
 
     const deleteComment = async (token: string, id: string) => {
@@ -113,7 +110,10 @@ const CommentListView: React.FC<{
                 <React.Fragment>
                     <a className="button-delete"
                        href="?"
-                       onClick={e => deleteComment(token!, a.id!)}>
+                       onClick={e => {
+                           e.preventDefault();
+                           deleteComment(token!, a.id!);
+                       }}>
                         <Trashbox />
                     </a>
                     <a className="button-edit" href="?">
@@ -185,8 +185,7 @@ const CommentListView: React.FC<{
 
     return (
         <div>
-            <CommentEditor key={editorKey}
-                           analysisId={props.options.analysisId}
+            <CommentEditor analysisId={props.options.analysisId}
                            onSuccess={addedComment} />
             <ul className="content comments-list">
                 {

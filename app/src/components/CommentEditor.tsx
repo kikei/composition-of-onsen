@@ -5,6 +5,8 @@ import WebAPI from '../services/WebAPI';
 import ConfigContext from '../contexts/ConfigContext';
 import StorageContext from '../contexts/StorageContext';
 
+type SaveStatus = 'none' | 'progress' | 'success';
+
 interface IProps extends React.Props<any> {
     analysisId: string;
     onSuccess?: (token: string, comment: Comment) => void;
@@ -24,6 +26,7 @@ const CommentEditor: React.FC<IProps> = props => {
 
     const { token, username, email, website } = storageContext.getAuth();
 
+    const [saveState, setSaveState] = useState('none');
     const [inputName, setInputName] = useState(username);
     const [inputEmail, setInputEmail] = useState(email);
     const [inputWebsite, setInputWebsite] = useState(website);
@@ -31,11 +34,21 @@ const CommentEditor: React.FC<IProps> = props => {
     const inputFiles = [useRef<HTMLInputElement>(null)];
 
     const callOnSuccess = (token: string, comment: Comment) => {
+        // Reset form
+        setInputBody('');
+        inputFiles.forEach(ref => {
+            if (ref?.current) ref.current.value = '';
+        });
+        // Callback
         if (typeof props.onSuccess === 'function')
             props.onSuccess(token, comment);
     }
 
     const submitComment = async () => {
+        if (saveState !== 'none')
+            return;
+        setSaveState('progress');
+
         const images = inputFiles
             .map(ref => Array.from(ref.current?.files ?? []))
             .flat()
@@ -70,6 +83,9 @@ const CommentEditor: React.FC<IProps> = props => {
                 const res1 =
                     await api.fetchPostCommentImages(res.value, images);
                 console.log('Uploaded comment images, result:', res1);
+                setSaveState('success');
+                callOnSuccess(res1.token, res1.value);
+                setTimeout(() => setSaveState('none'), 1000);
             }
         } catch (e) {
             console.warn('Failed to submit comment, e:', e);
@@ -153,9 +169,27 @@ const CommentEditor: React.FC<IProps> = props => {
                 </div>
             </div>
             <div className="control">
-                <button
-                    onClick={submitComment}
-                    className="button is-primary is-rounded">送信</button>
+                {
+                    saveState === 'none' ? (
+                        <button
+                            onClick={submitComment}
+                            className="button is-primary is-rounded">
+                            送信
+                        </button>
+                    ) : saveState === 'progress' ? (
+                        <button className="button is-loading is-rounded">
+                            送信中...
+                        </button>
+                    ) : saveState === 'success' ? (
+                        <button className="button is-success is-rounded">
+                            成功!!
+                        </button>
+                    ) : (
+                        <button className="button is-danger is-rounded">
+                            Error!
+                        </button>
+                    )
+                }
             </div>
         </div>
     )

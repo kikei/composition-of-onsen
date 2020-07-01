@@ -1,6 +1,6 @@
 import Resource, { suspender } from '../utils/Resource';
 import Analysis, { IAnalysis } from '../models/Analysis';
-import Comment, { ICommentPhoto } from '../models/Comment';
+import Comment from '../models/Comment';
 import { AuthType } from '../models/Authorize';
 
 type WebAPIResource =
@@ -317,8 +317,7 @@ export default class WebAPI {
         return promise;
     }
 
-    fetchPostCommentImages(a: Comment, images: File[]):
-        Promise<WithAuth<Array<Array<ICommentPhoto>>>>
+    fetchPostCommentImages(a: Comment, images: File[]): Promise<WithAuth<Comment>>
     {
         if (!a.id)
             throw new TypeError('comment id must not be empty');
@@ -358,10 +357,10 @@ export default class WebAPI {
                     console.log('WebAPI.fetchPutComment done, obj:', obj,
                                 'a:', a);
                     return {
-                        value: obj.images,
-                        authType: obj.auth_type,
-                        userId: obj.userid,
-                        token: obj.token
+                        value: obj.comment,
+                        token: obj.token,
+                        authType: obj.comment.auth_type as AuthType,
+                        userId: a.userId!
                     };
                 });
         return promise;
