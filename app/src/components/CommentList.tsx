@@ -33,7 +33,7 @@ const commentBody = (body: string) => (
     <React.Fragment>
         {
             body.split('\n').map((t, i) =>
-                <span>{i != 0 ? <br /> : ''}{t}</span>
+                <span key={i!}>{i !== 0 ? <br /> : ''}{t}</span>
             )
         }
     </React.Fragment>
@@ -104,17 +104,19 @@ const CommentListView: React.FC<{
         }
         {
             !!a.web ? (
-                <a href={encodeURI(a.web)} target="_blank"><Globe /></a>
+                <a href={encodeURI(a.web)}
+                   target="_blank" rel="noopener noreferrer"><Globe /></a>
             ) : null
         }
         {
             token && a.userId && a.userId === userId ? (
                 <React.Fragment>
                     <a className="button-delete"
+                       href="?"
                        onClick={e => deleteComment(token!, a.id!)}>
                         <Trashbox />
                     </a>
-                    <a className="button-edit">
+                    <a className="button-edit" href="?">
                         <Edit />
                     </a>
                 </React.Fragment>
@@ -236,7 +238,6 @@ extends React.Component<IProps, IState> {
     }
 
     render() {
-        const props = this.props;
         const state = this.state;
         return (
             <div className="comment-container">
