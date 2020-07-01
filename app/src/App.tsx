@@ -193,7 +193,8 @@ const configContext: IConfigContext = {
         'analyses': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSES ?? '',
         'analysis': process.env.REACT_APP_WEBAPI_RESOURCE_ANALYSIS ?? '',
         'comments': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENTS ?? '',
-        'comment_image': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENT_IMAGE ?? ''
+        'comment_image': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENT_IMAGE ?? '',
+        'comment_images': process.env.REACT_APP_WEBAPI_RESOURCE_COMMENT_IMAGES ?? ''
     },
     paths: {
         'top': process.env.REACT_APP_PATH_TOP ?? '',

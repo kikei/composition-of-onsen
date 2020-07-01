@@ -1,9 +1,10 @@
 import Resource, { suspender } from '../utils/Resource';
 import Analysis, { IAnalysis } from '../models/Analysis';
-import Comment from '../models/Comment';
+import Comment, { ICommentPhoto } from '../models/Comment';
 import { AuthType } from '../models/Authorize';
 
-type WebAPIResource = 'analyses' | 'analysis' | 'comments' | 'comment_image';
+type WebAPIResource =
+    'analyses' | 'analysis' | 'comments' | 'comment_image' | 'comment_images';
 export type WebAPIUrls = {[R in WebAPIResource]: string};
 
 const AnalysesOrderBys = ['timeline', 'identifier'] as const;
@@ -227,6 +228,11 @@ export default class WebAPI {
                    .replace('{filename}', path);
     }
 
+    urlCommentImages(commentId: string): string {
+        return this.urls['comment_images']
+                   .replace('{comment}', commentId);
+    }
+
     fetchGetComments(options: ICommentsOptions = {} as any)
         : Resource<ICommentsResponse> {
         const url = this.urlComments(options);
@@ -266,20 +272,59 @@ export default class WebAPI {
         return suspender<ICommentsResponse, string>(promise);
     }
 
-    fetchPostComment(a: Comment, images: File[]): Promise<WithAuth<Comment>> {
+    fetchPostComment(a: Comment): Promise<WithAuth<Comment>> {
         if (!!a.id)
             throw new TypeError('comment id should be empty');
         const url = this.urlComments();
-        console.log('WebAPI.fetchPutComment, url:', url);
+        console.log('WebAPI.fetchPostComment, url:', url);
+
+        const auth = !!this.token ? headerAuthorization(this.token) : {};
+        const promise =
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...auth
+                },
+                mode: 'cors',
+                body: a.toJSONString()
+            })
+                .then(r => {
+                    if (r.ok)
+                        return r.json();
+                    else
+                        throw new Error(`${r.statusText} ${r.status}`);
+                })
+                .then(async obj => {
+                    console.log('obj:', obj, 'comment:', obj.comment);
+                    if (obj.comment.auth.guest) {
+                        obj.comment.authType = 'guest';
+                        obj.comment.userId = obj.comment.auth.guest.guestid;
+                    } else {
+                        obj.comment.authType = 'signin';
+                        obj.comment.userId = obj.comment.auth.signin.userid;
+                    }
+                    const a = new Comment(obj.comment);
+                    console.log('WebAPI.fetchPutComment done, obj:', obj,
+                                'a:', a);
+                    return {
+                        value: a,
+                        authType: obj.auth_type,
+                        userId: obj.userid,
+                        token: obj.token
+                    };
+                });
+        return promise;
+    }
+
+    fetchPostCommentImages(a: Comment, images: File[]):
+        Promise<WithAuth<Array<Array<ICommentPhoto>>>>
+    {
+        if (!a.id)
+            throw new TypeError('comment id must not be empty');
+        const url = this.urlCommentImages(a.id!);
+        console.log('WebAPI.fetchPostCommentImages, url:', url);
         const form = new FormData();
-        if (!!a.id) {
-            form.append('id', a.id);
-        }
-        form.append('parentId', a.parentId);
-        form.append('username', a.username);
-        form.append('email', a.email);
-        form.append('web', a.web);
-        form.append('body', a.body);
         images.forEach((e, i) => {
             form.append(`images${i}`, e, e.name);
         });
@@ -310,11 +355,10 @@ export default class WebAPI {
                         obj.comment.authType = 'signin';
                         obj.comment.userId = obj.comment.auth.signin.userid;
                     }
-                    const a = new Comment(obj.comment);
                     console.log('WebAPI.fetchPutComment done, obj:', obj,
                                 'a:', a);
                     return {
-                        value: a,
+                        value: obj.images,
                         authType: obj.auth_type,
                         userId: obj.userid,
                         token: obj.token

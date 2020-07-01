@@ -56,7 +56,7 @@ const CommentEditor: React.FC<IProps> = props => {
         const api = new WebAPI(context);
         try {
             api.setToken(token);
-            const res = await api.fetchPostComment(comment, images);
+            const res = await api.fetchPostComment(comment);
             storageContext.updateAuth({
                 token: res.token,
                 authType: res.authType,
@@ -66,6 +66,11 @@ const CommentEditor: React.FC<IProps> = props => {
                 website: inputWebsite
             });
             callOnSuccess(res.token, res.value);
+            if (images.length > 0) {
+                const res1 =
+                    await api.fetchPostCommentImages(res.value, images);
+                console.log('Uploaded comment images, result:', res1);
+            }
         } catch (e) {
             console.warn('Failed to submit comment, e:', e);
         }
