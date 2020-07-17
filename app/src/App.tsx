@@ -359,8 +359,8 @@ const AnalysisApp = (props: RouteComponentProps) => {
         const api = new WebAPI(configContext);
         const saved = Storage.getInputAnalysis();
         return id === '_new' ? (
-            saved === null ?
-            resource(SampleAnalysis.newAnalysis()) : resource(saved)
+            saved !== null && !saved.id ?
+            resource(saved): resource(SampleAnalysis.newAnalysis())
         ) : api.fetchGetAnalysis(id);
     }
     const [analysis, setAnalysis] = useState(getAnalysis(id));
