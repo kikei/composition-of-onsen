@@ -79,7 +79,10 @@ const CommentEditor: React.FC<IProps> = props => {
                 website: inputWebsite
             });
             callOnSuccess(res.token, res.value);
-            if (images.length > 0) {
+            if (images.length === 0) {
+                setSaveState('success');
+                setTimeout(() => setSaveState('none'), 1000);
+            } else {
                 const res1 =
                     await api.fetchPostCommentImages(res.value, images);
                 console.log('Uploaded comment images, result:', res1);
