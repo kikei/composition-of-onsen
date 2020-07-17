@@ -8,11 +8,6 @@ import CommentEditor from './CommentEditor';
 import Resource from '../utils/Resource';
 import Comment, {ICommentPhoto} from '../models/Comment';
 
-import { ReactComponent as Trashbox } from '../assets/trash-solid.svg';
-import { ReactComponent as Edit } from '../assets/edit-solid.svg';
-import { ReactComponent as Email } from '../assets/envelope-solid.svg';
-import { ReactComponent as Globe } from '../assets/globe-asia-solid.svg';
-
 interface IProps {
     analysisId: string
 }
@@ -96,13 +91,17 @@ const CommentListView: React.FC<{
         <div className="comment-toolbox">
         {
             !!a.email ? (
-                <a href={`mailto:${a.email}`}><Email /></a>
+                <a href={`mailto:${a.email}`}>
+                    <i className="fas fa-envelope fa-fw"></i>
+                </a>
             ) : null 
         }
         {
             !!a.web ? (
                 <a href={encodeURI(a.web)}
-                   target="_blank" rel="noopener noreferrer"><Globe /></a>
+                   target="_blank" rel="noopener noreferrer">
+                    <i className="fas fa-globe-asia fa-fw"></i>
+                </a>
             ) : null
         }
         {
@@ -114,14 +113,17 @@ const CommentListView: React.FC<{
                            e.preventDefault();
                            deleteComment(token!, a.id!);
                        }}>
-                        <Trashbox />
+                        <i className="fas fa-trash fa-fw"></i>
                     </a>
                     <a className="button-edit" href="?">
-                        <Edit />
+                        <i className="fas fa-edit fa-fw"></i>
                     </a>
                 </React.Fragment>
             ) : null
         }
+            <a className="button-permanent" href={`#${a.id}`}>
+                <i className="fas fa-bookmark fa-fw"></i>
+            </a>
         </div>
     );
 
@@ -161,9 +163,6 @@ const CommentListView: React.FC<{
                     <div className="level-right">
                         <div className="level-item">
                             {IconBox(a)}
-                        </div>
-                        <div className="level-item is-3">
-                            <a href={`#${a.id}`}>#</a>
                         </div>
                     </div>
                 </div>

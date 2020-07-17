@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ReactComponent as Arrow
-} from '../assets/arrow-alt-circle-up-regular.svg';
 
 interface IProps extends React.Props<any> {
     className?: string;
@@ -49,7 +46,7 @@ const ScrollButton: React.FC<IProps> = props => {
             scrollTo()
            }}
            className={ visible ? 'notop' : 'top' }>
-            <Arrow />
+            <i className="fa-4x far fa-arrow-alt-circle-up"></i>
         </a>
     );
 };
