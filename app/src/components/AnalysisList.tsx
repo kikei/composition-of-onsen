@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import SearchInput from './SearchInput';
 import ConfigContext, { IConfigContext } from '../contexts/ConfigContext';
 import WebAPI, {
     AnalysesOrderBy, AnalysesDirection, IAnalysesOptions, IAnalysesResponse
@@ -66,10 +65,10 @@ const AnalysisItem = (context: IConfigContext, a: Analysis) => {
     );
     const Detail = (
         [
-            a.pH ? `pH ${a.pH}` : null,
             a.temperature ?
             `泉温 ${a.temperature}${a.getMetadata('temperatureExtra')}`
             : null,
+            a.pH ? `pH ${a.pH}` : null,
             a.getMetadata('quality') ?
             `泉質 ${a.getMetadata('quality')}` : null,
             `成分総計 ${a.getTotalComponent().mg.toFixed(1)} mg/kg`
@@ -118,16 +117,25 @@ const AnalysisListView: React.FC<{
     analyses: IAnalysesResponse
 }> = props => {
     const { analyses, limit, total } = props.analyses;
-    const { page } = props.options;
+    const { query, orderBy, direction, page } = props.options;
     const finalPage = Math.floor((total - 1) / limit) + 1;
     return (
         <ConfigContext.Consumer>{
             context => {
                 return (
                     <div>
+                        <h2 className="title is-4">
+                            {
+                                query ?
+                                `検索結果「${query}」` :
+                                orderBy === 'timeline' && direction === 'desc'?
+                                '新着' :
+                                '温泉分析書 一覧'
+                            }
+                        </h2>
                         {
                             total > 0 ? (
-                                <p>
+                                <p className="subtitle is-6">
                                     全 {total} 件中
                                     {' '}{limit * (page - 1) + 1} 件目 〜
                                     {' '}{limit * (page - 1) + analyses.length}
@@ -231,7 +239,6 @@ export default class AnalysisList extends React.Component<IProps, IState> {
         console.log('componentWllMount context:', this.context);
         const api = new WebAPI(this.context);
         this.setState({ analyses: api.fetchGetAnalyses(this.options) });
-        this.onSearch = this.onSearch.bind(this);
     }
 
     getAnalysesOptions(): IAnalysesPage {
@@ -245,40 +252,21 @@ export default class AnalysisList extends React.Component<IProps, IState> {
         return options;
     }
 
-    onSearch(query: string) {
-        this.props.history.push({
-            pathname: '/',
-            search: '?query=' + encodeURIComponent(query)
-        })
-    }
-
     render() {
         const state = this.state;
         console.log('AnalysisList render, state:', state, 'props:', this.props,
                     'options:', this.options);
         return (
-            <div className="container">
-                <div className="columns">
-                    <div className="column is-1">
-                    </div>
-                    <div className="column">
-                        <div className="content search-container">
-                            <SearchInput value={this.props.query ?? ''}
-                                         onSearch={this.onSearch} />
-                            {
-                                state.analyses ? (
-                                    <Suspense fallback={<p>Loading...</p>}>
-                                        <SuspensedAnalysisList
-                                            options={this.options}
-                                            analyses={state.analyses} />
-                                    </Suspense>
-                                ) : null
-                            }
-                        </div>
-                    </div>
-                    <div className="column is-1">
-                    </div>
-                </div>
+            <div className="content search-container">
+                {
+                    state.analyses ? (
+                        <Suspense fallback={<p>Loading...</p>}>
+                            <SuspensedAnalysisList
+                                options={this.options}
+                                analyses={state.analyses} />
+                        </Suspense>
+                    ) : null
+                }
             </div>
         );
     }

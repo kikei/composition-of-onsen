@@ -118,7 +118,7 @@ extends React.Component<IProps, IState> {
         const a = new Analysis(state.analysis);
         const viewMode = state.viewMode;
         return (
-            <div className="container is-fluid">
+            <div className="container is-fullhd analysis-container">
                 <nav className="select_view-nav">
                     <button onClick={e => this.selectView('edit')}
                             className="button is-rounded">
@@ -149,7 +149,7 @@ extends React.Component<IProps, IState> {
                         )
                     }
                 </nav>
-                <div className="content analysis-container">
+                <div className="content">
                     <AnalysisTableEditor
                         analysis={a}
                         visible={viewMode === 'edit'}

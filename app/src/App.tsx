@@ -10,6 +10,8 @@ import * as Storage from './Storage';
 import AnalysisList from './components/AnalysisList';
 import AnalysisView from './components/AnalysisView';
 import SearchInput from './components/SearchInput';
+import WhatIsAnalysisView from './components/WhatIsAnalysisView';
+import AboutView from './components/AboutView';
 import ScrollButton from './components/ScrollButton';
 import CompRepresentations from './models/CompRepresentations';
 import ChemicalConst from './constants/ChemicalConst';
@@ -327,13 +329,27 @@ const ListApp = (props: RouteComponentProps) => {
         console.info('Invalid direction:', direction);
         return <div>error (APP_LISTAPP_INVALID_DIRECTION)</div>
     }
-    return <AnalysisList key={window.location.pathname + window.location.search}
-                         {...props}
-                         orderBy={orderBy}
-                         direction={direction}
-                         page={pageNumber}
-                         query={query}
-    />
+    return (
+        <div className="container">
+            <div className="columns">
+                <div className="column list-container">
+                    <div className="content">
+                        <AnalysisList
+                            key={window.location.pathname + window.location.search}
+                            orderBy={orderBy}
+                            direction={direction}
+                            page={pageNumber}
+                            query={query}
+                            {...props}
+                        />
+                    </div>
+                </div>
+                <div className="column is-2 content sidebar-container">
+                    <Sidebar {...props} />
+                </div>
+            </div>
+        </div>
+    )
 };
 
 
@@ -391,7 +407,7 @@ const TopSearchInput = withRouter(props => {
 
     const onSearch = (query: string) => {
         props.history.push({
-           pathname: '/',
+           pathname: '/analyses',
            search: '?query=' + encodeURIComponent(query)
         })
     }
@@ -400,6 +416,39 @@ const TopSearchInput = withRouter(props => {
         <SearchInput onSearch={onSearch} />
     );
 });
+
+const Footer = () => {
+    return (
+        <div className="container">
+            <div className="columns">
+                <div className="column">
+                    <div className="content is-small">
+                        <h3 className="title is-5 has-text-light">Development</h3>
+                        kikei &lt;fujii@xaxxi.net&gt;
+                    </div>
+                </div>
+                <div className="column">
+                    <div className="content is-small">
+                        <h3 className="title is-5 has-text-light">Contact</h3>
+                        準備中。
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div className="content has-text-right is-small">
+                <div>
+                    <p>
+                        当サイトに掲載されたテキスト・画像、記事内容等を引用、転載する場合、URLを記載し引用元を明示してください。
+                        また、投稿された写真を投稿者本人以外が転載することを禁止します。
+                    </p>
+                </div>
+                <div>
+        &copy; <a href="/">温泉草子</a> All Rights Reserved.
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default class App extends React.Component {
     componentDidMount() {
@@ -411,36 +460,40 @@ export default class App extends React.Component {
                 <StorageContext.Provider value={new DefaultStorageContext()}>
                     <BrowserRouter>
                         <header className="navbar is-fixed-top app-header">
-                            <h1 className="navbar-brand">
-                                <Link to="/" className="navbar-item">
-                                    温泉草子
-                                </Link>
-                            </h1>
-                            <nav className="navbar-menu">
-                                <div className="navbar-end app-nav" >
-                                    <div className="navbar-item">
-                                        <TopSearchInput />
+                            <div className="container">
+                                <h1 className="navbar-brand">
+                                    <Link to="/" className="navbar-item">
+                                        <img src={titleLogo} alt="温泉草子" />
+                                    </Link>
+                                </h1>
+                                <nav className="navbar-menu">
+                                    <div className="navbar-end app-nav" >
+                                        <div className="navbar-item">
+                                            <TopSearchInput />
+                                        </div>
+                                        <div className="navbar-item">
+                                            <Link to={"/analysis/_new"}>
+                                                <i className="fas fa-plus fa-lg"></i>
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div className="navbar-item">
-                                        <Link to={"/analysis/_new"}
-                                              className="button">
-                                            +
-                                        </Link>
-                                    </div>
-                                </div>
-                            </nav>
+                                </nav>
+                            </div>
                         </header>
                         <div className="section app-body">
                             <Switch>
-                                <Route path="/analyses/:orderBy/:direction/:page"
+                                <Route path="/analyses/:orderBy?/:direction?/:page?"
                                        component={ListApp} />
                                 <Route path="/analysis/:id"
                                        component={AnalysisApp} />
-                                <Route path="/" component={ListApp} />
+                                <Route path="/document/:key"
+                                       component={DocumentApp} />
+                                <Route path="/" component={TopApp} />
                             </Switch>
                         </div>
                     </BrowserRouter>
-                    <footer>
+                    <footer className="footer">
+                        <Footer />
                     </footer>
                     <div className="id-overlay scrollup-button">
                         <ScrollButton />

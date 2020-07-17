@@ -27,10 +27,11 @@ $color-0: $sugar-cane-20;
 $scheme-main: $color-1;
 $background: $color-1;
 $primary: $color-4;
+$footer-background-color: rgba($color-6, 0.7);
 
-$text-strong: $color-6;
-$text: $color-5;
-$link: $color-4;
+$text-strong: $color-7;
+$text: $color-6;
+$link: $color-5;
 $subtitle-color: $color-6;
 $border: $color-3;
 $button-border-color: $color-4;
@@ -49,21 +50,35 @@ $table-row-hover-background-color: $color-2;
 @import "~bulma/bulma.sass";
 
 body {
-  font-family: "Helvetica Neue",
-               Arial,
-               "Hiragino Kaku Gothic ProN",
-               "Hiragino Sans",
-               Meiryo,
-               sans-serif;
   background-color: $color-2;
+  background-image: url('/background.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body, input, textarea {
+    font-family: "游明朝",
+                 YuMincho,
+                 "Hiragino Mincho ProN W3",
+                 "ヒラギノ明朝 ProN W3",
+                 "Hiragino Mincho ProN",
+                 "HG明朝E",
+                 "ＭＳ Ｐ明朝",
+                 "ＭＳ 明朝",
+                 serif;
 }
 
 .hidden {
     display: none;
 }
 
-.app-header h1 a {
-    color: $color-1;
+.app-header {
+    h1 {
+        a:hover {
+            opacity: 0.5;
+        }
+    }
 }
 
 .select_view-nav {
@@ -81,25 +96,59 @@ body {
 
 .app-body {
     margin: 3.0em 0em 0em 0em;
-    > .container {
-        background-color: $color-0;
+}
+
+.top-container {
+    background-color: rgba($color-0, 0.95);
+    > .content {
+        line-height: 1.8em;
     }
 }
 
-.search-list {
-    list-style: circle;
+.list-container {
+    background-color: rgba($color-0, 0.95);
+    padding-left: 1em;
+    line-height: 1.8em;
 }
 
-.search-item:hover {
-    background-color: $sugar-cane-80;
+.sidebar-container {
+    padding: 1em 1em 1em 1em;
+    background-color: rgba($color-0, 0.8);
+    box-shadow: -2px 2px 2px 0px rgba($color-2, 0.2);
+}
+
+.analysis-container {
+    background-color: rgba($color-0, 0.95);
+    padding: 1em;
+}
+
+.search-list {
+    li {
+        list-style: none;
+        margin-left: -3em;
+        padding: 0.6em 1em 0.6em 2em;
+    }
+    .search-item:hover {
+        background-color: rgba($color-2, 0.9);
+        /*background: rgb(249,255,244);*/
+        background: linear-gradient(90deg,
+                                    rgba($color-2, 0.0) 0%,
+                                    rgba($color-2, 0.3) 2%,
+                                    rgba($color-3, 0.3) 98%,
+                                    rgba($color-3, 0.0) 100%);
+    }
 }
 
 .search-title {
-    margin: 1.0em 0px 0.25em 0px !important;
+    margin: 0px 0px 0.25em 0px !important;
 }
 
 .search-subtitle {
-    margin: 0px 0px 0px 0em !important;
+    margin: 0px 0px 0.20em 1em !important;
+}
+
+.search-content {
+    margin: 0px 0px 0px 1em !important;
 }
 
 .search-location, .search-detail {
@@ -137,10 +186,6 @@ body {
 
 @import "styles/editor.scss";
 
-.analysis-container {
-    padding-bottom: 1em;
-}
-
 @mixin keyframes($name) {
     @-webkit-keyframes #{$name} { @content; }
     @-moz-keyframes    #{$name} { @content; }
@@ -174,6 +219,10 @@ body {
         opacity: 0.9;
         animation: fadein-1 0.5s ease 1;
     }
+}
+
+.comment-container {
+    padding: 1em;
 }
 
 ul.comments-list {
@@ -226,3 +275,9 @@ ul.comments-list {
     }
 }
 
+.footer {
+    color: $color-0;
+    a {
+        color: $color-2;
+    }
+}
