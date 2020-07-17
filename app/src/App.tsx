@@ -21,7 +21,40 @@ import { enableMathJax } from './utils/MathJax';
 import * as SampleAnalysis from './utils/SampleAnalysis';
 import { resource } from './utils/Resource';
 
+import titleLogo from './assets/title.png';
+
 const Const = ChemicalConst;
+
+const SidebarAreaList = [
+    {
+        category: '北海道・東北',
+        keywords: ['北海道', '青森', '秋田', '岩手', '宮城', '山形', '福島']
+    },
+    {
+        category: '関東・甲信越',
+        keywords: ['茨城', '栃木', '群馬', '埼玉', '千葉', '東京', '神奈川',
+                   '山梨', '長野', '新潟']
+    },
+    {
+        category: '北陸・東海',
+        keywords: ['富山', '石川', '福井',
+                   '静岡', '愛知', '岐阜', '三重',],
+    },
+    {
+        category: '近畿',
+        keywords: ['滋賀', '京都', '大阪', '奈良', '和歌山', '兵庫'],
+    },
+    {
+        category: '中国・四国',
+        keywords: ['鳥取', '島根', '岡山', '広島', '山口',
+                   '香川', '愛媛', '徳島', '高知']
+    },
+    {
+        category: '九州',
+        keywords: ['福岡', '佐賀', '長崎', '大分', '熊本',
+                   '宮崎', '鹿児島', '沖縄']
+    }
+];
 
 function row(key: Comp, name: string): CompRepresentations {
     return {
@@ -115,10 +148,159 @@ function rowsMinor(): Array<CompRepresentations> {
     ];
 }
 
+const Sidebar = (props: RouteComponentProps): any => {
+    const params = new URLSearchParams(props.location.search);
+    const query = params.get('query');
+
+    const onSearch = (query: string) => {
+        props.history.push({
+            pathname: '/analyses',
+            search: '?query=' + encodeURIComponent(query)
+        })
+    };
+
+    return (
+        <div className="sidebar">
+            <h3 className="title is-6">地域ごとの温泉</h3>
+                {
+                    SidebarAreaList.map((a, i) => (
+                        <div>
+                            <span className="title is-7">{a.category}</span>
+                            <div className="tags">
+                                {
+                                    a.keywords.map((e, j) => (
+                                        <React.Fragment>
+                                            { j !== 0 ? ' ' : ''}
+                                            <a key={j}
+                                               className="tag is-light"
+                                               href={`/analyses/timeline/desc?query=${e}`}>
+                                                {e}
+                                            </a>
+                                        </React.Fragment>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    ))
+                }
+            <h3 className="title is-6">検索</h3>
+            <SearchInput value={query ?? ''} onSearch={onSearch} />
+        </div>
+    );
+}
+
 const AppContent = (props: any): any => {
     const a = props.analysis;
     return <AnalysisView {...props}
                          analysis={a.read()} rows={props.rows} />
+};
+
+const DocumentApp = (props: RouteComponentProps): any => {
+    let { key } = useParams();
+
+    let Body = ((_key) => {
+        switch (_key) {
+            case 'what-is-analysis':
+                return <WhatIsAnalysisView />;
+            case 'about':
+                return <AboutView />;
+            default:
+                return (
+                    <div className="content">
+                        ページが見つかりませんでした。
+                    </div>
+                );
+        }
+    })(key);
+
+    const Content = (
+        <div className="content">
+            {Body}
+        </div>
+    );
+    return (
+        <div className="container">
+            <div className="columns">
+                <div className="column top-container">
+                    {Content}
+                </div>
+                <div className="column is-2 content sidebar-container">
+                    <Sidebar {...props} />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const TopApp = (props: RouteComponentProps): any => {
+    const Welcome = (
+        <div className="content">
+            <h2 className="title is-4">当サイトについて</h2>
+            <div>
+        <p>
+                「温泉草子」では温泉分析書のデータや写真を集めています。<br />
+                どうぞ写真だけでもアップロードしていってください。
+        </p>
+                <ul>
+                    <li>
+                        <Link to="/document/what-is-analysis">
+                            <i className="fas fa-file-alt fa-fw"></i>
+                            {' '}温泉分析書について
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/document/about">
+                            <i className="fas fa-question-circle fa-fw"></i>
+                            {' '}温泉草子について
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/analysis/_new">
+                            <i className="fas fa-plus-circle fa-fw"></i>
+                            {' '}温泉分析書を登録する
+                        </Link>
+                    </li>
+                </ul>
+                <div className="box">
+                    試験公開中です。以下の機能が使えます。
+                    <ul>
+                        <li>温泉分析書を見る・編集する</li>
+                        <li>温泉分析書を一覧表示する・検索する</li>
+                        <li>温泉分析書にコメントする</li>
+                    </ul>
+                </div>
+                {/*
+                    <h2 className="title is-4">初めての方へ</h2>
+                    <div>
+                    </div>
+                  */}
+            </div>
+        </div>
+    );
+    const LatestList = (
+        <div className="content">
+            <AnalysisList
+                key={window.location.pathname + window.location.search}
+                orderBy="timeline"
+                direction="desc"
+                page={1}
+                {...props}
+            />
+        </div>
+    );
+    return (
+        <div className="container">
+            <div className="columns">
+                <div className="column top-container">
+                    {Welcome}
+                    {LatestList}
+                </div>
+                <div className="column is-2 content sidebar-container">
+                    <Sidebar {...props} />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const ListApp = (props: RouteComponentProps) => {
