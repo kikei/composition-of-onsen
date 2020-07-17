@@ -21,13 +21,15 @@ const SearchInput: React.FC<IProps> = props => {
                 <input className="input"
                        type="text"
                        value={searchInput}
-                       onChange={e => setSearchInput(e.target.value) }
+                       onChange={e => setSearchInput(e.target.value)}
+                       onKeyDown={e => e.key === 'Enter' &&
+                                     onSubmit(searchInput)}
                 />
             </div>
             <div className="control">
                 <button className="button is-primary"
                         onClick={e => onSubmit(searchInput)}>
-                    Search
+                    <i className="fas fa-search"></i>
                 </button>
             </div>
         </div>
