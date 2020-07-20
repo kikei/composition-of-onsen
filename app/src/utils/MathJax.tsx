@@ -6,31 +6,32 @@ function addScript(src: string, isAsync: boolean = false) {
   document.body.appendChild(script);
 };
 
-const enableMhchem = () => {
-  const script = document.createElement('script');
-  script.type = 'text/x-mathjax-config';
-  script.innerHTML = `MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [ ['$','$'] ],
-    processEscapes: true
-  },
-  TeX: {
-    extensions: ["mhchem.js"]
-  },
-  CommonHTML: {
-    matchFontHeight: false
-  }
-})`;
-  document.body.appendChild(script);
-};
-
 export const enableMathJax = () => {
-  addScript('https://polyfill.io/v3/polyfill.min.js?features=es6');
-  addScript('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML', true);
-  enableMhchem();
+  const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.innerHTML = `window.MathJax = {
+    loader: {
+      load: ['[tex]/mhchem']
+    },
+    tex: {
+      packages: {'[+]': ['mhchem']},
+      inlineMath: [['$', '$']],
+    },
+    chtml: {
+      matchFontHeight: false
+    },
+    options: {
+      renderActions: {
+        addMenu: [0, '', '']
+      }
+    }
+  }`;
+  document.body.appendChild(script);
+  addScript('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js');
 }
 
 export const renderMathJax = () => {
-    const MathJax = (window as any).MathJax;
-    MathJax?.Hub.Queue(['Typeset', MathJax.Hub]);
+  const MathJax = (window as any).MathJax;
+  if (MathJax && MathJax.typeset)
+    MathJax.typeset();
 }
