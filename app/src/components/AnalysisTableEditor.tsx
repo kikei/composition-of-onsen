@@ -477,9 +477,6 @@ extends React.Component<IProps, IState> {
             ].join(' ')}>
                <header>
                    <h1 className="title is-size-3">温泉分析書</h1>
-                   <p className="subtitle is-size-6">
-                       (鉱泉分析試験法による分析)
-                   </p>
                </header>
                <div className="columns is-multiline">
                    <fieldset className="column is-half-widescreen
