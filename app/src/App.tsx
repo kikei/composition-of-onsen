@@ -166,15 +166,14 @@ const Sidebar = (props: RouteComponentProps): any => {
             <h3 className="title is-6">地域ごとの温泉</h3>
                 {
                     SidebarAreaList.map((a, i) => (
-                        <div>
+                        <div key={i}>
                             <span className="title is-7">{a.category}</span>
                             <div className="tags">
                                 {
                                     a.keywords.map((e, j) => (
-                                        <React.Fragment>
+                                        <React.Fragment key={j}>
                                             { j !== 0 ? ' ' : ''}
-                                            <a key={j}
-                                               className="tag is-light"
+                                            <a className="tag is-light"
                                                href={`/analyses/timeline/desc?query=${e}`}>
                                                 {e}
                                             </a>
