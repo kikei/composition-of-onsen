@@ -239,7 +239,7 @@ const TopApp = (props: RouteComponentProps): any => {
             <h2 className="title is-4">当サイトについて</h2>
             <div>
         <p>
-                「温泉草子」では温泉分析書のデータや写真を集めています。<br />
+                「湯花草子」では温泉分析書のデータや写真を集めています。<br />
                 どうぞ写真だけでもアップロードしていってください。
         </p>
                 <ul>
@@ -252,7 +252,7 @@ const TopApp = (props: RouteComponentProps): any => {
                     <li>
                         <Link to="/document/about">
                             <i className="fas fa-question-circle fa-fw"></i>
-                            {' '}温泉草子について
+                            {' '}湯花草子について
                         </Link>
                     </li>
                     <li>
@@ -442,7 +442,7 @@ const Footer = () => {
                     </p>
                 </div>
                 <div>
-        &copy; <a href="/">温泉草子</a> All Rights Reserved.
+        &copy; <a href="/">湯花草子</a> All Rights Reserved.
                 </div>
             </div>
         </div>
@@ -462,7 +462,7 @@ export default class App extends React.Component {
                             <div className="container">
                                 <h1 className="navbar-brand">
                                     <Link to="/" className="navbar-item">
-                                        <img src={titleLogo} alt="温泉草子" />
+                                        <img src={titleLogo} alt="湯花草子" />
                                     </Link>
                                 </h1>
                                 <nav className="navbar-menu">

@@ -3,7 +3,7 @@ import React from 'react';
 const AboutView: React.FC<React.Props<any>> = _ => {
     return (
         <div className="content">
-            <h2 className="title is-4">温泉草子について</h2>
+            <h2 className="title is-4">湯花草子について</h2>
             <div className="section">
                 準備中
             </div>
