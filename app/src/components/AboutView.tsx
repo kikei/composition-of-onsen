@@ -29,6 +29,10 @@ const AboutView: React.FC<React.Props<any>> = _ => {
                         Webページデザイン、レイアウトには、
                         CSSフレームワークの Bulma を利用しました。
                     </dd>
+                    <dt><a href="https://geenes.app/">Geenes</a></dt>
+                    <dd>
+                        ベースカラーは Geenes で生成しました。
+                    </dd>
                     <dt><a href="https://github.com/kikei/composition-of-onsen">kikei/composition-of-onsen</a></dt>
                     <dd>
                         Webクライアント側アプリケーションはオープンソースで開発しています。
