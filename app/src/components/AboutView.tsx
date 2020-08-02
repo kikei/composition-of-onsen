@@ -1,4 +1,5 @@
 import React from 'react';
+import ExternalLink from './ExternalLink';
 
 const AboutView: React.FC<React.Props<any>> = _ => {
     return (
@@ -14,30 +15,56 @@ const AboutView: React.FC<React.Props<any>> = _ => {
             <div className="section">
                 <h3 className="title is-5">関連ページ</h3>
                 <dl>
-                    <dt><a href="https://fontopo.com/">fontopo</a></dt>
+                    <dt>
+                        <ExternalLink href="https://fontopo.com/">
+                            fontopo
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         ロゴフォントには fontopo 様で配布されている
-                        <a href="https://fontopo.com/?p=377">はれのそら明朝</a>
+                        <ExternalLink href="https://fontopo.com/?p=377">
+                            はれのそら明朝
+                        </ExternalLink>
                         を利用しました。
                     </dd>
-                    <dt><a href="https://fontawesome.com">Font Awesome</a></dt>
+                    <dt>
+                        <ExternalLink href="https://fontawesome.com">
+                            Font Awesome
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         Webページ内の各種アイコンは Font Awesome を利用しました。
                     </dd>
-                    <dt><a href="https://bulma.io/">Bulma</a></dt>
+                    <dt>
+                        <ExternalLink href="https://bulma.io/">
+                            Bulma
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         Webページデザイン、レイアウトには、
                         CSSフレームワークの Bulma を利用しました。
                     </dd>
-                    <dt><a href="https://geenes.app/">Geenes</a></dt>
+                    <dt>
+                        <ExternalLink href="https://geenes.app/">
+                            Geenes
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         ベースカラーは Geenes で生成しました。
                     </dd>
-                    <dt><a href="https://github.com/kikei/composition-of-onsen">kikei/composition-of-onsen</a></dt>
+                    <dt>
+                        <ExternalLink href="https://github.com/kikei/composition-of-onsen">
+                            kikei/composition-of-onsen
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         Webクライアント側アプリケーションはオープンソースで開発しています。
                     </dd>
-                    <dt><a href="https://github.com/kikei/composion-of-onsen-server">kikei/composion-of-onsen-server</a></dt>
+                    <dt>
+                        <ExternalLink href="https://github.com/kikei/composion-of-onsen-server">
+                            kikei/composion-of-onsen-server
+                        </ExternalLink>
+                    </dt>
                     <dd>
                         サーバー側もオープンソースで開発しています。
                     </dd>
