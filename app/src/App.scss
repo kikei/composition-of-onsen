@@ -49,6 +49,10 @@ $table-row-hover-background-color: $color-2;
 
 @import "~bulma/bulma.sass";
 
+.has-background-color-0 {
+    background-color: $color-0;
+}
+
 body {
   background-color: $color-2;
   background-image: url('/background.jpg');
@@ -166,6 +170,9 @@ body, input, textarea {
 
 .pages a:hover {
     background-color: $color-2;
+}
+
+.container-preview {
 }
 
 .container-export {

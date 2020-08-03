@@ -8,6 +8,7 @@ import './App.scss';
 import * as Storage from './Storage';
 
 import AnalysisList from './components/AnalysisList';
+import AnalysisRenderer from './components/AnalysisRenderer';
 import AnalysisView from './components/AnalysisView';
 import SearchInput from './components/SearchInput';
 import WhatIsAnalysisView from './components/WhatIsAnalysisView';
@@ -196,6 +197,13 @@ const AppContent = (props: any): any => {
                          analysis={a.read()} rows={props.rows} />
 };
 
+const AnalysisViewerContent = (props: any): any => {
+    const html = props.resource.read();
+    return <AnalysisRenderer id={props.id}>
+        <div dangerouslySetInnerHTML={{__html: html}} />
+    </AnalysisRenderer>
+}
+
 const DocumentApp = (props: RouteComponentProps): any => {
     let { key } = useParams();
 
@@ -351,8 +359,23 @@ const ListApp = (props: RouteComponentProps) => {
     )
 };
 
+const AnalysisViewerApp = (props: RouteComponentProps) => {
+    const params = new URLSearchParams(props.location.search);
+    const template = params.get('template') || 'ghost';
+    const { id } = useParams();
+    const getAnalysis = (id: string, template: string) => {
+        const api = new WebAPI(configContext);
+        return api.fetchGetAnalysisHTML(id, template);
+    }
+    const [resource] = useState(getAnalysis(id, template));
+    return <Suspense fallback={<p>Loading...</p>}>
+        <AnalysisViewerContent {...props}
+             resource={resource}
+             id={id}/>
+    </Suspense>
+};
 
-const AnalysisApp = (props: RouteComponentProps) => {
+const AnalysisEditorApp = (props: RouteComponentProps) => {
     const { id } = useParams();
     const getAnalysis = (id: string) => {
         const api = new WebAPI(configContext);
@@ -396,6 +419,7 @@ const configContext: IConfigContext = {
     paths: {
         'top': process.env.REACT_APP_PATH_TOP ?? '',
         'analysis': process.env.REACT_APP_PATH_ANALYSIS ?? '',
+        'analysisEditor': process.env.REACT_APP_PATH_ANALYSIS_EDITOR ?? '',
         'analysesPage': process.env.REACT_APP_PATH_ANALYSES_PAGE ?? ''
     }
 };
@@ -483,8 +507,10 @@ export default class App extends React.Component {
                             <Switch>
                                 <Route path="/analyses/:orderBy?/:direction?/:page?"
                                        component={ListApp} />
+                                <Route path="/analysis/:id/edit"
+                                       component={AnalysisEditorApp} />
                                 <Route path="/analysis/:id"
-                                       component={AnalysisApp} />
+                                       component={AnalysisViewerApp} />
                                 <Route path="/document/:key"
                                        component={DocumentApp} />
                                 <Route path="/" component={TopApp} />

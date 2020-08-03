@@ -1,6 +1,6 @@
 import Analysis from '../models/Analysis';
 
-type AppResource = 'top' | 'analysis' | 'analysesPage';
+type AppResource = 'top' | 'analysis' | 'analysisEditor' | 'analysesPage';
 export type AppPaths = {[P in AppResource]: string};
 
 export default class AppPath {
@@ -14,6 +14,10 @@ export default class AppPath {
         return a.id ?
             this.paths['analysis'].replace('{id}', a.id!) :
             this.paths['top'];
+    }
+
+    analysisEditor(id: string): string {
+        return this.paths['analysisEditor'].replace('{id}', id);
     }
 
     analysesPage(orderBy: string, direction: string, page: number, params: {

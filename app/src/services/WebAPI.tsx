@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 import Resource, { suspender } from '../utils/Resource';
 import Analysis, { IAnalysis } from '../models/Analysis';
 import Comment from '../models/Comment';
@@ -35,6 +37,10 @@ export interface IAnalysesResponse {
     page: number;
     limit: number;
     total: number;
+}
+
+export interface IAnalysisOptions {
+    template: string;
 }
 
 export interface ICommentsOptions {
@@ -90,8 +96,13 @@ export default class WebAPI {
         return this.urls['analyses'] + (query ? `?${query}` : '');
     }
 
-    urlAnalysis(id: string) {
-        return this.urls['analysis'].replace('{id}', id);
+    urlAnalysis(id: string, options: IAnalysisOptions = {} as any) {
+        const query = [
+            options.template ?
+            `template=${encodeURIComponent(options.template)}` : null,
+        ].filter(x => !!x).join('&');
+        return this.urls['analysis'].replace('{id}', id) +
+               (query ? `?${query}` : '');
     }
 
     fetchGetAnalyses(options: IAnalysesOptions = {} as any)
@@ -123,6 +134,30 @@ export default class WebAPI {
                     }
                 });
         return suspender<IAnalysesResponse, string>(promise);
+    }
+
+    fetchGetAnalysisHTML(id: string, template: string): Resource<string> {
+        const url = this.urlAnalysis(id, { template: template });
+        console.log('WebAPI.fetchGetAnalysisHTML,',
+                    'url:', url, 'template:', template);
+        const promise =
+            fetch(url)
+                .then(r => {
+                    if (r.ok)
+                        return r.text();
+                    else
+                        throw new Error(`${r.statusText} ${r.status}`);
+                })
+                .then(text => {
+                    console.log('WebAPI.fetchGetAnalysisHTML done,',
+                                'text:', text);
+                    return DOMPurify.sanitize(text);
+                })
+                .catch(e => {
+                    console.warn('WebAPI.fetchGetAnalysisHTML done, error:', e);
+                    throw e;
+                })
+        return suspender<string, string>(promise);
     }
 
     fetchGetAnalysis(id: string): Resource<Analysis> {
