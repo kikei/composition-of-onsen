@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+
 import CommentList from './CommentList';
 
 import ConfigContext from '../contexts/ConfigContext';
@@ -19,11 +21,11 @@ const AnalysisRenderer: React.FC<IProps> = props => {
                     <div className="navbar-end">
                         <div className="navbar-item">
                             <div className="buttons">
-                                <a className="button is-primary"
-                                   href={paths.analysisEditor(props.id)}>
-                                    <i className="fas fa-edit fa-fw is-small"></i>
+                                <Link className="button is-primary"
+                                   to={paths.analysisEditor(props.id)}>
+                                    <i className="fas fa-edit fa-fw"></i>
                                     {' '}編集する
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
