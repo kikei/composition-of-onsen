@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 import * as Storage from '../Storage';
 
@@ -116,52 +116,70 @@ extends React.Component<IProps, IState> {
         const state = this.state;
         const a = new Analysis(state.analysis);
         const viewMode = state.viewMode;
+        const paths = new AppPath(this.context);
         return (
-            <div className="container is-fullhd analysis-container">
-                <nav className="select_view-nav">
-                    <button onClick={e => this.selectView('edit')}
-                            className="button is-rounded">
-                        Editor
-                    </button>
-                    <button onClick={e => this.selectView('json')}
-                            className="button is-rounded">
-                        JSON
-                    </button>
-                    {
-                        state.saveResult === 'none' ? (
-                            <button onClick={e => this.saveAnalysis()}
-                                    className="button is-primary is-rounded">
-                                Save
-                            </button>
-                        ) : state.saveResult === 'progress' ? (
-                            <button className="button is-primary is-loading is-rounded">
-                                Saving...
-                            </button>
-                        ) : state.saveResult === 'success' ? (
-                            <button className="button is-success is-rounded">
-                                Success!
-                            </button>
-                        ) : (
-                            <button className="button is-danger is-rounded">
-                                Error!
-                            </button>
-                        )
-                    }
+            <React.Fragment>
+                <nav className="navbar has-background-color-0">
+                    <div className="navbar-menu">
+                        <div className="navbar-end">
+                            <div className="navbar-item">
+                                <div className="buttons">
+                                    <Link className="button is-primary"
+                                          to={paths.analysis(a)}>
+                                        <i className="fas fa-edit fa-fw"></i>
+                                        {' '}戻る
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </nav>
-                <div className="content">
-                    <AnalysisTableEditor
-                        analysis={a}
-                        visible={viewMode === 'edit'}
-                        onChangeAnalysis={this.updateAnalysis}
-                        {...this.props}
-                    />
-                    <AnalysisTablePreview
-                        format='json'
-                        analysis={a}
-                        visible={viewMode === 'json'}
-                    />
+                <div className="container is-fullhd analysis-container">
+                    <nav className="select_view-nav">
+                        <button onClick={e => this.selectView('edit')}
+                                className="button is-rounded">
+                            Editor
+                        </button>
+                        <button onClick={e => this.selectView('json')}
+                                className="button is-rounded">
+                            JSON
+                        </button>
+                        {
+                            state.saveResult === 'none' ? (
+                                <button onClick={e => this.saveAnalysis()}
+                                        className="button is-primary is-rounded">
+                                    Save
+                                </button>
+                            ) : state.saveResult === 'progress' ? (
+                                <button className="button is-primary is-loading is-rounded">
+                                    Saving...
+                                </button>
+                            ) : state.saveResult === 'success' ? (
+                                <button className="button is-success is-rounded">
+                                    Success!
+                                </button>
+                            ) : (
+                                <button className="button is-danger is-rounded">
+                                    Error!
+                                </button>
+                            )
+                        }
+                    </nav>
+                    <div className="content">
+                        <AnalysisTableEditor
+                            analysis={a}
+                            visible={viewMode === 'edit'}
+                            onChangeAnalysis={this.updateAnalysis}
+                            {...this.props}
+                        />
+                        <AnalysisTablePreview
+                            format='json'
+                            analysis={a}
+                            visible={viewMode === 'json'}
+                        />
+                    </div>
                 </div>
-            </div>
+            </React.Fragment>
         )
     }
 }
