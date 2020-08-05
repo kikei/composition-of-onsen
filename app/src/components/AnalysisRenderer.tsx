@@ -16,16 +16,21 @@ const AnalysisRenderer: React.FC<IProps> = props => {
 
     return (
         <React.Fragment>
-            <nav className="navbar has-background-color-0">
-                <div className="navbar-menu">
-                    <div className="navbar-end">
-                        <div className="navbar-item">
-                            <div className="buttons">
-                                <Link className="button is-primary"
-                                   to={paths.analysisEditor(props.id)}>
-                                    <i className="fas fa-edit fa-fw"></i>
-                                    {' '}編集する
-                                </Link>
+            <nav className="navbar has-background-transparent">
+                <div className="container is-fullhd has-background-color-0">
+                    <div className="navbar-menu">
+                        <div className="navbar-end">
+                            <div className="navbar-item">
+                                <div className="buttons">
+                                    <Link className="button is-primary"
+                                          to={paths.analysisEditor(props.id)}>
+                                        <i className="fas fa-edit fa-fw"></i>
+                                        {' '}編集する
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="navbar-item">
+                                {/* For layout */}
                             </div>
                         </div>
                     </div>

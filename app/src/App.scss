@@ -49,6 +49,10 @@ $table-row-hover-background-color: $color-2;
 
 @import "~bulma/bulma.sass";
 
+.has-background-transparent {
+    background-color: transparent;
+}
+
 .has-background-color-0 {
     background-color: $color-0;
 }
@@ -61,7 +65,7 @@ body {
   background-size: cover;
 }
 
-body, input, textarea {
+body, button, input, textarea {
     font-family: "游明朝",
                  YuMincho,
                  "Hiragino Mincho ProN W3",

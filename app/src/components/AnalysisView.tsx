@@ -119,52 +119,61 @@ extends React.Component<IProps, IState> {
         const paths = new AppPath(this.context);
         return (
             <React.Fragment>
-                <nav className="navbar has-background-color-0">
-                    <div className="navbar-menu">
-                        <div className="navbar-end">
-                            <div className="navbar-item">
-                                <div className="buttons">
-                                    <Link className="button is-primary"
-                                          to={paths.analysis(a)}>
-                                        <i className="fas fa-edit fa-fw"></i>
-                                        {' '}戻る
-                                    </Link>
+                <nav className="navbar has-background-transparent">
+                    <div className="container is-fullhd has-background-color-0">
+                        <div className="navbar-menu">
+                            <div className="navbar-start">
+                                <div className="navbar-item">
+                                    <div className="buttons">
+                                        <Link className="button is-primary"
+                                              to={paths.analysis(a)}>
+                                            <i className="fas fa-arrow-left fa-fw"></i>
+                                            {' '}戻る
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="navbar-end">
+                                <div className="navbar-item">
+                                    <a onClick={e => this.selectView('edit')}>
+                                        Editor
+                                    </a>
+                                </div>
+                                <div className="navbar-item">
+                                    <a onClick={e => this.selectView('json')}>
+                                        JSON
+                                    </a>
+                                </div>
+                                <div className="navbar-item">
+                                    {
+                                        state.saveResult === 'none' ? (
+                                            <button onClick={e => this.saveAnalysis()}
+                                                    className="button is-primary">
+                                                送信
+                                            </button>
+                                        ) : state.saveResult === 'progress' ? (
+                                            <button className="button is-primary is-loading">
+                                                送信中です...
+                                            </button>
+                                        ) : state.saveResult === 'success' ? (
+                                            <button className="button is-success">
+                                                完了!
+                                            </button>
+                                        ) : (
+                                            <button className="button is-danger">
+                                                失敗しました
+                                            </button>
+                                        )
+                                    }
+                                </div>
+                                <div className="navbar-item">
+                                    {/* For layout */}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </nav>
                 <div className="container is-fullhd analysis-container">
-                    <nav className="select_view-nav">
-                        <button onClick={e => this.selectView('edit')}
-                                className="button is-rounded">
-                            Editor
-                        </button>
-                        <button onClick={e => this.selectView('json')}
-                                className="button is-rounded">
-                            JSON
-                        </button>
-                        {
-                            state.saveResult === 'none' ? (
-                                <button onClick={e => this.saveAnalysis()}
-                                        className="button is-primary is-rounded">
-                                    Save
-                                </button>
-                            ) : state.saveResult === 'progress' ? (
-                                <button className="button is-primary is-loading is-rounded">
-                                    Saving...
-                                </button>
-                            ) : state.saveResult === 'success' ? (
-                                <button className="button is-success is-rounded">
-                                    Success!
-                                </button>
-                            ) : (
-                                <button className="button is-danger is-rounded">
-                                    Error!
-                                </button>
-                            )
-                        }
-                    </nav>
                     <div className="content">
                         <AnalysisTableEditor
                             analysis={a}
