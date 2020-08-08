@@ -11,9 +11,12 @@ interface IProps extends React.Props<any> {
 
 const JSONExport = (analysis: Analysis) => {
     return (
-        <pre>
-            {analysis.toJSONString()}
-        </pre>
+        <div className="container-export">
+            <h1>温泉分析書</h1>
+            <pre>
+                {analysis.toJSONString()}
+            </pre>
+        </div>
     );
 };
 
@@ -27,9 +30,8 @@ const SwitchExport = (format: ExportFormat, analysis: Analysis) => {
 const AnalysisTablePreview: React.FC<IProps> = props => {
     return (
         <div className={
-          `container-export ${props.visible === false ? "hidden" : undefined}`
+          `container-preview ${props.visible === false ? "hidden" : undefined}`
         }>
-          <h1>温泉分析書</h1>
           {SwitchExport(props.format, props.analysis)}
         </div>
     );
