@@ -264,7 +264,7 @@ const TopApp = (props: RouteComponentProps): any => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/analysis/_new">
+                        <Link to="/analysis/_new/edit">
                             <i className="fas fa-plus-circle fa-fw"></i>
                             {' '}温泉分析書を登録する
                         </Link>
@@ -495,7 +495,7 @@ export default class App extends React.Component {
                                             <TopSearchInput />
                                         </div>
                                         <div className="navbar-item">
-                                            <Link to={"/analysis/_new"}>
+                                            <Link to={"/analysis/_new/edit"}>
                                                 <i className="fas fa-plus fa-lg"></i>
                                             </Link>
                                         </div>
