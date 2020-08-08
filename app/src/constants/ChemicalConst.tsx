@@ -19,7 +19,7 @@ type Atom =
     /* 3 */'Na' | 'Cr' | 'Mg' | 'Al' | 'Si' | 'P'  | 'S'  | 'Cl' |
     /* 4 */'K'  | 'Ca' | 'Mn' | 'Fe' | 'Cu' | 'Zn' | 'As' | 'Br' |
     /* 5 */'Sr' | 'Ag' | 'Cd' | 'I'  |
-    /* 6 */'Hg' | 'Pb'
+    /* 6 */'Ba' | 'Hg' | 'Pb'
 ;
 
 export type Comp =
@@ -32,7 +32,7 @@ export type Comp =
     /* 29-32 */'Cu' | 'CuII' | 'Zn' | 'ZnII' |
     /* 33-36 */'As' | 'Br' |
     /* 37-54 */'Sr' | 'Ag' | 'Cd' | 'I'  |
-    /* 55-86 */'Hg' | 'Pb' |
+    /* 55-86 */'Ba' | 'Hg' | 'Pb' |
     /* H */'H2SiO3' | 'H2S' | 'HBO2' | 'HCO3' |
     /* H */'HNO2' | 'HSiO3' |
     /* H */'H3PO4' | 'H2PO4' | 'HPO4' |
@@ -80,6 +80,7 @@ const compounds: Record<Comp, Array<Atom>> = {
     Ag: ['Ag'],
     Cd: ['Cd'],
     I: ['I'],
+    Ba: ['Ba'],
     Hg: ['Hg'],
     Pb: ['Pb'],
     H2SiO3: ['H', 'H', 'Si', 'O', 'O', 'O'],
@@ -142,6 +143,7 @@ const weightAtom: Record<Atom, number> = {
     Ag: 107.868,
     Cd: 112.414,
     I: 126.90447,
+    Ba: 137.327,
     Hg: 200.592,
     Pb: 207.2
 };
@@ -185,6 +187,7 @@ const Valence: Record<Comp, number> = {
     Sr: +2,
     Cd: +2,
     I: -1,
+    Ba: +2,
     Hg: +2,
     Ag: +2,
     Pb: +4,
@@ -247,6 +250,7 @@ const Formula: Record<Comp, string> = {
     Ag: '$\\ce{Ag}$',
     Cd: '$\\ce{Cd^2+}$',
     I: '$\\ce{I-}$',
+    Ba: '$\\ce{Ba^2+}$',
     Hg: '$\\ce{Hg}$',
     Pb: '$\\ce{Pb^4+}$',
     H2SiO3: '$\\ce{H2SiO3}$',

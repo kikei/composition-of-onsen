@@ -77,7 +77,7 @@ function rowsPositiveIon(): Array<CompRepresentations> {
         row('Mg', 'マグネシウムイオン'),
         row('Ca', 'カルシウムイオン'),
         row('Sr', 'ストロンチウムイオン'),
-        row('Br', 'バリウムイオン'),
+        row('Ba', 'バリウムイオン'),
         row('Al', 'アルミニウムイオン'),
         row('MnII', 'マンガン (II) イオン'),
         row('FeII', '鉄 (II) イオン'),
