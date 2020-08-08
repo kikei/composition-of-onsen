@@ -361,7 +361,7 @@ const ListApp = (props: RouteComponentProps) => {
 
 const AnalysisViewerApp = (props: RouteComponentProps) => {
     const params = new URLSearchParams(props.location.search);
-    const template = params.get('template') || 'ghost';
+    const template = params.get('template') || 'default';
     const { id } = useParams();
     const getAnalysis = (id: string, template: string) => {
         const api = new WebAPI(configContext);
