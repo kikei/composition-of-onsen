@@ -239,7 +239,7 @@ extends React.Component<IProps, IState> {
         const state = this.state;
         return (
             <div className="comment-container">
-                <h2>Comments</h2>
+                <h2>コメント</h2>
                 {
                     state.comments ? (
                         <Suspense fallback={<p>Loading...</p>}>
